@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Integer arithmetic</span></h1>
+
+
+<h2>Single / double integer arithmetic</h2>
+<pre>
+BINARY     ( -- )          set the current number base to binary
+DECIMAL    ( -- )          set the current number base to decimal
+HEX        ( -- )          set the current number base to hexadecimal
+OCTAL      ( -- )          set the current number base to octal
+
+S>D        ( n -- d )      extend with sign single to double (convert n to d)
+D>S        ( d -- n )      convert a double to single
+
+1+         ( n -- n+1 )    increment n by 1
+1-         ( n -- n-1 )    decrement n by 1
+2*         ( n -- n*2 )    integer single multiply by 2 - no overflow check
+2/         ( n -- n/2 )    integer single divide by 2
+NEGATE     ( n -- -n )     change sign of single
+?NEGATE    ( n1 n2 -- n3 ) NEGATE n1 only if n2<0
+ABS        ( n -- abs[n] ) absolute value of single integer
+
++          ( n1 n2 -- n1+n2 ) integer single add n1 and n2 - no overflow check
+-          ( n1 n2 -- n1-n2 ) integer single substract n2 from n1
+*          ( n1 n2 -- n1*n2 ) integer single multiplication - no overflow check
+/          ( n1 n2 -- quotn1/n2 ) integer single divide n1 by n2
+MOD        ( n1 n2 -- remn1/n2 ) integer single remainder of divide n1 by n2
+/MOD       ( n1 n2 -- rest quot ) integer single remainder and quotient of divide n1 by n2
+*/         ( n1 n2 n3 -- n4 ) n4 = (n1*n2)/n3 - transient n1*n2 is a double
+*/MOD      ( n1 n2 n3 -- rem quot ) same as */ but gives remainder and quotient
+
+D+         ( d1 d2 -- d3 ) integer double add d1 and d2 - no overflow check
+D-         ( d1 d2 -- d3 ) integer double substract d2 from d1
+D*         ( d1 n -- d2 )  integer double multiply d1 by d2 - no overflow check
+D/         ( d1 u -- d2 )  quotient of integer division of double by unsigned single
+D2*        ( d -- d*2 )    integer double multiply by 2 - no overflow check
+D2/        ( d -- d/2 )    integer double quotient of divide double by 2
+?DNEGATE   ( d1 n -- d2 )  DNEGATE d only if n<0
+DNEGATE    ( d -- -d )     change sign of integer double
+DABS       ( d -- abs[d] ) absolute value of a double integer
+
+UM*        ( u1 u2 -- ud )  unsigned integer multiply
+UM/MOD     ( ud u -- urem uquot ) unsigned integer divide with remainder
+M*         ( n1 n2 -- d )  integer single multiply n1 y n2 give result as a double
+SM/REM     ( d n -- rem quot )
+FM/MOD     ( d n -- rem quot )
+</pre>
+
+
+<p><hr>Document : w32f-arithm -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

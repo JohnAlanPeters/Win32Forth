@@ -1,0 +1,77 @@
+
+\ ---------------------------------------------------
+\     (c) Copyright 2001  Julian V. Noble.          \
+\       Permission is granted by the author to      \
+\       use this software for any application pro-  \
+\       vided this copyright notice is preserved.   \
+\ ---------------------------------------------------
+
+\ This is an ANS Forth program requiring the
+\   FLOAT, FLOAT EXT, FILE and TOOLS EXT wordsets.
+\
+\ Environmental dependences:
+\       Assumes independent floating point stack
+\       Uses FORmula TRANslator for clarity
+
+\ Algorithm:
+\
+\   Assume roots are bracketed between xa and xb
+\   and that f(xa)*f(xb) < 0   (at least 1 root in interval).
+\   Then take next guess to be xp = (xa+xb)/2 and evaluate
+\   f(xp}. If f(xa)*f(xp} < 0 then xb = xp, else xa = xp,
+\   and continue until done.
+
+
+MARKER -binroots
+
+\ Data structures
+
+FVARIABLE Ra                      \ f(xa)
+FVARIABLE Rb                      \ f(xb)
+FVARIABLE Rp                      \ f(xp)
+FVARIABLE xa                      \ lower end of interval
+FVARIABLE xb                      \ upper end of interval
+FVARIABLE xp                      \ new guess
+FVARIABLE epsilon                 \ precision
+
+v: dummy                          \ dummy dictionary entry
+
+
+: MoreThan    POSTPONE  F>  ;  IMMEDIATE
+
+: initialize    ( xt --) ( F: lower upper precision --)
+        f" epsilon="    f" xb="   f" xa="   \ store parameters
+        defines dummy                       \ xt -> DUMMY
+        f" Ra=dummy(xa)"
+        f" Rb=dummy(xb)"
+        f" MoreThan( Ra*Rb, 0)"             \ same sign?
+        ABORT" Even # of roots in interval!"
+;
+
+
+: NotConverged?    ( -- f)
+    F" MoreThan( ABS( xa - xb ), epsilon )"   ;
+
+: NewPoint
+        f" xp = (xa+xb)/2"      \ new point
+        f" Rp = dummy(xp)"
+        f" MoreThan( Ra*Rp, 0)" \ xp on same side of root as xa?
+
+        IF      f" xa=xp"  f" Ra=Rp"
+        ELSE    f" xb=xp"  f" Rb=Rp"   THEN
+;
+
+: )binroot  ( xt --)   ( f: Low High Precision -- root)
+    initialize
+    BEGIN   NotConverged?   WHILE   NewPoint   REPEAT
+    f" (xa+xb)/2"           ( f: -- root)
+;
+
+FALSE [IF]
+Usage example:
+
+    : f1   fdup  fexp  f*  1e0  f-  ;  ok
+    use( f1  0e0 2e0 1e-5 )binroot f. .567142  ok
+
+[THEN]
+

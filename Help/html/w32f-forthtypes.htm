@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Forth basic data types</h1>
+
+
+<h2>Basic data types</h2>
+
+<p>Forth is not a "typed" language. You are free to do whatever you want with any data.
+Storing an integer into a float is allowed. Storing a cell into a byte is allowed too...
+but will probably lead to a crash.</p>
+
+<p>That said, Win32Forth uses a few basic data types which are :</p>
+
+<ul>
+  <li>1 byte  : character</li>
+  <li>2 bytes : word integer</li>
+  <li>4 bytes : cell (single precision integer)</li>
+  <li>8 bytes : 2 cells (double precision integer)</li>
+  <li>8 bytes : (usually) : floating point</li>
+  <li>1 count byte + n chars : counted string </li>
+</ul>
+
+<p>Most of theese data types are not explicitly defined, they are merely defined by
+their sizes. Not all types are provided defining words but most of them do have
+memory operators according to their sizes.</p>
+
+
+
+<h4>Defining basic data types</h4>
+
+<p>Basic defining words are :</p>
+
+<p><code>CONSTANT      ( n -- )</code>   \ create a single constant</p>
+<p><code>2CONSTANT     ( d -- )</code>   \ create a double constant</p>
+<p><code>VARIABLE      ( <name> -- )</code>    \ create a single precision variable</p>
+<p><code>2VARIABLE     ( <name> -- )</code>    \ create a double precision variable</p>
+
+<p><code>CREATE</code> is a more versatile defining word that simply creates a header in the
+dictionary and, when executed, pushes on stack its pfa, the address immediately following
+the header. Just after <code>CREATE</code>ing a word, you can allot and/or
+initialize some space in the dictionary for it. Examples :</p>
+<pre>
+     CREATE acell CELL ALLOT   \ has the same effect as VARIABLE acell
+
+     CREATE rawdata       \ create a 30 bytes storage area named rawdata
+            HERE          \ HERE is the first free address in the dictionary
+                          \ just after the header for rawdata has been created
+            30 ALLOT      \ allocate 30 bytes of dictionary space
+            30 ERASE      \ erase 30 byte starting at saved address HERE
+</pre>
+<p>Notice that <code>HERE</code> has to be invoked before <code>ALLOT</code> because
+this later increments the dictionary pointer and we need to <code>ERASE</code> from
+the beginning of rawdata.</p>
+
+<p>A set of words is provided to directly compile data after a <code>CREATE</code>.
+ They are : </p>
+
+
+<p><code>ERASE     ( addr u -- )</code> \ erases u bytes starting at address (u positive)</p>
+<p><code>ALLOT     ( n -- )</code> \ allocate n bytes at HERE, increment DP</p>
+<p><code>HERE      ( -- a1 )</code> \ current dictionary pointer, points to next free space</p>
+<p><code>,         ( n -- )</code> \ compile cell at HERE, increment DP dictionary pointer</p>
+<p><code>W,        ( n -- )</code> \ compile word at HERE, increment DP</p>
+<p><code>C,        ( n -- )</code> \ compile byte at HERE, increment DP</p>
+<p><code>",        ( a1 n1 -- )</code>   \ compile string a1,n1 as a counted string at here</p>
+<p><code>,"        ( -<string">- )</code> \ compile string delimited by " as a counted string at here</p>
+<p><code>Z",       ( addr len -- )</code> \ compile the string, addr len as uncounted chars at here</p>
+<p><code>Z,"       ( -<string">- )</code> \ compile string delimited by " as uncounted chars null-terminated chars at here</p>
+<p><code>ALIGN     ( -- )</code> \ align dictionary pointer to a cell boundary</p>
+
+<p>Some words are specialized in handling <code>CELL</code> and <code>CHAR</code> sizes :</p>
+
+<p><code>CELLS      ( n1 -- n1*cell )</code> \ multiply n1 by the cell size</p>
+<p><code>CELLS+     ( a1 n1 -- a1+n1*cell )</code> \ multiply n1 by the cell size and add</p>
+<p><code>CELLS-     ( a1 n1 -- a1-n1*cell )</code> \ multiply n1 by the cell size and subtract</p>
+<p><code>CELL+      ( a1 -- a1+cell )</code> \ add a cell to a1</p>
+<p><code>CELL-      ( a1 -- a1-cell )</code> \ subtract a cell from a1</p>
+<p><code>+CELLS     ( n1 a1 -- n1*cell+a1 )</code> \ multiply n1 by the cell size and add</p>
+<p><code>-CELLS     ( n1 a1 -- a1-n1*cell )</code> \ multiply n1 by the cell size and</p>
+<p><code>CHARS      ( n1 -- n1*char )</code> \ multiply n1 by the character size (1 byte)</p>
+<p><code>CHAR+      ( a1 -- a1+char )</code> \ add the characters size in bytes to a1</p>
+
+
+<h4>Memory operators for basic data types</h4>
+
+<p><code>C!       ( byte adr -- )</code>  \ store byte at address</p>
+<p><code>C+!      ( byte adr -- )</code>  \ add byte to the byte stored at address</p>
+<p><code>C@       ( adr -- byte )</code>  \ load byte from address</p>
+<p><code>W@       ( a1 -- w1 )</code>  \ fetch the word (16bit) w1 from address a1</p>
+<p><code>SW@      ( a1 -- w1 )</code>  \ fetch and sign extend the word (16bit) w1 from address a1</p>
+<p><code>W!       ( w1 a1 -- )</code>  \ store word (16bit) w1 into address a1</p>
+<p><code>W+!      ( w1 a1 -- )</code>  \ add word (16bit) w1 to the contents of address a1</p>
+<p><code>!        ( n adr -- )</code>  \ store cell at address</p>
+<p><code>+!       ( n adr -- )</code>  \ add n to the cell stored at address</p>
+<p><code>@        ( adr -- n )</code>  \ load cell from address</p>
+<p><code>2!       ( d adr -- )</code>  \ store a double at address</p>
+<p><code>2@       ( adr -- d )</code>  \ load a double from address</p>
+<p><code>CMOVE    (  from to count -- )</code>  \ move "count" bytes from address "from" to
+                \ address "to" - start with the first byte of "from"</p>
+<p><code>CMOVE>   ( from to count -- )</code>  \ move "count" bytes from address "from" to
+                \ address "to" - start with the last byte of "from"</p>
+<p><code>MOVE     ( source dest len -- )</code>  \ move len bytes from source address to dest address</p>
+<p><code>BLANK    ( adr count -- )</code>  \ fill count bytes with BL from address</p>
+<p><code>ERASE     ( addr u -- )</code> \ fills u bytes with 0 starting at address</p>
+<p><code>FILL     ( adr n byte -- )</code>  \ fill n bytes with byte from address</p>
+
+
+<h2>Values</h2>
+
+<p>Values are similar to <code>VARIABLE</code>s in that they are cell sized. They differ
+however in the way they are set. Example :</p>
+
+<pre>
+     0 VALUE myvar
+     1 TO myvar     myvar . ==> 1
+     2 +TO myvar    myvar . ==> 3
+</pre>
+<p>To be compared to : </p>
+<pre>
+     VARIABLE myvar
+     1 myvar !      myvar @ . ==> 1
+     2 myvar +!     myvar @ . ==> 3
+</pre>
+<p>Glossary :</p>
+<p><code>VALUE     ( n -<name>- )</code> \ create a self fetching value, initialized to n</p>
+<p><code>TO        ( n -<value_name>- )</code> \ store n in a value</p>
+<p><code>+TO       ( n -<value_name>- )</code> \ Add n to a value</p>
+
+
+<h2>User variables</h2>
+
+<p>User variables are special variables that are "task safe" (ie: several tasks can be
+run at the same time that use the "same" variables). This is obtained by maintaining a
+copy of each user variable for each task. Forth does that for us. If we have to define
+a variable that has to be "task safe", then we should define a <code>USER</code>
+variable (which, by the way, can have any size in Win32Forth)</p>
+
+<p>To define a <code>USER</code> variable :</p>
+<pre>
+     n NEWUSER myvar  \ where n is the number of bytes
+                      \ allocated to myvar in the USER area
+</pre>
+
+
+
+<h2>Coming next :</h2>
+
+<p>Next pages give information on another sort of variables : the local variables, whose
+life is limited to the inside of a colon definition. Then we will see memory allocation
+from the Operating System space (as opposed to the Forth dictionary space). Last we will
+see some more advanced data structuring tools.</p>
+
+<p><hr>Document : w32f-ForthTypes -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

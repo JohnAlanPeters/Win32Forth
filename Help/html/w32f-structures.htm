@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Data Structures</h1>
+
+<p>Often when programming it's necessary to refer to collections of data as
+a single entity. Most Languages have built in mechanisms  for declaring
+structures ( C structs, Pascal records, VB types etc ). Forth is to some extent
+an exception in this respect because its extensible nature makes it easy to implement
+custom structures tailored to your application. Nevertheless WIN32FORTH contains
+some words to help with this process :</p>
+
+<h3>Simple structure : using FIELD+</h3>
+
+<p><code>FIELD+</code> is a defining word
+that creates a new word that adds an offset to the address on the stack when it
+executes. When compiling it stores the second from top value as the offset and
+returns the sum of the top 2 stack values. Its use is best illustrated by
+example thus:</p>
+
+<pre>0       nostack1                  \ thing record
+        cell  field+ >This
+        cell  field+ >That
+        cell  field+ >Other
+        constant SizeOfThing</pre>
+
+<p>where the 1st line sets up the
+initial value ( usually 0 ) and subsequent lines define the offsets ( the best
+way to arrange the code is in a tabular format as shown ). The final line line
+stores the value remaining as a <code>CONSTANT</code> ( alternately if it's not needed it
+can be <code>DROP</code>ed ). </p>
+
+<p>You can define a <code>thing</code> with:</p>
+
+<pre>        create MyThing SizeOfThing Allot</pre>
+
+<p>or alternately any number of <code>thing</code>s with:</p>
+
+<pre>        : THING create SizeOfThing Allot ;
+        Thing MyThing
+        Thing AnyThing
+        Thing Something</pre>
+
+<por on a per thread basis:</p>
+
+<pre>        SizeOfThing NewUser MyThing</pre>
+
+<p>and then reference individual fields with:</p>
+
+<pre>        MyThing >This @
+        22 MyThing >That !
+        1 MyThing >Other +!</pre>
+
+
+
+<h2>More structures</h2>
+
+<p>In the library, there are three optional structure packages (in the sense of C
+structures), they are : ExtStruct.f, Struct.f and eStruct.f </p>
+
+
+
+<h2>Arrays</h2>
+
+<p>Also in the library, the file Array.f contains simple array definitions.</p>
+
+<p>The array pack used by the Forth Scientific Library is useful too (there
+is a link at the help page Getting started / Forth Web resources).</p>
+
+
+
+<h2>Classes : linked list &amp; Enum</h2>
+
+<p>Still in the library, the class LinkList implements a
+doubly linked list. There is also an Enum class.</p>
+
+
+
+<h2>Structures in classes</h2>
+
+<p>Special structures ( <code>record:</code> ) are used as class instances
+variables. See Object Oriented Programming page for more information.</p>
+
+<hr>
+
+<p>Document : w32f-structures.htm -- 2005/12/20 -- dbu_de &amp; Camille Doiteau</p>
+
+</body>
+
+</html>

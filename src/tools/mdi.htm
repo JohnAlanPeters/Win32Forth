@@ -1,0 +1,442 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>Multiple Document Interface (MDI) classes
+</h1><hr /><p>MDI.f contains classes that form the basis for writing MDI aplications
+(like MS Word and MS Excel). &nbsp;Each document in an MDI application is displayed
+in a separate child window within the client area of the application's main window.
+</p><a name="MDIClientWindow"></a>
+<h2>MDI client control class
+</h2><pre><b><a name="0">:Class MDIClientWindow &nbsp;&nbsp;&lt;super Control
+</a></b></pre><p>MDI client control class. This control is used by the MDIFrameWindow class.
+You shouldn't create instances of this class within your application.
+</p><pre><b><a name="1">:M Start: ( hWindowMenu Parent -- )
+</a></b></pre><p>Start the control.
+</p><pre><b><a name="2">:M CreateStruct: ( -- CreateStrucPointer )
+</a></b></pre><p>Get the address of CLIENTCREATESTRUCT structure. It contains information about
+the menu and first multiple document interface (MDI) child window of an MDI
+client window. An application passes a pointer to this structure as the
+lpvParam parameter of the CreateWindow function when creating an MDI client window.
+</p><pre><b><a name="3">;Class
+</a></b></pre><p>End of MDIClientWindow class
+</p><a name="MDIFrameWindow"></a>
+<h2>MDI Frame window class
+</h2><pre><b><a name="4">:Class MDIFrameWindow &nbsp;&nbsp;&lt;super Window
+</a></b></pre><p>All MDI child windows are displayed within the client area of this
+window.
+</p><pre><b><a name="5">:M WindowMenuNo: ( -- n )
+</a></b></pre><p>Override this method to set the menu number in whitch all
+child windows should be displayed.
+</p><pre><b><a name="6">:M WindowTitle: ( -- z&quot; )
+</a></b></pre><p>Get the title text for the frame window.
+</p><pre><b><a name="7">:M SetRedraw: &nbsp;&nbsp;( f -- )
+</a></b></pre><p>Set the redraw state of the window.
+</p><p><i>&nbsp;f </i>&nbsp;Specifies the redraw state. If this parameter is TRUE, the
+content can be redrawn after a change. If this parameter is FALSE,
+the content cannot be redrawn after a change.
+</p><pre><b><a name="8">:M Tile: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</a></b></pre><p>Arrange all child windows in a tile format.
+</p><p><i>&nbsp;f </i>&nbsp;can be one of the following values optionally combined with
+MDITILE_SKIPDISABLED to prevent disabled MDI child windows from being
+tiled.
+</p><table border="1"><tr><td>MDITILE_HORIZONTAL
+</td>
+<td>Tiles windows horizontally.
+</td>
+</tr>
+<tr><td>MDITILE_VERTICAL
+</td>
+<td>Tiles windows vertically.
+</td>
+</tr>
+</table><pre><b><a name="9">:M Arrange: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Arrange all minimized child windows. It does not affect child
+windows that are not minimized.
+</p><pre><b><a name="10">:M Cascade: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Arrange all child windows in a cascade format.
+</p><pre><b><a name="11">:M RefreshMenu: ( -- )
+</a></b></pre><p>Refresh the window menu of the MDI frame window.
+</p><pre><b><a name="12">:M MDISetMenu: &nbsp;( hmenuWindow hmenuFrame -- )
+</a></b></pre><p>Replace the entire menu of an MDI frame window, replace the window menu
+</p><p>of the frame window, or both.
+</p><pre><b><a name="13">:M DrawMenuBar: ( -- )
+</a></b></pre><p>Redraws the menu bar of the window. If the menu bar changes after the system
+has created the window, this function must be called to draw the changed menu bar.
+</p><pre><b><a name="14">:M Restore: &nbsp;&nbsp;&nbsp;&nbsp;( hWnd -- )
+</a></b></pre><p>Restore an MDI child window from maximized or minimized size.
+</p><pre><b><a name="15">:M Maximize: &nbsp;&nbsp;&nbsp;( hWnd -- )
+</a></b></pre><p>M maximize an MDI child window. The system resizes the child window to make its
+client area fill the client window. The system places the child window's window
+menu icon in the rightmost position of the frame window's menu bar, and places
+the child window's restore icon in the leftmost position. The system also appends
+the title bar text of the child window to that of the frame window.
+</p><pre><b><a name="16">:M GetActive: &nbsp;&nbsp;( -- Maximized handle )
+</a></b></pre><p>Retrieve the handle to the active MDI child window.
+</p><pre><b><a name="17">:M Activate: &nbsp;&nbsp;&nbsp;( hWnd -- )
+</a></b></pre><p>Activate a MDI child window.
+</p><pre><b><a name="18">:M Next: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f hWnd -- )
+</a></b></pre><p>Activate the next or previous child window.
+</p><pre><b><a name="19">:M Destroy: &nbsp;&nbsp;&nbsp;&nbsp;( hWnd -- )
+</a></b></pre><p>Destroy an MDI child window.
+</p><pre><b><a name="20">:M CloseChild: &nbsp;( hWnd -- )
+</a></b></pre><p>Close an MDI child window.
+</p><pre><b><a name="21">:M EnumChildWindows: ( lparam pCallBack -- f )
+</a></b></pre><p>Enumerate the MDI child windows
+</p><pre><b><a name="22">:M CloseAll: &nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Close all MDI child windows.
+</p><pre><b><a name="23">:M GetFirstChild: ( -- hWndChild )
+</a></b></pre><p>Get handle of the first child window
+</p><pre><b><a name="24">:M GetNextChild: ( -- hWndChild )
+</a></b></pre><p>Get handle of the next child window. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+NOTE: you must call GetFirstChild: first.
+</p><pre><b><a name="25">:M SendMessageToAllChildren: { wParam lParam msg -- }
+</a></b></pre><p>Send a message to all child windows
+</p><pre><b><a name="26">:M PostMessageToAllChildren: { wParam lParam msg -- }
+</a></b></pre><p>Post a message to all child windows
+</p><pre><b><a name="27">;Class
+</a></b></pre><p>End of MDIFrameWindow class
+</p><a name="MDIChildWindow"></a>
+<h2>MDI Child window class
+</h2><pre><b><a name="28">:Class MDIChildWindow &nbsp;&nbsp;&lt;super child-window
+</a></b></pre><p>This is the base class for all windows that should be displayed
+within the client area of a MDIFrameWindow.
+</p><pre><b><a name="29">\ :M DefaultIcon: ( -- hIcon )
+</a></b></pre><p>Return the handle of the Icon whitch should be displayed in the upper
+left corner of the MDi child window.
+</p><pre><b><a name="30">:M ParentWindow: ( -- hParent )
+</a></b></pre><p>Teturn the handle of parent, 0 = no parent
+</p><pre><b><a name="31">:M Start: ( Parent -- )
+</a></b></pre><p>Create a new MDI child window object
+</p><pre><b><a name="32">:M WindowTitle: ( -- z&quot; )
+</a></b></pre><p>Get the title text for the MDI child window.
+</p><pre><b><a name="33">:M On_QueryEnd: ( -- f )
+</a></b></pre><p>This method is called when the user chooses to end the session or when an
+application calls the ExitWindows function. If any application returns zero,
+the session is not ended.
+</p><p>The default method returns TRUE, so that the session will be ended.
+</p><pre><b><a name="34">:M On_Close: ( -- f )
+</a></b></pre><p>This method is called when the user chooses to close the MDI child window.
+If it returns FALSE the window will not be closed.
+</p><p>Override the method to check if the document within the child window
+need's to be saved.
+</p><p>The default method returns TRUE, so that the window will be closed.
+</p><pre><b><a name="35">:M On_ChildActivate: ( -- )
+</a></b></pre><p>Handle the WM_CHILDACTIVATE message. This message is sent to a child window
+when the user clicks the window's title bar or when the window is activated,
+moved, or sized.
+</p><pre><b><a name="36">:M On_GetMinMaxInfo: ( pMinMaxInfo -- pMinMaxInfo )
+</a></b></pre><p>Handle the WM_GETMINMAXINFO message. This message is sent to a window when the size
+or position of the window is about to change. An application can use this message
+to override the window's default maximized size and position, or its default minimum
+or maximum tracking size.
+</p><p><i>&nbsp;pMinMaxInfo </i>&nbsp;Pointer to a MINMAXINFO structure that contains the default maximized
+position and dimensions, and the default minimum and maximum tracking sizes. An application
+can override the defaults by setting the members of this structure.
+</p><pre><b><a name="37">:M On_MenuChar: ( w l -- w l )
+</a></b></pre><p>Handle the WM_MENUCHAR message. This message is sent when a menu is active and the user
+presses a key that does not correspond to any mnemonic or accelerator key. This message
+is sent to the window that owns the menu.
+</p><pre><b><a name="38">:M On_Move: ( l -- l )
+</a></b></pre><p>Handle the WM_MOVE message. This message is sent after a window has been moved.
+</p><pre><b><a name="39">:M On_SysCommand: ( h m w l -- h m w l f )
+</a></b></pre><p>Handle the WM_SYSCOMMAND message. A window receives this message when the user chooses
+a command from the window menu or when the user chooses the maximize button, minimize
+button, restore button, or close button.
+</p><pre><b><a name="40">:M On_Command: ( h m w l -- h m w l f )
+</a></b></pre><p>Handle the WM_COMMAND message. This message is sent when the user selects a command item
+from a menu, when a control sends a notification message to its parent window, or when an
+accelerator keystroke is translated.
+</p><pre><b><a name="41">;Class
+</a></b></pre><p>End of MDIChildWindow class
+</p><h2>Example (demos\MdiExample.f)
+</h2><pre>
+Needs MDI
+
+0 value CurrentWindow
+0 value ActiveChild
+Create CurrentFile 256 allot
+
+
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Messages and Dialogs
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+: ?SaveMessage ( -- n ) &nbsp;&nbsp;\&nbsp;IDYES, IDNO or IDCANCEL
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&quot; Do you want to save &quot;&nbsp;pad place
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CurrentFile count &quot;to-pathend&quot; pad +place
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&quot; &nbsp;?&quot; pad +place &nbsp;pad +NULL
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pad 1+ z&quot; MDI Example&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ MB_ICONEXCLAMATION &nbsp;MB_YESNOCANCEL or ] literal
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NULL MessageBox ;
+
+
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Simple TextBox to place on child windows
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+:Class TextBox &nbsp;&nbsp;&lt;Super Control
+
+:M Start: ( Parent -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to Parent
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;z&quot; EDIT&quot; Create-Control
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M WindowStyle: ( -- style )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[ WS_VISIBLE WS_CHILD or ES_MULTILINE or WS_VSCROLL or WS_HSCROLL or ] literal
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+;Class
+
+
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\&nbsp;Define application menu
+\
+\&nbsp;The frame window of an MDI application should include
+\&nbsp;a menu bar with a Window menu. The Window menu should
+\&nbsp;include command items that arrange the child windows
+\&nbsp;within the client window or that close all child windows.
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+: NewID ( &lt;name&gt; -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;defined
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF &nbsp;drop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE NextID swap count ['] constant execute-parsing
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THEN ;
+
+IdCounter constant StartId
+
+NewID IDM_NEW
+NewID IDM_CLOSE
+NewID IDM_EXIT
+NewID IDM_TILE
+NewID IDM_ARRANGE
+NewID IDM_CASCADE
+NewID IDM_CLOSE_ALL
+NewID IDM_OPEN_FILE
+
+IdCounter constant EndId
+
+Create MenuTable EndId StartId - 4 * allot
+: DoMenu ( ID -- ) &nbsp;&nbsp;StartId - 4 * MenuTable + @ ?dup IF execute THEN ;
+: SetMenu ( ID -- ) &nbsp;last @ name&gt; &nbsp;swap StartId - 4 * MenuTable + ! ;
+
+MENUBAR MDIMenu
+&nbsp;&nbsp;&nbsp;&nbsp;POPUP &quot;&amp;File&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MENUITEM &nbsp;&nbsp;&nbsp;&nbsp;&quot;&amp;New... &nbsp;&nbsp;\tCtrl+N&quot; &nbsp;&nbsp;&nbsp;&nbsp;IDM_NEW &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DoMenu ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MENUITEM &nbsp;&nbsp;&nbsp;&nbsp;&quot;C&amp;lose&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_CLOSE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DoMenu ;
+\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9 RECENTFILES &nbsp;&nbsp;RecentFiles &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_OPEN_FILE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DoMenu ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MENUSEPARATOR
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MENUITEM &nbsp;&nbsp;&nbsp;&nbsp;&quot;E&amp;xit &nbsp;\tAlt-F4&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_EXIT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DoMenu ;
+&nbsp;&nbsp;&nbsp;&nbsp;POPUP &quot;&amp;Window&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MENUITEM &nbsp;&nbsp;&nbsp;&nbsp;&quot;&amp;Tile&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_TILE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DoMenu ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MENUITEM &nbsp;&nbsp;&nbsp;&nbsp;&quot;&amp;Arrange&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_ARRANGE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DoMenu ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MENUITEM &nbsp;&nbsp;&nbsp;&nbsp;&quot;Ca&amp;scade&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_CASCADE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DoMenu ;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MENUITEM &nbsp;&nbsp;&nbsp;&nbsp;&quot;&amp;Close all&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_CLOSE_ALL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DoMenu ;
+ENDBAR
+
+
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Define application window
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+:Object Frame &nbsp;&nbsp;&lt;Super MDIFrameWindow
+
+:M Classinit: ( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ClassInit: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MDIMenu to CurrentMenu
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M WindowMenuNo: ( -- n ) &nbsp;&nbsp;1 ;M &nbsp;&nbsp;\&nbsp;the Window menu where the child window titles will be placed
+
+:M WindowStyle: ( -- style )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WindowStyle: SUPER
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WS_CLIPCHILDREN or
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M ExWindowStyle: ( -- exstyle )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WS_EX_ACCEPTFILES
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M WM_DROPFILES { hndl message wParam lParam \&nbsp;drop$ -- res }
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SetForegroundWindow: self
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAXSTRING LocalAlloc: drop$
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 0 -1 wParam Call DragQueryFile
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 DO
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MAXCOUNTED drop$ 1+ i wParam Call DragQueryFile drop$ c!
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drop$ IDM_OPEN_FILE DoMenu
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOOP
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wParam Call DragFinish
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M MinSize: ( -- width height ) &nbsp;&nbsp;106 &nbsp;0 &nbsp;;M
+
+:M WindowTitle: ( -- z&quot; ) &nbsp;&nbsp;z&quot; MDI Example&quot; &nbsp;;M
+
+:M On_Size: ( h m w -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 0 Width Height Move: MDIClient
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+(( This is equivalent to &nbsp;:M WM_SIZE &nbsp;( h m w l -- f ) &nbsp;&nbsp;DefFrameProc ;M
+&nbsp;&nbsp;&nbsp;but if space for a Toolbar or StatusBar is needed MDIClient needs to be smaller ))
+
+:M On_Init: ( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Init: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100 appinst Call LoadIcon &nbsp;&nbsp;\&nbsp;Win32For.ico
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GCL_HICON hWnd Call SetClassLong drop
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M OnWmCommand: &nbsp;( hwnd msg wparam lparam -- hwnd msg wparam lparam )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OnWmCommand: Super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;over LOWORD ( Menu ID ) &nbsp;dup StartId EndId within &nbsp;&nbsp;\&nbsp;intercept Menu commands
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF &nbsp;DoMenu &nbsp;ELSE &nbsp;drop &nbsp;THEN
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M WM_CLOSE ( h m w l -- res )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CloseAll: self
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NotCancelled &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;if we don't cancel the close
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WM_CLOSE WM: super &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;then just terminate the program
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;else abort program termination
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THEN
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M On_Done: ( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Turnkeyed? IF &nbsp;bye THEN
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Done: Super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+;Object
+
+
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Define Child Window class
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+:Class MDIChild &nbsp;&nbsp;&lt;Super MDIChildWindow
+&nbsp;&nbsp;&nbsp;&nbsp;int EditWindow
+&nbsp;&nbsp;&nbsp;&nbsp;256 bytes FileName
+&nbsp;&nbsp;&nbsp;&nbsp;int Modified
+
+:M WindowTitle: ( -- z&quot; )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CurrentFile count FileName place
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FileName +null &nbsp;FileName 1+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M WindowStyle: ( -- style )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WindowStyle: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WS_CLIPCHILDREN or
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GetActive: Frame &nbsp;0= or &nbsp;IF &nbsp;WS_MAXIMIZE or &nbsp;THEN &nbsp;&nbsp;\&nbsp;start new child maximised unless
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;the active child is not maximised
+
+:M DefaultIcon: ( -- hIcon )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;101 appInst Call LoadIcon &nbsp;&nbsp;\&nbsp;App_icon.ico
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M Start: ( parent -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New&gt; TextBox to EditWindow
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self start: EditWindow
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 0 Width Height Move: EditWindow
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SetFocus: EditWindow
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;True to Modified
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M On_SetFocus: ( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;A child window can be selected by clicking on it,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SetFocus: EditWindow &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;selecting it from the Window menu or using CTRL+F6
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EditWindow to CurrentWindow
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self to ActiveChild
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FileName count CurrentFile place CurrentFile +null
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M On_Size: ( h m w l -- h m w l )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 0 Width Height Move: EditWindow &nbsp;&nbsp;\&nbsp;make TextBox fit child window
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+:M On_Close: ( -- f ) &nbsp;&nbsp;\&nbsp;True = close, False = cancel close
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Modified
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;?SaveMessage
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Case
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDCANCEL &nbsp;Of &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FALSE &nbsp;Endof
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDYES &nbsp;&nbsp;&nbsp;&nbsp;Of &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRUE &nbsp;Endof
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( otherwise IDNO ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRUE &nbsp;swap
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EndCase
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE &nbsp;TRUE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THEN
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dup &nbsp;dup to NotCancelled
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;if we don't cancel the close
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GetHandle: self Destroy: Frame &nbsp;&nbsp;\&nbsp;close child window first
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EditWindow dispose &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;so we can safely dispose
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self dispose &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;of both the EditControl
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THEN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;and the child window
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+;Class
+
+
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Activate Menu
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+0 value New#
+: New ( -- ) &nbsp;&nbsp;1 +to New# &nbsp;s&quot; File &quot;&nbsp;currentfile place
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New# (.) currentfile +place
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New&gt; MDIChild to ActiveChild
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MDIClientWindow: Frame Start: ActiveChild ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_NEW SetMenu
+: Close ( -- ) &nbsp;&nbsp;GetHandle: ActiveChild CloseChild: Frame ; &nbsp;&nbsp;IDM_CLOSE SetMenu
+: ExitApp ( -- ) &nbsp;&nbsp;bye ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_EXIT SetMenu
+: Tile ( -- ) &nbsp;&nbsp;0 Tile: Frame ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_TILE SetMenu
+: Arrange ( -- ) &nbsp;&nbsp;Arrange: Frame ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_ARRANGE SetMenu
+: Cascade ( -- ) &nbsp;&nbsp;Cascade: Frame ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_CASCADE SetMenu
+: CloseAll ( -- ) &nbsp;&nbsp;CloseAll: Frame ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_CLOSE_ALL SetMenu
+: OpenFile ( File$ -- ) &nbsp;&nbsp;count currentfile place
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New&gt; MDIChild to ActiveChild
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( File opening stuff )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;MDIClientWindow: Frame Start: ActiveChild ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IDM_OPEN_FILE SetMenu
+
+\&nbsp;********** many menu items not implemented here **********
+
+
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Handle MDI Accelerators: ALT+ - (minus), CTRL+ F4, CTRL+ F6
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+: DoMDIMsg ( pMsg f &nbsp;-- pMsg f )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dup MDIClient: Frame 0&lt;&gt; and
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;drop dup MDIClient: Frame Call TranslateMDISysAccel 0=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;THEN
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;
+msg-chain chain-add DoMDIMsg
+
+
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The word to start the application
+\&nbsp;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+: go &nbsp;&nbsp;( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;zeromenu: mdimenu
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;start: Frame
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 to New#
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;New
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cascade
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;
+
+</pre><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

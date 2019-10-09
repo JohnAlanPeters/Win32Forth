@@ -1,0 +1,256 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Release Notes for version 6.12.00 </h1>
+
+<h2>Contributors (in alphabetical order) </h2>
+
+<ul>
+  <li>Robert Dudley Ackerman</li>
+  <li>Ezra Boyce</li>
+  <li>Dirk Busch</li>
+  <li>Thomas Dixon</li>
+  <li>Brad Eckert</li>
+  <li>Bruno Gauthier</li>
+  <li>George Hubert</li>
+  <li>Alex McDonald</li>
+  <li>Rod Oakford</li>
+  <li>Andrew Stephenson</li>
+  <li>Jos van de Ven</li>
+  <li>and others...</li>
+</ul>
+
+
+
+<h2>Overview </h2>
+
+<h3>System Changes</h3>
+
+<ul>
+  <li>The File w32fHtmlDisplay.dll was removed because it was replaced whith
+the new ActiveX support written by Thomas Dixon. </li>
+  <li>The File FreeImage.dll was added because it is used by the Win32Forth
+IDE to display Bitmap images. </li>
+  <li>PATH-PTR was changed. All code that depend on PATH-PTR being defined as
+a VALUE must be changed !!! Alternatively you can INCLUDE the file
+compat\oldpaths.f for a harness to use old code with the new paths.f </li>
+</ul>
+
+
+<h3>Documentation</h3>
+
+<p>A lot of new documentation has been added using an extended version of Brad Eckert's
+<a href="dexh-helpdexh.htm">DexH - Document Extractor</a>.</p>
+
+<h3>Bug fixes</h3>
+
+<p>A large number of bugs have been fixed. Changes since December 12, 2005 can be found at the
+<a href="http://sourceforge.net/mailarchive/forum.php?forum_id=43364">CVS Commit List</a>.</p>
+
+
+
+<h2>New Applications</h2>
+
+<ul type=disc>
+ <li><b>Player4</b> (Audio/Video player)</li>
+ <li><b>PlayVirginRadio</b> (Play &quot;Virgin Radio&quot; from the internet)</li>
+ <li><b>Solipion</b> (Classic Morpion Solitaire Like Game)</li>
+ <li><b>Sudoku</b> (Classic Sudoku Game)</li>
+ <li><b>The Win32Forth IDE</b>  (It combines SciEdit and the Project Manager).</li>
+ <li><b>Picture Viewer</b> (A Simple Bitmap Viewer)</li>
+</ul>
+
+
+
+<h2>New Tools</h2>
+
+<ul type=disc>
+ <li><b>Resources.f</b> - Utilities to copy, add and enumerate resources in .dll
+     and .exe files (For Win NT4 or better only). </li>
+ <li><b>fcom.f</b> - Component Object Module (COM) Interface. </li>
+ <li><b>AxConList.f</b> - Shows a list of all installed ActiveX controls</li>
+ <li><b>AxConInfo.f</b> - Shows informations about an ActiveX control</li>
+ <li><b>DexH</b> - Document Extractor</li>
+ <li><b>noconsole.f</b> - Helper words for turnkey
+     applications that don't need the w32fConsole.dll</li>
+ <li><b>DumpWindow.f</b> - Dump all Top-Level-Windows to the console.</li>
+</ul>
+
+
+
+<h2>New Controls</h2>
+
+<ul type=disc>
+ <li><b>HTMLControl.f</b>
+     HTML browser control This is a HTML browser control that can be used for all kinds of
+     things. This requires that Internet Explorer is installed (even if it's
+     not your default browser). </li>
+ <li><b>PDFControl.f</b>
+     PDF control</a> Embeds a adobe acrobat control into your window. This control uses
+     the dispatch interface to talk to the control (because a real interface
+     wasn't provided). This requires that you have a adobe reader
+     installed. </li>
+ <li><b>FlashControl.f</b>
+     Shockwave Flash Control</a> Flash control that can play swf movies.
+     There are many more methods to the calling interface that I did not
+     include because I didn't know what they did. Maybe someone who has more
+     experience with flash could help develop it futher. You do need the
+     shockwave control installed. </li>
+ <li><b>ListView.f</b> ListView Control </li>
+ <li><b>AXControl.f</b> Generic Activex Control</ul>
+</ul>
+
+<p>AXControl is a class that can be treated like any other control in win32forth, except
+it is enabled to host an activex component. A short example of it's usage:</p>
+
+<pre>    window win
+         start: win
+            axcontrol ax
+            win start: ax
+            s" MSCAL.Calendar" axcreate: ax
+                               autosize: ax</pre>
+
+<p>The example here hosts a calandar control by it's progid. In order to see this work
+properly, you need to have that activex control installed on your machine.  ProgID's may
+also have some version control to them. "MSCAL.Calendar.7" as the progid would only host
+version 7 of the calendar control.<br>
+You may also use the string of the clsid that you want to use instead of the progid, if
+it suits your purposes better.  Ex:</p>
+
+<pre>    s" {8E27C92B-1264-101C-8A2F-040224009C02}" axcreate: ax
+                                                autosize: ax</pre>
+
+<p>You may also use a url if you want:</p>
+
+<pre>    s" http://www.google.com" axcreate: ax
+                               autosize: ax</pre>
+
+<p>Just having the control there is nice, but the REAL trick is to communicate with
+it and exchange data back and forth.  The way that this is done is by  getting the
+control's interface and using it. That is what was done in all the other activex
+controls. </p>
+
+
+
+
+<h2>New ADO class library</h2>
+
+<ul type=disc>
+ <li><a href="clas-ADO.htm#0">ADOConnection</a> For connecting to a database.</li>
+ <li><a href="clas-ADO.htm#21">ADOCursor</a> For manipulating recordsets.</li>
+</ul>
+
+
+
+<h2>New GDI class library</h2>
+
+<ul type=disc>
+ <li><a href="clas-gdiStruct.htm#gdiPOINT">gdiPOINT</a>
+     Wrapper class for a POINT struct.</li>
+ <li><a href="clas-gdiStruct.htm#gdiCOLORREF">gdiCOLORREF</a>
+     Wrapper class for a COLORREF struct.</li>
+ <li><a href="clas-gdiStruct.htm#gdiRGBQUAD">gdiRGBQUAD</a>
+     Wrapper class for a RGBQUAD struct.</li>
+ <li><a href="clas-gdiStruct.htm#gdiSIZE">gdiSIZE</a>
+     Wrapper class for a SIZE struct.</li>
+ <li><a href="clas-gdiStruct.htm#gdiTEXTMETRIC">gdiTEXTMETRIC</a>
+     Wrapper class for a TEXTMETRIC struct.</li>
+</ul>
+
+<ul type=disc>
+ <li><a href="clas-gdiBase.htm">gdiBase</a>
+     Base class for GDI objects.</li>
+ <li><a href="clas-gdiPen.htm#gdiPen">gdiPen</a>
+     Class for cosmetic pen's.</li>
+ <li><a href="clas-gdiPen.htm#gdiGeometricPen">gdiGeometricPen</a>
+     Class for geometric pen's.</li>
+ <li><a href="clas-gdiBrush.htm#gdiBrush">gdiBrush</a>
+     Base class for all brush objects.</li>
+ <li><a href="clas-gdiBrush.htm#gdiSolidBrush">gdiSolidBrush</a>
+     Solid brush class.</li>
+ <li><a href="clas-gdiBrush.htm#gdiHatchBrush">gdiHatchBrush</a>
+     Hatch brush class.</li>
+ <li><a href="clas-gdiBrush.htm#gdiPatternBrush">gdiPatternBrush</a>
+     Pattern brush class.</li>
+ <li><a href="clas-gdiBrush.htm#gdiDIBPatternBrush">gdiDIBPatternBrush</a>
+     DIB Pattern brush class.</li>
+ <li><a href="clas-gdiFont.htm">gdiFont</a>
+     Font class.</li>
+ <li><a href="clas-gdiBitmap.htm">gdiBitmap</a>
+     Bitmap class.</li>
+ <li><a href="clas-gdiMetafile.htm">gdiMetafile</a>
+     Enhanced metafile class.</li>
+ <li><a href="clas-gdiDC.htm">gdiDC</a>
+     Device context class.</li>
+ <li><a href="clas-gdiWindowDC.htm">gdiWindowDC</a>
+     Window device context class.</li>
+ <li><a href="clas-gdiMetafileDC.htm">gdiMetafileDC</a>
+     Metafile device context class.</li>
+</ul>
+
+<p>The 'old' classes in Win32Forth that are dealing with the GDI:</p>
+
+<ul type=disc>
+ <li><b>ColorObject</b> Class for color objects.</li>
+ <li><b>ExtColorObject</b> Class for extended color objects.</li>
+ <li><b>HatchColorObject</b> Class for hatch color objects.</li>
+ <li><b>Font</b> Class for fonts.</li>
+ <li><b>WinDC</b> Device context class for windows.</li>
+ <li><b>WinPrinter</b> Device context class for printing.</li>
+</ul>
+
+<p>were rewritten to use the GDI class library.</p>
+
+
+
+
+<h2>Other new classes</h2>
+
+<ul type=disc>
+ <li><a href="clas-TrayWindow.htm">TrayWindow</a>
+     Class for windows that hide themself in the TrayBar when they are minimized.</li>
+ <li><a href="clas-SQLite.htm">SQLite</a>
+     Database Class for SQLite</li>
+</ul>
+
+
+
+<h2>New Libraries</h2>
+
+<ul type=disc>
+ <li><a href="clas-Sock.htm">WinSock</a>
+     Simple Socket Library</li>
+</ul>
+
+
+
+<h2>New Demos</h2>
+
+<ul type=disc>
+ <li><b>HtmlControlDemo.f</b> - Shows how to use the HTMLControl</a></li>
+ <li><b>PdfControlDemo.f</b> - Shows how to use the PDFControl</a></li>
+ <li><b>FlashControlDemo.f</b> - Shows how to use the FlashControl</a></li>
+ <li><b>demos\COM\*.f</b> - Various demos for the new  COM interface.</li>
+ <li><b>demos\GdiDemo\*.f</b> - Various demos for the new GDI class library. Most of
+     them were original written by David R. Pochin.</li>
+ <li><b>ListViewDemo.f</b> - Shows how to use the ListView control. Also
+     shows how to implement a Spliiter window</a></li>
+ <li><b>demos\Ado\*.f </b>- Various demos for the new Ado class library. Requires MS
+     access to build the .mdb file for the tests. </li>
+ <li><b>demos/SQLite Demo.f</b> - Shows how to use the SQLite class</a></li>
+ <li><b>demos/SWinSock Demo.f</b> - Shows how to use the WinSock library</a></li>
+</ul>
+
+
+<hr>
+
+<p>Document : p-relnotes.6.12.htm -- 2007/05/26 --  dbu_de</p>
+
+</body>
+
+</html>

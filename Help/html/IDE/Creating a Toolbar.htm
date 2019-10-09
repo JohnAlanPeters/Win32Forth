@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Creating A ToolBar</title>
+    <link rel="stylesheet" type="text/css" href="IDEstyle.css">
+</head>
+<body>
+
+<h1>Creating A ToolBar</h1>
+
+<br>
+
+<p>The toolbar dialog, the bitmap preview window and the toolbar bitmap preview
+window allow a toolbar to be defined and tested.
+
+<p align="center"><img src="Bitmap Preview Window.gif" width="600" height="62" alt="" border="0">
+<img src="CreateToolbar Window.gif" width="598" height="454" alt="" border="0"><br clear=0>
+<img src="Toolbar Preview Window.gif" width="600" height="62" alt="" border="0"><br clear=0></p>
+
+<p>The bitmap preview window displays the selected bitmap at the default dimensions.
+The toolbar bitmap preview window simulates how the selected bitmaps will look in the
+toolbar when created.</p>
+
+
+
+<h3>Defining a toolbar</h3>
+
+<p><b>Name</b> - the name of the toolbar. This is the minimum required to generate
+a toolbar. With a name specified and no bitmap image a default toolbar will be
+generated using one of the Win32 API toolbar bitmaps.</p>
+
+<p><b>Bitmap</b> - full path to the bitmap file that contains the toolbar images.</p>
+
+<p><b>Exclude path</b> - if checked bitmap file is referenced without the path component.</p>
+
+<p><b>Bitmap Info</b> - set the bitmap width and height.</p>
+
+<p><b>Button Info</b> - set the width and height of each toolbar button.</p>
+
+<p><b>Toolbar Options</b> - Check "Flat" if a flat toolbar is required, otherwise
+the toolbar will have raised buttons Use "Show Button text" if buttons will display
+text strings.</p>
+
+<p><b>Toolbar Styles</b> - These options should be self-explanatory or experiment to
+find out. Further information can be found in the source code file "Toolbar.f".</p>
+
+<p><b>ToolBar Button-</b> Used to change the style, state, description and other
+information for a single button.</p>
+
+
+<p>Use "Add" to add an individual button to the toolbar, and then select the desired
+bitmap for this button by left clicking in the bitmap preview window. The default
+style and state for the button is "Button" and "Enabled". These can be changed by
+clicking the appropiate checkboxes.</p>
+
+<p>If the "Auto Mode" option is selected a button will be automatically added when
+a bitmap in the bitmap preview window is clicked. The clicked bitmap becomes the
+default for the added button.</p>
+
+<p>If it is desired to change the bitmap for a button simply manuever to the desired
+button (first,last,previous,next), ensure that "Auto Mode" is off and click the
+desired bitmap in the preview window.</p>
+
+<p><b>Move Up/Move Down</b>- Use these buttons to reposition a button in the toolbar.</p>
+
+<p><b>Delete</b>- Removes a button from the list. No confirmation is given.</p>
+
+<p><b>Description</b>- this can be the button name or description. It is used in the
+generation of button IDs for the toolbar. If none is provided a default will be
+added.</p>
+
+<p><b>Tooltip</b>- tooltip text for the button.</p>
+
+<p><b>Button Text</b>- optional button text. Note that "Show Button Text" should be
+enabled if text is to be displayed.<br><br>
+
+<p><b>Extra Button</b>- If this option is selected the button will not be displayed
+in the toolbar by default.</p>
+
+<p>Note that if a button has the "Separator style" option selected no bitmap will be
+displayed for the button. In the Toolbar bitmap preview window a separator button
+is displayed as a white space.</p>
+
+
+
+<h3>Button Functions</h3>
+
+<p><b>New</b> - Start with a default toolbar and clear button list.</p>
+
+<p><b>Open</b> - Open a toolbar definition file (.tdf) with saved toolbar options.</p>
+
+<p><b>Save</b> - Save options to file.</p>
+
+<p><b>Test</b> - Compiles and displays a toolbar with the specified options. To modify
+and retest close the open toolbar window first.</p>
+
+<p><b>Source</b> - Display source code for the toolbar in the FormPad. From there it
+can be copied to the clipboard or saved to file.</p>
+
+<p><b>Refresh</b> - Updates button information display.</p>
+
+<p><b>Close</b> - close the "Define Toolbar" dialog. This will also close the Bitmap
+Preview Window.</p>
+
+<hr>
+
+<p>Document : Creating a toolbar.htm -- 2008/08/26 -- Ezra Boyce</p>
+
+</body>
+
+</html>

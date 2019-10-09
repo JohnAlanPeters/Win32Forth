@@ -1,0 +1,19 @@
+ProjectName= PlayVirginRadio
+BuildFile= apps\PlayVirginRadio\PlayVirginRadio.f
+SearchPath= 
+PlayVirginRadio,0
+Modules,8
+apps\PlayVirginRadio\PlayVirginRadio.f
+SRC\LIB\TrayWindow.f
+SRC\LIB\HtmlControl.f
+SRC\LIB\AXControl.F
+SRC\LIB\fcom.F
+SRC\LIB\SoundVolume.f
+SRC\CONSOLE\NoConsole.f
+SRC\LIB\Resources.f
+DLLs,0
+Forms,0
+Auxiliary Files,0
+Resources,1
+apps\PlayVirginRadio\Virgin.ico
+Docs,0

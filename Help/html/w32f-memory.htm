@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Memory management</h1>
+
+
+<p>Apart from dictionary, memory can be allocated on the process heap. Once allocated,
+all Forth memory operators may access this memory.</p>
+
+<p>Win32Forth keeps track of each heap allocated chunk and so is able to release them
+when closing for example. However it is a very good habit to properly release any
+memory allocated by a program.</p>
+
+
+<h2>Win32Forth heap memory management</h2>
+
+<p>Possible errors are intercepted by the Win32Forth system, so users do not have to
+handle result flags, except for <code>REALLOC</code>.</p>
+
+<p><code>MALLOC    ( u -- addr )</code> allocate n bytes of heap memory, at addr</p>
+<p><code>REALLOC   ( u addr -- addr' flag )</code> resize a previously allocated block of memory to
+the new size u - u may be less or more than previously allocated - return possibly new
+address addr' and flag=0 if success</p>
+<p><code>RELEASE   ( addr -- )</code> release the previously allocated memory block</p>
+
+
+
+<h2>ANS heap memory management</h2>
+
+<p><code>ALLOCATE  ( u -- addr flag )</code> allocate n bytes of memory, give addr and flag=0 if success</p>
+<p><code>RESIZE    ( addr1 u -- addr2 flag )</code> resize memory at addr1 to u bytes, return possibly new
+address addr2 and flag=0 if success</p>
+<p><code>FREE      ( addr -- flag )</code> release memory, flag=0 if success</p>
+
+
+<p><hr>Document : w32f-memory -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

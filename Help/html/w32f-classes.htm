@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+<h1>Classes</h1>
+
+<h2>Windows and Dialogs</h2>
+
+<ul>
+ <li><a href="class-Generic.htm">Generic-Window</a> Base class for all window objects.</li>
+ <li><a href="class-Window.htm">Window</a> Class for window objects.</li>
+ <li><a href="class-Childwnd.htm">Child-Window</a> Class for child window objects.</li>
+ <li><a href="class-TrayWindow.htm">TrayWindow</a> Class for windows that hide themself in the TrayBar when they are minimized.</li>
+ <li><a href="class-TimerWindow.htm">TimerWindow</a> Class for windows that can handle timer events.</li>
+ <li><a href="class-Controls.htm#DialogWindow">DialogWindow</a> Class for windows that contain controls.</li>
+ <li><a href="class-mdi.htm#MDIClientWindow">MDIClientWindow</a> MDI client control class.</li>
+ <li><a href="class-mdi.htm#MDIFrameWindow">MDIFrameWindow</a> MDI Frame window class.</li>
+ <li><a href="class-mdi.htm#MDIChildWindow">MDIChildWindow</a> MDI Child window class.</li>
+ <li><a href="class-MdiDialog.htm">MdiDialogWindow</a> Class for MDI child windows that contain controls.</li>
+</ul>
+
+<h2>Controls</h2>
+
+<p><a href="class-Control.htm">Control</a> is the base class for standard
+window controls. All the following classes are derived from it</p>
+
+
+<ul>
+  <li><b>Edit controls</b></li>
+  <ul type=circle>
+    <li><a href="class-Controls.htm#EditControl">EditControl</a> Class for text edit controls.</li>
+    <li><a href="class-Controls.htm#TextBox">TextBox</a> Enhanced Version of the EditControl class.</li>
+    <li><a href="class-Controls.htm#PassWordBox">PassWordBox</a> Class for text edit controls. All
+        characters in the control are displayed as an asterisk *.</li>
+    <li><a href="class-Controls.htm#MultiLineTextBox">MultiLineTextBox</a> Class for multi line text
+        edit controls.</li>
+    <li><a href="class-Controls.htm#RichEditControl">RichEditControl</a> Class for rich edit controls.</li>
+  </ul>
+  <li><b>Combo box controls</b></li>
+  <ul type=circle>
+    <li><a href="class-Controls.htm#ComboControl">ComboControl</a> Class for combo box controls.</li>
+    <li><a href="class-Controls.htm#ComboBox">ComboBox</a> Enhanced Version of the ComboControl class.</li>
+    <li><a href="class-Controls.htm#ComboListBox">ComboListBox</a> Class for read only combo box controls.</li>
+  </ul>
+  <li><b>List box controls</b></li>
+  <ul type=circle>
+    <li><a href="class-Controls.htm#ListControl">ListControl</a> Class for list box controls.</li>
+    <li><a href="class-Controls.htm#ListBox">ListBox</a> Enhanced Version of the ListControl class.</li>
+  </ul>
+  <li><b>Group controls</b></li>
+  <ul type=circle>
+    <li><a href="class-Controls.htm#GroupControl">GroupControl</a> Class for group controls.</li>
+  </ul>
+  <li><b>Static controls</b></li>
+  <ul type=circle>
+  <li><a href="class-Controls.htm#StaticControl">StaticControl</a> Class for static controls.</li>
+  </ul>
+  <li><b>Check box controls</b></li>
+  <ul type=circle>
+  <li><a href="class-Controls.htm#CheckControl">CheckControl</a> Class for check box controls.</li>
+  </ul>
+  <li><b>Radio button controls</b></li>
+  <ul type=circle>
+  <li><a href="class-Controls.htm#RadioControl">RadioControl</a> Class for radio button controls.</li>
+  </ul>
+  <li><b>Push button controls</b></li>
+  <ul type=circle>
+  <li><a href="class-Controls.htm#ButtonControl">ButtonControl</a> Class for push button controls.</li>
+  </ul>
+  <li><b>Other controls</b></li>
+  <ul type=circle>
+  <li><a href="class-Controls.htm#TabControl">Tab Control</a> Class for tabulator controls.</li>
+	<li><a href="class-Controls.htm#UpDownControl">Up-down Control</a> Class for up-down controls.</li>
+	<li><a href="class-Controls.htm#SpinnerControl">Spinner Control</a> Class for spinner controls.</li>
+  </ul>
+</ul>
+
+
+<h2>ActiveX controls</h2>
+
+<ul>
+  <li><a href="class-AXControl.htm">AXControl</a> Base class for ActiveX controls.</li>
+  <ul type=circle>
+    <li><a href="class-HTMLcontrol.htm">HTMLControl</a> HTML control class.</li>
+    <li><a href="class-WebServer.htm">WebServer</a> - Simple Web Server</li>
+  </ul>
+</ul>
+
+<h2>Dialogs defined in resource (*.res) files.</h2>
+
+<ul>
+ <li><a href="class-Dialog.htm#Dialog">Dialog</a> Class for Dialogs.</li>
+ <li><a href="class-Dialog.htm#ModelessDialog">ModelessDialog</a> Class for modless Dialogs.</li>
+</ul>
+
+<p>Since Win32Forth doesn't provide any tool's to create a dialog resource you should use
+<a href="ForthForm/ForthForm.htm">ForthForm</a> to create your dialog windows instead.</p>
+
+<h2>GDI</h2>
+
+<ul type=disc>
+ <li><a href="class-gdiStruct.htm#gdiPOINT">gdiPOINT</a> Wrapper class for a POINT struct.</li>
+ <li><a href="class-gdiStruct.htm#gdiCOLORREF">gdiCOLORREF</a> Wrapper class for a COLORREF struct.</li>
+ <li><a href="class-gdiStruct.htm#gdiRGBQUAD">gdiRGBQUAD</a> Wrapper class for a RGBQUAD struct.</li>
+ <li><a href="class-gdiStruct.htm#gdiSIZE">gdiSIZE</a> Wrapper class for a SIZE struct.</li>
+ <li><a href="class-gdiStruct.htm#gdiTEXTMETRIC">gdiTEXTMETRIC</a> Wrapper class for a TEXTMETRIC struct.</li>
+</ul>
+
+<ul type=disc>
+ <li><a href="class-gdiBase.htm">gdiBase</a> Base class for GDI objects.</li>
+ <li><a href="class-gdiPen.htm#gdiPen">gdiPen</a> Class for cosmetic pen's.</li>
+ <li><a href="class-gdiPen.htm#gdiGeometricPen">gdiGeometricPen</a> Class for geometric pen's.</li>
+ <li><a href="class-gdiBrush.htm#gdiBrush">gdiBrush</a> Base class for all brush objects.</li>
+ <li><a href="class-gdiBrush.htm#gdiSolidBrush">gdiSolidBrush</a> Solid brush class.</li>
+ <li><a href="class-gdiBrush.htm#gdiHatchBrush">gdiHatchBrush</a> Hatch brush class.</li>
+ <li><a href="class-gdiBrush.htm#gdiPatternBrush">gdiPatternBrush</a> Pattern brush class.</li>
+ <li><a href="class-gdiBrush.htm#gdiDIBPatternBrush">gdiDIBPatternBrush</a> DIB Pattern brush class.</li>
+ <li><a href="class-gdiFont.htm">gdiFont</a> Font class.</li>
+ <li><a href="class-gdiBitmap.htm">gdiBitmap</a> Bitmap class.</li>
+ <li><a href="class-gdiMetafile.htm">gdiMetafile</a> Enhanced metafile class.</li>
+ <li><a href="class-gdiDC.htm">gdiDC</a> Device context class.</li>
+ <li><a href="class-gdiWindowDc.htm">gdiWindowDC</a> Window device context class.</li>
+ <li><a href="class-gdiMetafileDC.htm">gdiMetafileDC</a> Metafile device context class.</li>
+</ul>
+
+<p>There are some other 'old' classes in Win32Forth that are dealing with the GDI:</p>
+
+<ul type=disc>
+  <li><b>ColorObject</b> Class for color objects.</li>
+  <li><b>ExtColorObject</b> Class for extended color objects.</li>
+  <li><b>HatchColorObject</b> Class for hatch color objects.</li>
+  <li><b>Font</b> Class for fonts.</li>
+  <li><b>WinDC</b> Device context class for windows.</li>
+  <li><a href="class-ExtDC.htm">ext-windc</a> Extended version of the WinDC class.</li>
+  <li><b>WinPrinter</b> Device context class for printing.</li>
+  <li><a href="class-BitmapDC.htm">bitmap-dc</a> Bitmap device context class.</li>
+</ul>
+
+<p>All these classes are rewritten to use the GDI class library. </p>
+
+
+
+<h2>Other classes</h2>
+
+<ul>
+  <li><a href="class-EventClass.htm">EventClass</a> To manage unnamed event object.</li>
+  <li><a href="class-File.htm#File">File</a> Class for file I/O.</li>
+  <li><a href="class-MultiTaskingClass.htm">MultiTaskingClass</a> For clustered tasks in objects.</li>
+  <li><a href="class-File.htm#ReadFile">ReadFile</a> Class for loading/saving a complete file from/to memory.</li>
+  <li><a href="class-SQLite.htm">SQLite</a> Database Class for SQLite</li>
+  <li><a href="class-WaitableTimer.htm">WaitableTimer</a> For high resolution waitable timers.</li>
+</ul>
+
+
+<h2>ADO Classes</h2>
+
+<ul>
+ <li><a href="class-ADO.htm#0">ADOConnection</a> For connecting to a database.</li>
+ <li><a href="class-ADO.htm#21">ADOCursor</a> For manipulating recordsets.</li>
+</ul>
+
+
+<hr>
+
+
+<p>Document : w32f-classes.htm -- 2007/05/26 -- dbu_de </p>
+
+</body>
+
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Building and saving an application</h1>
+
+<p><code>SAVE</code> and <code>TURNKEY</code> both create new .exe programs on your
+hard drive. They differ, in the type of program they create. </p>
+
+
+<h2>SAVE </h2>
+
+<p><code>SAVE</code> is used to build a program that still contains the Forth
+interpreter. The program is specified by a word that will be executed immediately
+after launching the application. When this word is exited, <code>BYE</code> is
+automatically executed so that the application terminates.</p>
+<code>SAVE</code> is followed by the name of the program to create. <b>This name
+must not be the same name as the Forth program you are currently running.</b>
+<code>SAVE</code> is used as follows; </p>
+
+<pre>    ' do-myprogram SAVE newforth &lt;enter&gt; </pre>
+
+
+<br>
+<h4>How to rebuild Forth with SAVE</h4>
+
+<p>To rebuild Win32For.exe itself, use the following sequence :</p>
+<pre>
+     w32fForth to NewAppID        \ init shared memory for communication
+     false to RunUnique
+     ' ForthBoot SAVE Win32for    \ use specific ForthBoot
+</pre>
+<p>To rebuild a custom Forth, use :</p>
+<pre>
+     ' MyForthBoot SAVE Win32for  \ use specific ForthBoot
+</pre>
+<p>Where MyForthBoot can be either ForthBoot or a special boot word that you have
+defined at your own risk ;)</p>
+
+
+
+<h2>TURNKEY</h2>
+
+<p>Creates an application program that cannot run Forth any longer, because
+all the headers and all the system space are discarded during the program save
+process. This process reduces the newly saved program image size by over 200k
+bytes. <code>TURNKEY</code>ed programs cannot be debugged. TURNKEYed programs
+always have at least 3000 bytes of application dictionary space available at
+program startup, and zero bytes of system dictionary space available. </p>
+
+<p>The 'cfa' of a forth definition that runs your program must be passed
+to <code>TURNKEY</code> . <code>TURNKEY</code> is followed by the name of the
+program to create. <b>The name passed to <code>TURNKEY</code> must not be the
+same name as the Forth you are currently running.</b> <code>TURNKEY</code> is
+used as follows; </p>
+
+<pre>    ' do-myprogram TURNKEY newprogram &lt;enter&gt; </pre>
+
+
+
+
+<h2>SAVE & TURNKEY directives</h2>
+
+<p>Your program may run in the Console, start its own window or run both the
+Console and a Window. It may also happen that you run a window and also use
+Console keyboard input without showing the Console. Last you may want to run
+your program in a customized Console.</p>
+
+<p>By default :
+<ul>
+  <li><code>SAVE</code> uses the Console</li>
+  <li><code>TURNKEY</code> uses no console</li>
+</ul>
+
+</p>Depending on your application you can override theese defaults with the
+following words, to be put just before <code>SAVE</code> or <code>TURNKEY</code> : </p>
+<ul>
+  <li><code>NoConsoleBoot</code> - the saved program don't use any console. This
+      is the case when you use your own window.</li>
+  <li><code>DosConsoleBoot</code> - the saved program uses the kernel's Dos console.
+      You can use this for small applications with minimal i/o.</li>
+  <li><code>ConsoleBoot</code> - the saved program uses a visible console. This is
+      typically for programs running in the console, whatever they launch an extra
+      window or not.</li>
+  <li><code>ConsoleHiddenBoot</code> - the saved prog uses an hidden new console. To
+      be used when a program uses a window and Console i/o (eg: KEY) without the
+      need to show the Console, or when a program must run in a customized
+      Console. In this later case, your application will have to do further
+      Console initialization (eg. remove menubar, change title, show console...).</li>
+</ul>
+
+
+
+<h2>Troubleshooting</h2>
+
+<p>If your programm is turnkeyed and doesn't show after launching (seems to exit
+immediately) then your application probably uses console i/o. As the default
+console boot for TURNKEY is NoConsoleBoot you should use the prefix
+ConsoleHiddenBoot (use Task Manager to close the invisible instance that is
+possibly still running)</p>
+
+
+
+
+<h2>Advanced uses</h2>
+
+<h4>Commandlines</h4>
+<p>If your programm needs to interpret a command line, you will find it
+      as a counted string in CMDLINE . If your programm is SAVEd , you can
+      EVALUATE it. If your programm is TURNKEYed , as the dictionary is broken,
+      you will have to handle it programmatically.</p>
+
+<h4>Application and system spaces</h4>
+<p>The amount of available dictionary space available will remain the same
+      as before <code>SAVE</code> or <code>TURNKEY</code> was performed.  If you
+      need to change the amount of application dictionary or system dictionary
+      space available for a subsequent program compile, you must perform a
+      meta-compile by running option B of setup.exe. It will prompt you for the
+      new dictionary sizes and rebuilt win32for.exe accordingly. Then you can
+      use it to save your program.</p>
+
+<h4>Inter process communication</h4>
+<p>If you want several of your applications to communicate between them, you
+      will have to set some flags as explained in Help - Win32Forth Messaging.
+      By default, none of theese features are activated and you don't have to
+      worry about them.</p>
+
+
+<hr>
+
+<p>Document : w32f-imageman.htm -- 2008/08/30 -- Camille Doiteau</p>
+
+</body>
+
+</html>

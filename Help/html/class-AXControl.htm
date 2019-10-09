@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+AXControl.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>AXControl -- Base class for ActiveX controls
+</h1><p>AXControl is a class that can be treated like any other control in
+win32forth, except it is enabled to host an activex component. A short
+example of it's usage:
+</p><p>window win &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+start: win &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+axcontrol ax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+win start: ax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+s&quot; MSCAL.Calendar&quot; axcreate: ax &nbsp;&nbsp;&nbsp;<br />
+autosize: ax
+</p><p>The example here hosts a calandar control by it's progid.
+In order to see this work properly, you need to have that activex
+control installed on your machine. &nbsp;ProgID's may also have some
+version control to them. &quot;MSCAL.Calendar.7&quot; as the progid would
+only host version 7 of the caladar control.
+</p><p>You may also use the string of the clsid that you want to use instead of
+the progid, if it suits your purposes better. &nbsp;Ex:
+</p><p>s&quot; {8E27C92B-1264-101C-8A2F-040224009C02}&quot; axcreate: ax &nbsp;&nbsp;&nbsp;<br />
+autosize: ax
+</p><p>You may also use a url if you want: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+s&quot; http://www.google.com&quot; axcreate: ax &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+autosize: ax
+</p><p>You may also give it html code, if it is proceeded by &quot;MSHTML:&quot; &nbsp;Ex: &nbsp;<br />
+s&quot; MSHTML:&lt;HTML&gt;&lt;BODY&gt;Hello World!&lt;/BODY&gt;&lt;/HTML&gt;&quot; axcreate: ax &nbsp;&nbsp;<br />
+autosize: ax &nbsp;<br />
+</p><p>Just having the control there is nice, but the REAL trick is to
+communicate with it and exchange data back and forth. &nbsp;The way that
+this is done is by &nbsp;getting the control's interface and using it.
+</p><h2>Glossary
+</h2><p><b><code>:CLASS AXControl &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SUPER CHILD-WINDOW
+</code></b><br>AXControl Base class for ActiveX controls
+</p><p><b><code>:M AXUCreate: ( ustr -- )
+</code></b><br>calls unicode creation function
+</p><p><b><code>:M AXCreate: &nbsp;( str len -- )
+</code></b><br>Initialize the ActiveX control
+</p><p><b><code>:M QueryInterface: &nbsp;&nbsp;&nbsp;( ppv riid -- flag )
+</code></b><br>flag is true on error
+</p><p><b><code>;CLASS
+</code></b><br>End of AXControl class
+</p></body></html>

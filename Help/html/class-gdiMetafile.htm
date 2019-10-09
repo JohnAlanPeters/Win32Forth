@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+gdiMetafile.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>gdiMetafile -- Metafile class
+</h1><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><h2>Glossary
+</h2><a name="gdiMetafile"></a>
+<p><b><code>:class gdiMetafile &lt;super gdiObject
+</code></b><br>Metafile class. This class only support's enhanced metafiles (emf) !
+</p><p><b><code>:M Destroy: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Destroy the metafile.
+</p><p><b><code>:M SetHandle: ( hMF -- )
+</code></b><br>Set the handle of the metafile.
+</p><p><b><code>:M Copy: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- hCopy )
+</code></b><br>Create a copy of the metafile in memory
+</p><p><b><code>:M Load: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f )
+</code></b><br>Load a metafile from a file
+</p><p><b><code>:M Save: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f )
+</code></b><br>Save the metafile in a file
+</p><p><b><code>:M PlayInRect: &nbsp;( left top right bottom hDestDC -- )
+</code></b><br>Play the metafile in a rectangle
+</p><p><b><code>:M CopyToClipboard: ( -- )
+</code></b><br>Copy the metafile to the clipboard
+</p><p><b><code>:M GetFromClipboard: ( -- )
+</code></b><br>Get a metafile from the clipboard
+</p><p><b><code>:M GetFileHeader: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( pemh size -- n )
+</code></b><br>The GetFileHeader: method retrieves the record containing the header
+for the specified enhanced-format metafile. <br />
+pemh &nbsp;Pointer to an ENHMETAHEADER structure that receives the header record.
+If this parameter is NULL, the function returns the size of the header record. <br />
+size Specifies the size, in bytes, of the buffer to receive the data. Only this
+many bytes will be copied.
+</p><p><b><code>:M GetPaletteEntries: &nbsp;&nbsp;( cEntries lppe -- n )
+</code></b><br>The GetPaletteEntries: methods retrieves optional palette entries from the
+specified enhanced metafile. <br />
+cEntries &nbsp;Specifies the number of entries to be retrieved from the optional
+palette. <br />
+lppe Pointer to an array of PALETTEENTRY structures that receives the palette
+colors. The array must contain at least as many structures as there are entries
+specified by the cEntries parameter.
+If the array pointer is NULL and the enhanced metafile contains an optional palette,
+the return value is the number of entries in the enhanced metafile's palette; if
+the array pointer is a valid pointer and the enhanced metafile contains an optional
+palette, the return value is the number of entries copied; if the metafile does not
+contain an optional palette, the return value is zero. Otherwise, the return value
+is GDI_ERROR.
+</p><p><b><code>;class
+</code></b><br>End of gdiMetafile class
+</p></body></html>

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>IDE Menus</title>
+    <link rel="stylesheet" type="text/css" href="IDEstyle.css">
+</head>
+<body>
+
+<h1>IDE Menus</h1>
+
+<br>
+
+
+<h2>File</h2>
+<ul>
+  <li><b>New File</b> - create a new empty source text file</li>
+  <li><b>Open File</b>               - open a new source text file</li>
+  <li><b>Close File</b>              - close active file</li>
+  <li><b>Save File</b>               - save active file, prompt for a name if not named</li>
+  <li><b>Save File As</b>            - save active file under a different name</li>
+  <li><b>Save All Files</b>          - save all modified files</li>
+  <li><b>Open Highlighted File</b>   - attempt to open highlighted file</li>
+  <li><b>Open HTML File</b>          - open html file for previewing as html</li>
+  <li><b>New HTML Source File</b>    - create a new file with default html formatting</li>
+  <li><b>Print</b>                   - print active file</li>
+  <li><b>Page Setup</b>              - set print parameters e.g margins, paper size etc.</li>
+  <li><b>Exit</b>                    - exit the IDE, same effect as Alt-F4</li>
+  <li><b>Recent Files List</b>       - recent text files that were opened</li>
+</ul>
+
+
+<h2>Edit</h2>
+<ul>
+  <li><b>Undo</b>                     - undo the last editing operation</li>
+  <li><b>Redo</b>                     - redo the last editing operation</li>
+  <li><b>Cut</b>                      - removes selected text and place it on the clipboard</li>
+  <li><b>Copy</b>                     - copy selected text to the clipboard</li>
+  <li><b>Paste</b>                    - paste text from clipboard into document at current location</li>
+  <li><b>Delete</b>                   - deletes selected text. Does NOT place it on the clipboard</li>
+  <li><b>Line Cut</b>                 - removes current line and places it on the clipboard</li>
+  <li><b>Line Copy</b>                - copies current line to the clipboard</li>
+  <li><b>Line Delete</b>              - deletes current line. Does NOT place it on the clipboard</li>
+  <li><b>Line Transpose</b>           - swaps text on current line with that of the previous line</li>
+  <li><b>Line Duplicate</b>           - inserts a copy of current line at current line position</li>
+  <li><b>Select All</b>               - selects all text in current document</li>
+  <li><b>Remove Selection</b>         - removes highlight from selected text</li>
+  <li><b>Search</b>                   - opens a dialog to allow entering text to search for</li>
+  <li><b>Search Next</b>              - search forward in document for previously entered text</li>
+  <li><b>Search Previous</b>          - search backward in document for previously entered text</li>
+  <li><b>Search & Replace</b>         - opens a dialog to allow entering text for both search and replacing</li>
+  <li><b>Find Text In Files</b>       - opens a dialog to allow finding text in files</li>
+  <li><b>Insert Date</b>              - inserts date at current location in document</li>
+  <li><b>Insert Date & Time</b>       - inserts date and time at current location in document</li>
+  <li><b>Block comment</b>            - allows a group of specified lines to be commented out</li>
+  <li><b>Block uncomment</b>          - removes a previous block comment from a group of specified lines</li>
+  <li><b>Lower Case</b>               - converts the highlighted text to lower case</li>
+  <li><b>Upper Case</b>               - converts the highlighted text to upper case</li>
+</ul>
+
+
+<h2>Project Menu</h2>
+<ul>
+  <li><b>New</b> - start a new project</li>
+  <li><b>Open</b> - open a previously saved project</li>
+  <li><b>Save</b> - save current project. A project is saved as a standard text file</li>
+  <li><b>Save As</b> - save a copy of the project</li>
+  <li><b>Rename</b> - rename current project i.e the root name</li>
+  <li><b>Build</b> - build project. The build file would be the main file of
+      the project. Scans the build file for needs, include and fload statements and
+      add specified files. Recurses found files. Note that the build file is
+      highlighted with a red icon in the project tree</li>
+  <li><b>ReBuild</b> - Same as build except any files currently in the project are
+      deleted first</li>
+  <li><b>Set search path for build</b> - set the path to search for files with option
+      to save to disk</li>
+  <li><b>New Module</b> - creates a blank .f file, adds it to the module list
+      and opens the file in the editor ready for editing.</li>
+  <li><b>Navigator</b> - Project Navigator : tracks code in a project.</li>
+  <li><b>Add files to project</b> - opens a dialog allowing single or multiple
+      file selection.</li>
+  <li><b>Delete from project</b> - deletes highlighted file.</li>
+  <li><b>Add open Forms</b> - Add any saved open forms to the forms list.</li>
+</ul>
+
+
+<h2>Form</h2>
+<ul>
+  <li><b>New</b>                       - Create a new blank form of default size</li>
+  <li><b>Open</b>                      - Open a single or multiple forms</li>
+  <li><b>Edit Properties</b>           - modify the properties of active form</li>
+  <li><b>Close Active Form</b>         - close active form</li>
+  <li><b>Close all</b>                 - close all open forms</li>
+  <li><b>Save</b>                      - save active form (.ff file)</li>
+  <li><b>Save as</b>                   - save and allow changing the name of the active form</li>
+  <li><b>Save all modified</b>         - save any changed forms</li>
+  <li><b>Merge open forms</b>          - compile all open forms to a single text (.frm) file</li>
+  <li><b>Property form template</b>    - opens a dialog to allow generating a property sheet like template</li>
+  <li><b>Compile</b>                   - generate code to create form in a .frm file</li>
+  <li><b>Compile all</b>               - compile all open forms to .frm files</li>
+  <li><b>Copy to clipboard</b>         - compile form and copy code to the Windows clipboard</li>
+  <li><b>Test</b>                      - show how form will look at runtime</li>
+  <li><b>Create Toolbar</b>            - opens a dialog to allow generating a toolbar</li>
+  <li><b>Splitter Window Templates</b> - assorted splitter window templates</li>
+  <li><b>Define menu</b>               - opens a dialog to allow defining a menu</li>
+</ul>
+
+
+<h2>DexH</h2>
+<ul>
+  <li>Add DEXH auto-documentation commands to selected text</li>
+</ul>
+
+
+<h2>View</h2>
+<ul>
+  <li><b>Display Line Endings</b>  - shows the line ending characters which are
+      usually not visible.</li>
+  <li><b>Display White Space</b>   - shows spaces and tabs which are usually not
+      visible.</li>
+  <li><b>Display Line Numbers</b>  - shows numbers in the left hand margin to
+      indicate how far down in the file the line is.
+  <li><b>Colorize Source</b>       - shows keywords and various other items of text
+      in distinctive colors to allow for easy identification.  Makes editing source
+      code easier on the eyes and helps identify spelling errors.</li>
+  <li><b>Browse</b>                - switches the display mode from simple text
+      editing to hyperlinking.  Right clicking words in a source file will jump to
+      the definition of the word if it can be located.</li>
+  <li><b>Preview as HTML</b>       - displays the current file as it would appear
+      in a web browser.</li>
+</ul>
+
+
+<h2>Options</h2>
+<ul>
+  <li><b>Line Endings</b>                     - allows specifying the character
+      or characters to be used to terminate lines based on the target operating
+      system custom.</li>
+  <li><b>Create Backup Files</b>              - specifies that the original files
+      should be saved as backup files before changes are made.</li>
+  <li><b>Remove trailing white space</b>      -</li>
+  <li><b>Ensure final line ending</b>         -</li>
+  <li><b>Save All Files Before Compile</b>    - writes any unsaved changes to the
+      file system before performing the compilation process.  This can prevent loss
+      of changes if the machine crashes or hangs before the file could otherwise be
+      saved.</li>
+  <li><b>Always compile main project file</b> -  compile main project file if
+      checked, else compile active document</li>
+  <li><b>Set Tab Options</b> - allows specifying how the Tab key should be handled.</li>
+  <li><b>IDE Preferences</b> - opens a dialog to allow setting personal preferences
+      for the environment</li>
+  <li><b>Show Status Bar</b> - toggles display of the status bar at the bottom of
+      the window.</li>
+  <li><b>Show Toolbar</b>    - toggles display of the toolbar just below the menu.</li>
+</ul>
+
+
+<h2>Tools</h2>
+<ul>
+  <li>Compile and debugger commands</li>
+  <li>Bookmark management</li>
+</ul>
+
+
+<h2>Window</h2>
+<ul>
+  <li><b>Tile Horizontally</b> - displays the windows the full width of the client
+      area with each active window the same size vertically.</li>
+  <li><b>Tile Vertically</b>   - displays the windows the full height of the client
+      area with each active window the same size horizontally.</li>
+  <li><b>Arrange</b>           - allows positioning the active windows.</li>
+  <li><b>Cascade</b>           - overlaps the windows so that their title bars are
+      visible and stepped for easy location.</li>
+  <li><b>Close All</b>         - closes all open edit windows.</li>
+</ul>
+
+
+<h2>Help</h2>
+<ul>
+  <li><b>Win32Forth documentation</b>   - launches Help.</li>
+  <li><b>Get help for selected word</b> - diplay info for this word in help.</li>
+  <li><b>About</b>                      - shows the customary credits and
+      version numbers for the program</li>
+</ul>
+
+<hr>
+
+<p>Document : IDEmenus.htm -- 2008/08/26 -- Ezra Boyce</p>
+
+</body>
+
+</html>

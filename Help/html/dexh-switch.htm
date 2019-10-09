@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+switch.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Using Switches
+</h1><p>Switches are a cross between chains and case structures. Like chains they can be defined where they need to be
+compiled and extended by later code. Like case structures they perform different operations depending on the
+value on the top of the stack. Unlike CASE the comparators are stored as a single cell so cannot be a
+non-constant value. Also they pass the input value to a default case if no match is found in the linked cases,
+whereas with CASE one has to add code to handle a default case. For more information on switches see
+Forth Dimensions Volume 20 Issue 3 (Page 19 onwards).
+</p><h2>STRUCTURE OF A SWITCH
+</h2><pre>HEADER OF SWITCH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SWITCH CELL
+&nbsp;| DOSWITCH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CFA of SWITCH
+&nbsp;| SWITCH LINK &nbsp;&nbsp;First case/null ---&gt; SWITCH LINK Next case/null ---&gt;
+&nbsp;| XT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Default &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;COMPARATOR &nbsp;Value to match
+&nbsp;| SWITCHES LINK Next switch/null __ &nbsp;XT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Word to run if matched
+&nbsp;V &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;V
+</pre><h2>GLOSSARY
+</h2><p><b><code>: :SWITCH ( xt &quot;name&quot; -- head ) &nbsp;\ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Define a switch &quot;name&quot; that executes the procedure whose xt is on the stack ( with the input argument on top
+of the stack ) if no matching condition has been added to the switch and open it for adding conditions.
+</p><p><b><code>: [SWITCH ( &quot;name&quot; &quot;default&quot; -- head ) &nbsp;&nbsp;\ &nbsp;&nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Define a new switch &quot;name&quot; whose default action is &quot;default&quot; and open
+it for adding conditions.
+</p><p><b><code>: SWITCH: ( &quot;name&quot; &quot;&lt;code to perform&gt; ;&quot; -- head ) &nbsp;&nbsp;&nbsp;&nbsp;\ &nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Define a new switch &quot;name&quot; whose default action is the following inline
+forth code (up to the terminating ;). The forth words must call the switch
+&quot;name&quot; as a recursive call with &quot;name&quot; to perform recursion, since
+RECURSE merely runs the inline code again.
+</p><p><b><code>: [+SWITCH ( &quot;name&quot; -- head ) &nbsp;&nbsp;&nbsp;\ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Open existing SWITCH &quot;name&quot; for additional conditions.
+</p><p><b><code>: SWITCH] ( head -- ) \ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Close SWITCH structure. An error occurs if head is not the head of the currently open switch.
+</p><p><b><code>: RUNS ( head n -&lt;word&gt;- -- head ) \ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Add a condition to the currently open switch structure that runs -&lt;word&gt;- if the value n is passed to the
+switch. An error occurs if head is not the head of the currently open switch, or no switch is open.
+</p><p><b><code>: RUN: ( head n -&lt;words ;&gt;- -- head ) \ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Add a condition to the currently open switch structure that runs the following forth words up to ; if the
+value n is passed to the switch. An error occurs if head is not the head of the currently open switch, or no
+switch is open.
+</p><p><b><code>: .SWITCH ( xt -- ) \ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Print out all the conditions defined for this switch.Using SEE -&lt; name &gt;- on a switch has the same effect.
+Conditions are listed default first followed by the others with in the order they are found i.e. the later
+they are defined the earlier they are in the list.
+</p><p><b><code>: .SWITCHES \ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FORTH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SYSTEM
+</code></b><br>Print out all the defined switches.The more recently a switch has been defined the earlier it comes in the
+list.
+</p><h2>SOME EXAMPLES OF SWITCHES
+</h2><pre>SWITCH: FACTORIAL &nbsp;&nbsp;( n -- factorial )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dup 1- factorial * ; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ Recursive call n &lt;&gt;&nbsp;1 and n &lt;&gt;&nbsp;0
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 runs 1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ Base conditions:Note 1 is a constant
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 runs 1
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;switch]
+An implimentation of the classic recursive FACTORIAL function using SWITCH: that is about 15% faster than
+the standard recursive version, while only taking 16 cells ( the same as the standard version ).
+
+
+[SWITCH FOO-ERROR throw SWITCH]
+: (FOO) -&lt;Some code&gt;- ;
+: FOO ['] (foo) catch foo-error ;
+An extensible error handler. Initially any errors are simply thrown to the previous CATCH but adding extra
+conditions means they are caught and handled by FOO, since 0 THROW drops the 0 and carries on. You can even
+add a success condition e.g.
+
+[+SWITCH FOO-ERROR 0 run: .&quot; Hip, Hip, Hoorah I've done it&quot; ; SWITCH]
+
+if you want.
+
+</pre><hr>Document : dexh-switch.f -- 2008/05/16 -- georgeahubert
+</body></html>

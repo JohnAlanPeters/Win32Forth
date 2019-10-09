@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+Ado.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>ADO -- ADO Classes for Database Interfacing
+</h1><h3><i>Tom Dixon - August 2006
+</i></h3><p>These classes were developed to make accessing databases easy and convienent
+with win32forth.
+</p><h2>&nbsp;ADOConnection Class
+</h2><p><b><code>:class ADOConnection &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SUPER Object
+</code></b><br>An ADO connection object controls the access of cursors to the database.
+It is meant to control things such as tranactions, read/write properties
+and error handling.
+</p><p><b><code>:M Start: ( -- )
+</code></b><br>Initializes the ADO Connection Component. &nbsp;Most methods will not execute properly
+if this is not called when the object instance is created
+</p><p><b><code>:M Connect: ( -- )
+</code></b><br>Connects to the data source specified by the connection string with the given
+connection properties.
+</p><p><b><code>:M Close: ( -- flag )
+</code></b><br>Closes the database connection. &nbsp;The COM component still exists and a new
+connection may be made if desired.
+</p><p><b><code>:M GetErrorCnt: ( -- cnt )
+</code></b><br>Return the number of errors in the FIFO error queue
+</p><p><b><code>:M GetError: ( cnt -- n )
+</code></b><br>Return the error number of the 'cnt' error in the error queue
+</p><p><b><code>:M Error&gt;str: ( n -- str len )
+</code></b><br>Return the error string of the 'cnt' error in the error queue
+</p><p><b><code>:M ClearErrors: ( -- )
+</code></b><br>Clears the FIFO error queue
+</p><p><b><code>:M ERR: ( n -- ) \ thows an error on any problem
+</code></b><br>Displays and clears all errors in the queue
+</p><p><b><code>:M Transaction: ( -- )
+</code></b><br>Starts a transaction session for this connection. &nbsp;All changes
+performed on the database will not take effect until they are committed.
+Some databases may not support this functionality.
+</p><p><b><code>:M Commit: ( -- )
+</code></b><br>Commit all changes in the current transaction to the database.
+</p><p><b><code>:M RollBack: ( -- )
+</code></b><br>Drop all changes in the current transaction - no changes are made for the
+transaction session.
+</p><p><b><code>:M GetTimeOut: ( -- n )
+</code></b><br>Returns the timeout time (in seconds) that queries will give up.
+</p><p><b><code>:M SetTimeOut: ( n -- )
+</code></b><br>Sets the timeout time (in seconds) that queries will give up.
+</p><p><b><code>:M GetConnString: ( -- str len )
+</code></b><br>Return the connection string for the data source. &nbsp;This may not necessarily
+be the same string that was given to the object
+</p><p><b><code>:M SetConnString: ( str len -- )
+</code></b><br>Set the connection string for the data source. &nbsp;The connection string tells
+the object what drivers to use, where the database is, user name, and password.
+</p><p><b><code>:M GetProvider: ( -- str len )
+</code></b><br>Returns the provider for the connection.
+</p><p><b><code>:M SetProvider: ( str len -- )
+</code></b><br>Sets the provider for the connection. &nbsp;Can be set through the connection string
+as well.
+</p><p><b><code>:M GetMode: ( -- n )
+</code></b><br>Returns the connection mode.
+</p><p><b><code>:M SetMode: ( n -- )
+</code></b><br>Sets the connection mode. &nbsp;The connection mode indicates whether the database
+is read-only, write-only, sharable, etc...<br />
+See the ConnectModeEnum constants below the class descriptions.
+</p><p><b><code>:M GetState: ( -- n )
+</code></b><br>Returns the current state of the connection object.
+</p><h2>&nbsp;ADOCursor Class
+</h2><p><b><code>:class ADOCursor &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SUPER Object
+</code></b><br>An ADO cursor object represents a recordset of data, or data in a table-like
+structure. &nbsp;Data can be loaded, updated, inserted through this object.
+</p><p><b><code>:M Start: ( -- )
+</code></b><br>Initializes the ADO Recordset Component. &nbsp;Most methods will not execute properly
+if this is not called when the object instance is created
+</p><p><b><code>:M SetConnection: ( ADOConnection -- )
+</code></b><br>Sets the connection object for this cursor. &nbsp;It is required before any query
+is executed.
+</p><p><b><code>:M GetCacheSize: ( -- n )
+</code></b><br>Returns the cache size of the cursor. &nbsp;The value is the number of records in the
+cache before updates are required.
+</p><p><b><code>:M SetCacheSize: ( n -- )
+</code></b><br>Sets the cache size of the cursor. &nbsp;The default is 1, or updates occur with every
+new record edited.
+</p><p><b><code>:M GetCursorType: ( -- ctype )
+</code></b><br>Returns the cursor type.
+</p><p><b><code>:M SetCursorType: ( ctype -- )
+</code></b><br>Sets the cursor type. &nbsp;The cursor type determines what is allowed on the cursor
+data and how data is seen in a multi-client environment. &nbsp;The possible values are:
+</p><table><tr><th>adOpenUnspecified
+</th>
+<th>The cursor type is unspecified. &nbsp;Usually defaults to adOpenForwardOnly
+</th>
+</tr>
+<tr><td>adOpenStatic
+</td>
+<td>All movement methods are available. &nbsp;Changes from other users are not visible
+</td>
+</tr>
+<tr><td>adOpenForwardOnly
+</td>
+<td>The cursor can only move forward. &nbsp;The record count and other navigation methods are invalid. &nbsp;This should have the best performance of the cursors.
+</td>
+</tr>
+<tr><td>adOpenDynamic
+</td>
+<td>All additions, deletions and changes from other users are visible
+</td>
+</tr>
+<tr><td>adOpenKeyset
+</td>
+<td>Like a dynamic cursor, except added records can't be seen and deleted records are inaccessible
+</td>
+</tr>
+</table><p><b><code>:M GetLockType: ( -- n )
+</code></b><br>Returns the lock type.
+</p><p><b><code>:M SetLockType: ( n -- )
+</code></b><br>Sets the lock type. &nbsp;The lock type determines how the database is to handle changes
+to the data on a cursor. &nbsp;The possible values are:
+</p><table><tr><th>adLockUnspecified
+</th>
+<th>The lock type is unspecified. &nbsp;Usually defaults to adLockReadOnly
+</th>
+</tr>
+<tr><td>adLockReadOnly
+</td>
+<td>The records are read-only. Data cannot be altered
+</td>
+</tr>
+<tr><td>adLockPessimistic
+</td>
+<td>Pessamistic locking. &nbsp;Record(s) are locked at the data source immediately when the alterations begin.
+</td>
+</tr>
+<tr><td>adLockOptimistic
+</td>
+<td>Optimistic locking. &nbsp;Record(s) are locked only when the update method is called
+</td>
+</tr>
+<tr><td>adLockBatchOptimistic
+</td>
+<td>Useful for batch updates.
+</td>
+</tr>
+</table><p><b><code>:M GetMaxRows: ( -- n )
+</code></b><br>Returns the maximum number of records to be returned in a query.
+</p><p><b><code>:M SetMaxRows: ( n -- )
+</code></b><br>Sets the maximum number of records to be returned from a query (0 = unlimited)
+</p><p><b><code>:M Close: ( -- )
+</code></b><br>Closes the cursor. &nbsp;Another query can be executed on the cursor once it has been closed.
+</p><p><b><code>:M GetState: ( -- n )
+</code></b><br>Returns the state of the cursor. &nbsp;Useful when executing queries asyncronously.
+</p><p><b><code>:M Executing?: ( -- flag )
+</code></b><br>Returns true if the query is still executing.
+</p><p><b><code>:M Fetching?: ( -- flag )
+</code></b><br>Returns true if the rows are still being retrieved
+</p><p><b><code>:M Execute: ( str len -- )
+</code></b><br>Execute a SQL query on the cursor. &nbsp;Any returned data will be in the cursor.
+</p><p><b><code>:M AsyncExecute: ( str len -- )
+</code></b><br>Operates the same as the execute method, but is asyncronous. &nbsp;The cursor's
+state will indicate if the query has finished executing or not.
+</p><p><b><code>:M Requery: ( n -- )
+</code></b><br>Rerun the last query.
+</p><p><b><code>:M RecordCount: ( -- n )
+</code></b><br>Return the number of records in cursor. &nbsp;May not work with the adOpenForwardOnly
+cursor type.
+</p><p><b><code>:M Move: ( n -- )
+</code></b><br>Move to the record number 'n' of the cursor's data
+</p><p><b><code>:M MoveFirst: ( -- )
+</code></b><br>Move to the first record of the cursor's data.
+</p><p><b><code>:M MoveNext: ( -- )
+</code></b><br>Move to the next record of the cursor's data
+</p><p><b><code>:M MovePrevious: ( -- )
+</code></b><br>Move to the previous record of the cursor's data
+</p><p><b><code>:M MoveLast: ( -- )
+</code></b><br>Move to the last record of the cursor's data
+</p><p><b><code>:M EOF: ( -- flag )
+</code></b><br>Flag that indicates if the current record position is after the last record.
+</p><p><b><code>:M BOF: ( -- flag )
+</code></b><br>Flag that indicates if the current record position is before the first record.
+</p><p><b><code>:M FieldCnt: ( -- n )
+</code></b><br>Returns the number of columns in the current record.
+</p><p><b><code>:M FieldType: ( field -- DataTypeEnum )
+</code></b><br>Returns the data type constant of the given column. Possible data types are:
+</p><table><tr><th>adEmpty
+</th>
+</tr>
+<tr><td>adTinyInt
+</td>
+</tr>
+<tr><td>adSmallInt
+</td>
+</tr>
+<tr><td>adInteger
+</td>
+</tr>
+<tr><td>adBigInt
+</td>
+</tr>
+<tr><td>adUnsignedTinyInt
+</td>
+</tr>
+<tr><td>adUnsignedSmallInt
+</td>
+</tr>
+<tr><td>adUnsignedInt
+</td>
+</tr>
+<tr><td>adUnsignedBigInt
+</td>
+</tr>
+<tr><td>adSingle
+</td>
+</tr>
+<tr><td>adDouble
+</td>
+</tr>
+<tr><td>adCurrency
+</td>
+</tr>
+<tr><td>adDecimal
+</td>
+</tr>
+<tr><td>adNumeric
+</td>
+</tr>
+<tr><td>adBoolean
+</td>
+</tr>
+<tr><td>adError
+</td>
+</tr>
+<tr><td>adUserDefined
+</td>
+</tr>
+<tr><td>adVariant
+</td>
+</tr>
+<tr><td>adIDispatch
+</td>
+</tr>
+<tr><td>adIUnknown
+</td>
+</tr>
+<tr><td>adGUID
+</td>
+</tr>
+<tr><td>adDate
+</td>
+</tr>
+<tr><td>adDBDate
+</td>
+</tr>
+<tr><td>adDBTime
+</td>
+</tr>
+<tr><td>adDBTimeStamp
+</td>
+</tr>
+<tr><td>adBSTR
+</td>
+</tr>
+<tr><td>adChar
+</td>
+</tr>
+<tr><td>adVarChar
+</td>
+</tr>
+<tr><td>adLongVarChar
+</td>
+</tr>
+<tr><td>adWChar
+</td>
+</tr>
+<tr><td>adVarWChar
+</td>
+</tr>
+<tr><td>adLongVarWChar
+</td>
+</tr>
+<tr><td>adBinary
+</td>
+</tr>
+<tr><td>adVarBinary
+</td>
+</tr>
+<tr><td>adLongVarBinary
+</td>
+</tr>
+<tr><td>adChapter
+</td>
+</tr>
+<tr><td>adFileTime
+</td>
+</tr>
+<tr><td>adPropVariant
+</td>
+</tr>
+<tr><td>adVarNumeric
+</td>
+</tr>
+<tr><td>adArray
+</td>
+</tr>
+</table><p><b><code>:M FieldName: ( field -- str len )
+</code></b><br>Returns the column name of the given column number.
+</p><p><b><code>:M FieldSize: ( field -- n )
+</code></b><br>Returns the data size of the given column number.
+</p><p><b><code>:M GetInt: ( field -- int )
+</code></b><br>Returns an integer value of the given column on the current row.
+</p><p><b><code>:M GetDouble: ( field -- d )
+</code></b><br>Returns the double of the given column on the current row.
+</p><p><b><code>:M GetFloat: ( field -- float )
+</code></b><br>Returns the floating point value of the given column on the current row.
+</p><p><b><code>:M GetStr: ( field -- str len )
+</code></b><br>Returns the string of the given column on the current row. &nbsp;May be much longer than 255
+</p><p><b><code>:M GetTimeStamp: ( field -- float )
+</code></b><br>Return the timestamp value of the given column on the current row. &nbsp;The timestamp value is
+a floating point number that indicates the number of days since Dec 31, 1899.
+</p><p><b><code>:M GetDateTime: ( field -- sec min hour day month year )
+</code></b><br>Returns the datetime values of the given column on the current row.
+</p><p><b><code>:M isNull?: ( field -- flag )
+</code></b><br>Returns true if the given field for the given flag is null
+</p><p><b><code>:M SetInt: ( int field -- )
+</code></b><br>Sets the integer value of a given column on the current row.
+</p><p><b><code>:M SetDouble: ( d field -- )
+</code></b><br>Sets the double value of a given column on the current row.
+</p><p><b><code>:M SetFloat: ( float field -- )
+</code></b><br>Sets the floating point number of a given column on the current row.
+</p><p><b><code>:M SetNull: ( field -- )
+</code></b><br>Sets the field value to null of a given column on the current row.
+</p><p><b><code>:M SetStr: ( str len field -- )
+</code></b><br>Sets the string value of a given column on the current row.
+</p><p><b><code>:M SetTimeStamp: ( float field -- )
+</code></b><br>Sets the timestamp value of the given column on the current row. &nbsp;The timestamp value is
+a floating point number that indicates the number of days since Dec 31, 1899.
+</p><p><b><code>:M SetDateTime: ( sec min hour day month year field -- )
+</code></b><br>Sets the datetime values of the given column on the current row.
+</p><p><b><code>:M AddRow: ( -- )
+</code></b><br>Adds a new record to the end of the recordset and sets this as the current row. &nbsp;The row
+is not actually created until the update method is called.
+</p><p><b><code>:M DeleteRow: ( -- )
+</code></b><br>Deletes the current record.
+</p><p><b><code>:M Update: ( -- )
+</code></b><br>Updates the alterations to the data.
+</p><p><b><code>:M SaveNative: ( str len -- )
+</code></b><br>Saves the cursor's data to a file that is in a unspecified format.
+</p><p><b><code>:M SaveXML: ( str len -- )
+</code></b><br>Saves the cursor's data as a XML file.
+</p><p><b><code>:M SaveADTG: ( str len -- )
+</code></b><br>Saves the cursor's data in the Microsoft Advanced Data TableGram (ADTG) format.
+Requires a filename.
+</p><p><b><code>:M SaveCSV: ( str len -- )
+</code></b><br>Saves the cursor's data to a comma separated value file for easy viewing.
+Cannot be loaded later through the loadfile method.
+</p><p><b><code>:M LoadFile: ( str len -- )
+</code></b><br>Loads a cursor data file that was saved previously.<br />
+A connection object is not required to load this data.
+</p></body></html>

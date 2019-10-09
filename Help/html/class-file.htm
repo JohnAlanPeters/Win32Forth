@@ -1,0 +1,105 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+file.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Classes for File I/O
+</h1><a name="File"></a>
+<h2>File I/O class
+</h2><p><b><code>:Class File &nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Object
+</code></b><br>File I/O class
+</p><p><b><code>:M Close: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Close the file.
+</p><p><b><code>:M Open: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>Open the file
+</p><p><b><code>:M Read: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ addr cnt -- f }
+</code></b><br>Read cnt bytes from the file into memory
+</p><p><b><code>:M Write: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ addr cnt -- f }
+</code></b><br>Write cnt bytes from memory into the file.
+</p><p><b><code>:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>Create the file.
+</p><p><b><code>:M Delete: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Delete the file
+</p><p><b><code>:M Rename: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ addr cnt -- }
+</code></b><br>Rename the file.
+</p><p><b><code>:M GetPosition: ( -- ud )
+</code></b><br>Get the position of the file pointer
+</p><p><b><code>:M RePosition: &nbsp;( ud -- )
+</code></b><br>Set the position of the file pointer
+</p><p><b><code>:M FileSize: &nbsp;&nbsp;&nbsp;( -- ud )
+</code></b><br>Get the size of the file
+</p><p><b><code>:M Append: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Set append mode
+</p><p><b><code>:M Flush: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Flush the file
+</p><p><b><code>:M ReadLine: &nbsp;&nbsp;&nbsp;( addr len -- len eof )
+</code></b><br>Read a line from the file.
+</p><p><b><code>:M WriteLine: &nbsp;&nbsp;( addr len -- )
+</code></b><br>Write a line to the file
+</p><p><b><code>:M Resize: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( ud -- )
+</code></b><br>Resize the file
+</p><p><b><code>:M Exist?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>Check if the file exist
+</p><p><b><code>:M SetName: &nbsp;&nbsp;&nbsp;&nbsp;( addr cnt -- )
+</code></b><br>Set the file name
+</p><p><b><code>:M GetName: &nbsp;&nbsp;&nbsp;&nbsp;( -- addr )
+</code></b><br>Get the file name
+</p><p><b><code>:M ClearName: &nbsp;&nbsp;( -- )
+</code></b><br>Clear the file name
+</p><p><b><code>:M SetMode: &nbsp;&nbsp;&nbsp;&nbsp;( mode -- )
+</code></b><br>Set the I/O mode
+</p><p><b><code>:M ErrorCode: &nbsp;&nbsp;( -- n )
+</code></b><br>Get the error code of the previous file I/O
+</p><p><b><code>;Class
+</code></b><br>End of File class
+</p><a name="ReadFile"></a>
+<h2>Class for loading/saving a complete file from/to memory
+</h2><p><b><code>:Class ReadFile &lt;Super File
+</code></b><br>ReadFile class for loading/saving a complete file from/to memory.
+</p><p><b><code>:M ReleaseBuffer: ( -- )
+</code></b><br>Free the memory of the file-buffer
+</p><p><b><code>:M GetBuffer: &nbsp;&nbsp;( -- addr len )
+</code></b><br>Fet the address and len of the file-buffer
+</p><p><b><code>:M GetLength: &nbsp;&nbsp;( -- len )
+</code></b><br>Get the length of the file-buffer
+</p><p><b><code>:M SetLength: &nbsp;&nbsp;( len -- )
+</code></b><br>Set the length of the file-buffer.
+</p><p>NOTE: with this method you can set the length behind the
+allocated memory of the file-buffer! So take care.
+</p><p><b><code>:M SetBuffer: &nbsp;&nbsp;( addr len -- )
+</code></b><br>Set the address and length of the file-buffer
+</p><p><b><code>:M AllocBuffer: ( len -- )
+</code></b><br>Allocate memory for the file-buffer
+</p><p><b><code>:M LoadFile: &nbsp;&nbsp;&nbsp;( addr len -- f )
+</code></b><br>load a file into the file-buffer, f=true on success
+</p><p><b><code>:M SaveFile: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Save the file-buffer to the file
+</p><p><b><code>;Class
+</code></b><br>End of ReadFile class
+</p><h2>Example
+</h2><pre>
+ReadFile MyDumpFile
+
+: DumpFile &nbsp;( addr len -- )
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;Load the file into memory
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LoadFile: MyDumpFile
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if &nbsp;&nbsp;\&nbsp;get the address and length of the file buffer
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;GetBuffer: MyDumpFile ( addr len )
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;do something with the file data
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dump
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;don't forget to close the file
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Close: MyDumpFile
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else abort&quot; Can't read file.&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;then ;
+
+s&quot; temp.f&quot; DumpFile
+
+</pre></body></html>

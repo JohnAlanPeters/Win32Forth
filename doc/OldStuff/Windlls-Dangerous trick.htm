@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Calling Windows Procedures</h1>
+
+
+
+<h3>Dangerous tricks </h3>
+
+<p>This is a dangerous trick.
+Use it ONLY when you’re comfortable with calling DLL functions. For the
+function BOOL function(LPWORD param); (assume it returns 1, and places a
+10 in the area pointed to), then you can use the following: </p>
+
+<pre>    0 SP@ CALL function </pre>
+
+<p>Immediately before the call, the stack looks like <code> 0 | addr of previous cell </code></p>
+
+<p>After the function is called, the stack will have the values <code> 10 | 1 </code></p>
+
+<p>No <code>VARIABLE</code> required! The <code>ReadFile</code> call above could be written as; </p>
+
+<pre>    : MYFUNC 0        \ null address for overlapped buffer
+      0 SP@                \ bytes read
+      BYTESTOREAD          \ bytes to read
+      BUFFER               \ address of buffer
+      HANDLE               \ value of handle
+      CALL ReadFile ; </pre>
+
+<p>This will return 2 values
+on the stack, the # of bytes read and the return code, in that order. </p>
+
+<hr>
+
+<p>Document : w32f-windlls.htm -- 2004/12/21 -- alex_mcdonald  </p>
+
+</body>
+
+</html>

@@ -1,0 +1,223 @@
+\ DIALOGRC.TXT     docu&glossary for a Dialog Ressource Compiler wordset
+\                                by mis@kitchen.forth-ev.de  (Michael Schroeder)
+
+\ April 22nd, 1996 - 15:05 tjz
+\ modified to move NEW$ back into POINTER.F, and to remove FIND-DIALOG-TEMPLATE
+\ which is not needed any longer since FIND-DIALOG-ID has been changed to be
+\ compatible with the use of FIND-DIALOG-TEMPLATE.
+
+\ --------------------------------------------------------------
+\       A Dialog Ressource Compiler Add-On for Win32Forth
+\
+\ The package contains the following files:
+\       - DIALOGRC.F
+\               the main source file of the ressource
+\               compiler wordset
+\       - DIALOGS.F
+\               the dialog ressources from FORTHDLG.DLG
+\               ported to the DIALOGRC syntax with the original
+\               ressource scripts as comments. Shows the way of
+\               porting existing ressource scripts and was used
+\               to test the output of dialogrc.
+\       - DLGTEST.F
+\               the original file FORTHDLG.F with some changes to
+\               use the new form of inline compiled dialog templates.
+\               I used it, to see if DIALOGRC proper works.
+\       - DIALOGRC.TXT
+\               glossary of the Dialog Ressource Compiler wordset
+\               (still incomplete)
+\
+\ All of these files are released to public domain.
+\
+\ --------------------------------------------------------------
+
+
+\ --------------------------------------------------------------
+\ --------------------------------------------------------------
+\       Usage of the Dialog Ressource Compiler
+\ --------------------------------------------------------------
+\ --------------------------------------------------------------
+
+You will find some examples in the file DIALOGS.F. There are
+all forth system dialogs of Win32For from the file FORTHDLG.DLG
+ported to the DIALOGRC syntax. The original ressource scripts are
+included as comments.
+
+
+
+\ --------------------------------------------------------------
+\ --------------------------------------------------------------
+\       GLOSSARY of the Dialog Ressource Compiler wordset
+\ --------------------------------------------------------------
+\ --------------------------------------------------------------
+
+\ --------------------------------------------------------------
+\ -------------------- Ressource Scope -------------------------
+
+BEGIN-RESSOURCE   ( --<RessourceName>-- -- a 6 )
+Starts the ressource compiler and creates a named dialog ressource
+table.
+
+END-RESSOURCE
+Ends the dialog ressource compiler
+
+\ --------------------------------------------------------------
+
+find-dialog-template ( id addr -- address-of-template-header )
+
+A variant of Tom's original
+ find-dialog-ID ( id addr -- address-of-template-header )
+
+With inline compiled dialog ressources use find-dialog-template
+instead of the original find-dialog-ID.
+
+
+\ --------------------------------------------------------------
+\ -------------------- Dialog Scope ----------------------------
+
+0 VALUE STYLEFLAGS              \ hold the desired window style, until it will compiled
+
+: DIALOG-CAPTION ( 6 --<quoted caption text>-- -- 6 )
+
+: DIALOG-FONT ( 6 points --<quoted font name>-- -- 6 )
+
+: BEGIN-DIALOG { id x y cx cy -- addr0 addr1 7 }
+
+: END-DIALOG ( 6 addr0 addr1 7 -- 6 )   \
+
+\ --------------------------------------------------------------
+\ --------------- Control Compiler Words -----------------------
+
+\ some common Class-ID constants for use with CONTROL
+0X80 CONSTANT CLASS_BUTTON
+0X81 CONSTANT CLASS_EDIT
+0X82 CONSTANT CLASS_STATIC
+0X83 CONSTANT CLASS_LISTBOX
+0X84 CONSTANT CLASS_SCROLLBAR
+0X85 CONSTANT CLASS_COMBOBOX
+
+\ GENERIC_CONTROL ( txt-addr txt-len identifier classID xpos ypos xsize ysize -- )
+\ low level control compiler word. The other control compiler
+\ keywords are build onto GENERIC_CONTROL. No need to use ist
+\ directly.
+
+
+\ aCONTROL  ( identifier classID xpos ypos xsize ysize --<quoted text>-- -- )
+\ Defines a generic control within a BEGIN-DIALOG...END-DIALOG structure.
+\ The following predefined control classes may be used with aCONTROL:
+\       CLASS_BUTTON    CLASS_EDIT          CLASS_STATIC
+\       CLASS_LISTBOX   CLASS_SCROLLBAR     CLASS_COMBOBOX
+\
+\ STYLEFLAGS has to be explicitely preset, with: "... TO STYLEFLAGS"
+\ as seen in DLGTEST.F aCONTROL adds only the styles WS_CHILD and
+\ WS_VISIBLE, as almost all controls will need them.
+\
+\ See DIALOGS.F for an example.
+
+
+\ PUSHBUTTON  ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ Defines a "push button" control within a BEGIN-DIALOG...END-DIALOG structure.
+\ The control styles used by PUSHBUTTON are:
+\   BS_PUSHBUTTON WS_TABSTOP WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ DEFPUSHBUTTON  ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ Defines a "default push button" control within a BEGIN-DIALOG...END-DIALOG
+\ structure. This button will also be "clicked" if the user hit the <ENTER> key.
+\ Therefor in each dialog structure can only be one default pushbutton.
+\ The control styles used by DEFPUSHBUTTON are:
+\   BS_DEFPUSHBUTTON WS_TABSTOP WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ EDITTEXT  ( identifier xpos ypos xsize ysize -- )
+\ Defines a "edit text" control within a BEGIN-DIALOG...END-DIALOG structure.
+\ The user can type a string into the edit text control and edit the text with
+\ the usual selection, cut, copy, and paste operations.
+\ The control styles used by EDITTEXT are:
+\   ES_LEFT WS_TABSTOP WS_BORDER WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ MLETEXT  ( identifier xpos ypos xsize ysize -- )
+\ Defines a "multi-line edit text" control within a BEGIN-DIALOG...END-DIALOG
+\ structure.  The user can type a string into the edit text control and edit
+\ the text with the usual selection, cut, copy, and paste operations.
+\ The control styles used by MLETEXT are:
+\  ES_MULTILINE ES_LEFT WS_TABSTOP WS_BORDER WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ CHECKBOX  ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ Defines a "check box" control within a dialog.
+\ The control styles used by CHECKBOX are:
+\   BS_CHECKBOX WS_CHILD WS_TABSTOP WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ AUTOCHECKBOX  ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ Defines a "auto check box" control within a dialog.
+\ The control styles used by CHECKBOX are:
+\   BS_AUTOCHECKBOX WS_CHILD WS_TABSTOP WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ RADIOBUTTON          ( identifier xpos ypos xsize ysize --<quoted text>-- -- ) or
+\ synonym OPTIONBUTTON ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ defines a "radio button" control within a dialog structure.
+\ RADIOBUTTON uses the following styles: BS_RADIOBUTTON WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ GROUPBOX ( identifier xpos ypos xsize ysize -- )
+\ Defines a "group box" control within a dialog. GROUPBOX usually frames a group #
+\ of RADIOBUTTONs. GROUPBOX uses the following styles:
+\   BS_GROUPBOX WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ LISTBOX  ( identifier xpos ypos xsize ysize -- )
+\ defines a "list box" control within a dialog structure.
+\ LISTBOX's default control styles are:  LBS_STANDARD WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ COMBOBOX  ( identifier xpos ypos xsize ysize -- )
+\ defines a "combo box" control within a dialog structure. A combo box is
+\ basically a combination of a "list box" and a "edit text" control.
+\ The control styles used by COMBOBOX are:
+\   CBS_SIMPLE WS_CHILD WS_VISIBLE WS_TABSTOP
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+
+
+\ CTEXT  ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ defines a centered static text control within a dialog.
+\ CTEXT's styles are: SS_CENTER WS_GROUP WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+\ (But is this useful?)
+
+
+\ LTEXT  ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ defines a left-justified static text control within a dialog structure.
+\ LTEXT's styles are: SS_LEFT WS_GROUP WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+\ (But is this useful?)
+
+
+\ RTEXT  ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ defines a right-justified static text control within a dialog structure.
+\ RTEXT's control styles are: SS_RIGHT WS_GROUP WS_CHILD WS_VISIBLE
+\ Additional control styles may be preset with: "... TO STYLEFLAGS"
+\ (But is this useful?)
+
+
+\ ICON  ( identifier xpos ypos xsize ysize --<quoted text>-- -- )
+\ defines an "icon" bitmap control within a dialog structure. The bitmap is
+\ an icon ressource in the executable file. Therefore ICON cannot be used to
+\ create new icons without commercial ressource compiler :-( sorry!
+\ The control styles used by ICON are: SS_ICON WS_CHILD WS_VISIBLE.
+
+
+
+

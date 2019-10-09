@@ -1,0 +1,471 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD><title>History</title></HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<P><h2 ALIGN=CENTER><B>Developmental History for ForthForm</B></h2></P>
+<a Name="Top"> </a>
+<h2><b>In the beginning...</b></h2>
+ForthForm was primarily undertaken as an exercise to develope an
+alternative to DiaEdit, the dialog compiler from Michael Hillerstr&ouml;m. I
+wanted easier access to my controls, plus too I had developed some extended
+controls I wanted to be able to use in my dialogs. For a time developement was
+slow because of laziness since DiaEdit was doing some of what I wanted. However,
+I was really motivated when for some inexplicable reason DiaEdit stopped working.
+Regardless of what I did, reinstalling, deleting all registry entries and
+reinstalling, nothing would work. This lead to my focusing attention on writing
+a working application ForthForm. On achieving this developement again slowed.
+After posting to the Win32Forth group at Yahoo! however, developemental interest
+was renewed, not to mention bugs found that I never knew existed!
+
+<p>I am of the opinion that I don't know everything (almost but not all :-) ), so by
+distributing the source I am hoping others will continue to contribute to its
+developement, so that it could perhaps become something <em>really</em> useful.
+
+<p>The following is a developement history, starting at the latest.
+<hr>
+
+<P ALIGN=LEFT>
+
+<b>Wednesday, August 1 2007</b> - Two options now available from the Preferences dialog.
+Whether multiple controls or a single control is added when a control is selected from the
+toolbar can now be set. Default will be single control ( sometimes I forget to reset!).
+The next option, if selected, will automatically display the appropriate property for the selection.
+Default is off. These options will also be saved when ForthForm is closed.<br><br>
+
+Also upgraded the FileWindow class. It now uses a listview control instead of a treeview
+control for displaying files. The methods for accessing an object of that class generally
+remains the same. The source is in the file FolderView.f. FileLister.f is still available
+however.<br><br>
+
+<b>Friday, March 16 2007</b> - Added the ability to load all supported  files (.ff, .tdf, .mdf)
+from the command line.<br><br>
+
+<b>Thursday, January 11 2007</b> - Bug fix for static labels. Bitmap.f not loaded when
+control has an image, Been there for a while. Probably because I have never used static labels!
+Thanks to Dick for bringing it to my attention.<br><br>
+
+<b>Saturday, December 30 2006</b> - Implemented a little mechanism to use the arrow keys when
+adjusting controls. For those times when you've selected controls and then moved them out of
+the box. Just use the arrow keys to resize the box instead of redrawing it.<br><br>
+
+<b>Sunday, December 24 2006</b> - In the past week or so got around to enhancing the toolbar design tool.
+After a whole year even! Ah well, better late than never!<br><br>
+
+<b>Saturday, December 09 2006</b> - Updated the rebarcontrol to save more of its parameters
+in the registry.<br><br>
+
+Re-added the original way to add controls i.e single click adds one control only. It is turned off
+by default but the user can change it in the config file ( true to one-click?) or in the source
+and recompile.<br><br>
+
+<b>Saturday, November 25 2006</b> - Turns out the toolbar problem was related to this XP manifest file
+or something like that. Thanks to  Rod for the fix.<br><br>
+
+<b>November 10, 2006</b> - Realize that the PreviewWindow would not show the bitmap when creating
+toolbars. Seems that "dc.hdc" in the on_paint routine no longer works; had to use "GetHandle: dc"
+instead.<br><br>
+
+<b>October 22, 2006</b> - After _FOUR MONTHS_ I have finally found the bug! In July I realized
+that closing multiple forms that were opened and then exiting the program it would not close.
+Again I had to close it from the task manager. The trouble was using ~: in the control object.
+It seems this default disposing method  misbehaves when its code disposes another dynamic object.
+Four months!!! oh man....<br><br>
+
+Thing is now another bug has popped up. Some change by someone somewhere has broken the toolbar code for
+customizable toolbars. Once a change has been made the bitmaps disappear. The changes are saved
+in the registry but they aren't being restored. I wonder if this the reason the toolbars in the
+IDE were made non-customizable? Fix one, another is broken. Ah well...<br><br>
+
+BTW, the above problem affects all programs that use toolbar.f, including the example at the end
+of toolbar.f.<br><br>
+
+<b>June 22, 2006</b> - Separated the toolbars into two, the main toolbar and the control
+toolbar. Both are still contained in the rebarcontrol. Played around with docking
+and undocking the toolbars using code from RebarControlDemo.f. Except for a few issues
+it works ok. Maybe I'll add this feature later.<br><br>
+
+<b>May 27, 2006</b> - Updated the splitter-window templates using Rod Oakford techniques.
+Much less code and much easier to modify. Thanks Rod!<br><br>
+
+<b>April 30, 2006</b> - Added the ability to reposition the rebar according - top,
+bottom , left, right - to preference. When left or right is selected the Forms List control
+is disabled. It's too narrow to see the names of the forms anyway.<br><br>
+
+<b>February 11, 2006</b> -
+Found another change in ExControls.f that broke a portion of ForthForm's code. The stack
+requirements for the GetString: method in the ListBox class was changed. Caused a crashed
+in ChangeTabOrder.Hmmm...<br><br>
+
+Modified the control and form property dialogs to use spinnercontrols. Results in less code.<br><br>
+
+<b>February 10, 2006</b> - Added provision for a spinner control. Not quite implemented as
+the rest ( own button in toolbar, id etc ) but... ok ok, I am feeling a little lazy right
+now but hey, it works!<br><br>
+
+In the process of the above found a bug in ExControls.f introduced when optimizations
+were added by someone. In the UpDowncontrol WindowStyle: method an 'OR' was missing.<br><br>
+
+<b>January 24, 2006</b> - Added error checking for spaces in the names of forms and
+controls. Prompted after being puzzled why a form wasn't testing and no indication as
+to the reason.<br><br>
+
+<b>November 24, 2005</b> - Improved object of FileWindow class. Among other things, it
+displays the associated icons for each file. For directories I use my own bitmap for now.
+ <br><br>
+
+<b>November 08, 2005</b> - Added a routine to close all ForthForm windows automatically.
+Been trying to figure out how to do that for a while, instead of having to add the close
+routine for every form to the close method for the main window. Seems to work now! <br><br>
+
+<b>November 06, 2005 </b> - I think I figured out the console problem. Seems to have been
+a bug in the routine to check the integrity of a file. Newing and disposing objects before
+main window ( or some reason! ) seems to be a no-no. <br><br>
+
+<b>November 03, 2005 </b> - Updated to use gdiFont class. <br><br>
+
+<b>November 01, 2005 </b> - Working on enhancing the toolbar design tool. <br><br>
+
+<b>October 28, 2005 </b> - Implemented help system as a child window of the main window.
+Found use for that empty space. I will go along with it for a while to see if I will keep
+it.<br><br>
+
+I've been noticing that when I am running ForthForm from within the console and I close
+the main window and exit W32F it ( W32F i.e ) is not closing. I have to close it from the
+task manager. This is on WinXP Pro. I will have to make some time to debug this but I
+suspect it will be awhile before I figure out the reason.<br><br>
+
+<b>October 24, 2005</b> - Discovered and fixed a bug in the "Move to Back" and "Bring to front"
+routines. A wonder they ever worked! But they used to, I think...So much for bug free!<br><br>
+
+<b>Not too long afterwards</b> need to get some insect spray around here. Too many bugs!
+Fixed one in the routine that saves changes to a control. <br><br>
+
+<b>October 21, 2005</b> - Minor mod to allow sequential control creation. The last control
+selected from the toolbar will always be created until reset. Slightly different to what is
+used to but I think more intuitive in designing a form, yes?<br><br>
+
+<b>October 20, 2005</b> - Added error checking of a file before opening. <br><br>
+
+Discovered a lurking bug tonight when I tried to save a blank form, something I had never
+tried before. Resulted in accessing a null object. It's been there for a while...
+( I wonder if ForthForm will ever be bug free!...yeah right) <br><br>
+
+<b>September 25, 2005</b> - Ability to change font for a control added. Available from the
+right click menu. <br><br>
+
+<b>September 24, 2005</b> - Adding the ability to change the font in a control. Noticed something
+interesting tonight while testing; it seems comboboxes and their derivatives have a minimum size
+requirement.<br><br>
+
+<b>September 03, 2005</b> - Property sheet ( yes I said sheet!) template completed. Also
+add menu items to start SciEditMdi and Project Manager from ForthForm.<br><br>
+
+<b>August 26, 2005</b> - Adding the ability to compile existing forms to simulate a
+property form ( did I say sheet?).<br><br>
+
+<b>August 20, 2005</b> - With a slight mod to SciEditMdi forms, menus etc. can be sent to
+SciEditMdi from ForthForm for editing. SciEdit must be running for this to happen. If it
+isn't the internal editor FormPad will be used.<br><br>
+
+<b>August 11, 2005</b> - Removed Code Editor and reused FormPad. Integration of components
+is foreseen for the future and rather than have dual editors I will try to see if I can integrate
+with SciEditMdi. I just need to figure how to get SciEdit to load a file from memory! Maybe shared memory
+or via clipboard or...<br><br>
+
+<b>June 13, 2005</b> - Slight mods to box drawing routines.<br><br>
+
+<b>June 06, 2005</b> - Added definitions for small footprint mode today...then discarded them.
+I realize that adjusting the window size to be just big enough for the toolbar and the
+statusbar would do the same thing, since the size will be saved and restored.<br><br>
+
+<b>May 27, 2005</b> - Modified FileWindow object in the code editor to use a combolist control
+instead of a textbox to show selected path. This displays not only the current path but
+allows a path history to be kept and revisited quickly.<br><br>
+
+Converted the "Apply" and "Close" buttons in the Properties window to dual image buttons with text.
+Really just an example of how to use them.<br><br>
+
+<b>May 16, 2005</b> - Finally solved intermittent bug when selecting generic control. Toolbar
+button would not reset.<br><br>
+
+<b>April 23, 2005</b> - Additional way to add a control, normal click and drag or just click to create
+a control of default size.<br><br>
+
+<b>April 16, 2005</b> - Added Code Editor. Essentially a modified SciEdit in a splitter window
+with a filelister object.<br><br>
+
+<b>March 18, 2005</b> - Added the ability to make a form view only. No changes will be allowed when
+a form is locked. This is accessible from the form popup menu.<br><br>
+
+<b>March 13, 2005 </b>- Found that elusive bug having to do with sizing forms. In the SaveProperties
+function  I was late binding the Window style; I should have been using the Window style
+of the ActiveForm. So simple yet so elusive! (I think it's because I copied the routine
+from the Form class).<br><br>
+
+<b>March 11, 2005 </b>- Minor changes for better synching with system colors. If settings are
+changed all forms will be automatically updated. You can also select 'Refresh' from a any
+form's popup menu to update all open forms ( in case for some reason they don't).<br><br>
+
+<b>March 05, 2005</b> - Merge form property, control property and group action into a tabcontrol.
+Interestingly doing so shows up a long time bug with sizing forms from the property window.
+Let us see how we can fix this...<br><br>
+
+<b>February 25, 2005 </b>- Added ability to hide or show the monitor window.<br><br>
+
+<b>February 13, 2005 </b>-Fixed a bug in the FormProperties dialog. <br><br>
+
+<b>February 12, 2005 </b>-Made a little change in menus to enable/disable some options according to
+what is being done. <br><br>
+
+<b>February 06, 2005 </b>-Updated GroupAction dialog to allow shifting and sizing of a group of controls by a specified
+value.<br><br>
+
+<b>January 08, 2005 </b>-Tidy and rearrange some code, e.g menu definition now in its own file. Also added
+more comments to source.<br><br>
+
+<b>October 04, 2004 </b>-Have gotten certain way with the menu generator. It can read a menu definition
+from source code. In the future extended compilation will allow menus with such options as bitmaps
+and easily accessible ids.<br><br>
+
+<b>September 29, 2004 </b>-Added a tabcontrol to the list of controls.<br><br>
+
+<b>September 23, 2004 </b>-Added a folder tree browser to the list of controls.<br><br>
+
+<b>September 21, 2004 </b>-A status bar is now optional for a form.<br><br>
+
+<b>September 13, 2004 </b>-Added options to change the super class of a form. A form can now be
+compiled as a child-window, MDI dialog or default dialogwindow.<br><br>
+
+<b>September 10, 2004 </b>-Have been working on the menu generator for a few days now. Its usefulness
+in practice is questionable but at least developing it is interesting. <br><br>
+
+<b>August 31, 2004 </b>- Added option to compile a splitter window as a child window. <br><br>
+
+<b>August 27, 2004 </b>-Using Scintilla control in FormPad for editing forms or whatever.<br><br>
+
+<b>August 07, 2004 </b>-Added splitter windows template generator for 6 templates. Further templates
+can be derived by adapting an existing one.<br><br>
+
+<b>July 31, 2004 </b>-Added built in help display using the new Html control.<br><br>
+
+<b>July 30, 2004 </b>- Fully implemented a child window control. The positon and dimensions
+of the control are saved in the form and available to allow for any control not directly supported by
+ForthForm. <br><br>
+
+<b>July 25, 2004 </b>- Finally figured out the solution to the bitmap toolbar puzzle, thanks to
+some Liberty Basic code, WIN32 API help and some interactive testing. I knew there had to
+be a better way! <br><br>
+
+<b>July 12, 2004</b>- Discovered a serious bug in change control type. The code that
+was added to allow the control to maintain its position in the tab order was incorrect. Fixed.<br><br>
+
+<b>July 10, 2004</b>- saved some mouse right clicking. Added the "Group Action" dialog.<br><br>
+
+<b>July 05, 2004</b> - removed that XP specific toolbar. I never liked it anyway :-) <br><br>
+
+<b>July 04, 2004</b> - Minor bug fix for when using background image and rebar control resized.
+Added a toolbar specially for when running under Windows XP. Like I said, there gotta be a better way!<br><br>
+
+<b>June 08, 2004 04:27:55 PM</b> - ForthForm now opens multiple files simultaneously.<br><br>
+
+<b>May 15, 2004 08:57:31 PM</b>  - Factored out Project Manager into a separate application. I figure it will make the distribution too
+large.<br><br>
+
+<b>6th May, 2004 </b>- Reduce screen estate for editing form property.<br><br>
+
+<b>30th April, 2004</b> - Added Project Manager. In addition relative load point versions no longer supported. Sorry!<br><br>
+
+<b>20th April, 2004</b> - Implemented a rebar control. Further information on rebar controls can
+be found in "Rebar.txt" or the MSDN website. Replaced the Forms List Window with a combocontrol.<br><br>
+
+<b>7th April, 2004</b> - Changing a control type keeps position in tab order.<br><br>
+
+<b>3rd April, 2004</b> - Notice a bug in opening .ff file from explorer. Fixed<br><br>
+
+<b>31st March, 2004</b> - Added a feature to allow toolbar creation.<br><br>
+
+<b>20th March 2004</b> - Merge session, compile all open forms to one file.<br><br>
+
+<b>14th March 2004</b>  - Added FormPad, an internal editor/viewer for forms and toolbars.<br><br>
+
+<b> January 01, 2004 10:46:00 AM</b> - HTML documentation for ForthForm in progress.<br><br>
+
+<b>December 07, 2003 02:03:50 AM</b> - bug fix in displaying of default bitmap for static&nbsp;bitmaps and bitmap
+buttons.<BR><BR>
+
+<b>December 05, 2003 10:50:12 PM</b> - Added ChangeControl
+to menu. Allows the changing<BR>of control type e.g radiobox to
+checkbox. To change a control first select the control, check the
+type to change to in the toolbar and then select 'Change' from the
+menu.<BR><BR>
+
+<b>November 28, 2003 11:57:19 PM</b> - Loading all auxiliary
+files in ForthForm vocabulary.<BR><BR>Couple of bug fixes. Don't
+ever forget to initialize object integers!&nbsp;<BR><BR>
+
+<b>dbu November 8th, 2003 - 9:53</b> - Added simple Command-Line-Handling for opening
+a ForthForm-File (*.ff) via double-click in Windows-Explorer<BR><BR>
+
+<b>October 19, 2003 08:58:11 PM</b> - I figured it out! I now understand why flat
+toolbars were displaying on a white background. It has to do with
+the brush registered in the window class. A parent repaints its
+child windows and the WNDCLASS for the window object in W32F had a
+white brush by default. If set to NULL the child is painted
+the default system color. My flat toolbars are now displayed correctly.<BR><BR
+
+added ForthForm icon. Loaded from program directory.<BR>
+
+<b>October 6th, 2003 - 0:00</b> - Modified EditControlProperty form to use less screen real
+estate.<BR><BR>
+
+Forms now compiled have an extension of .frm. This means that both a file
+that uses a form and the form itself can have the same name.
+Examples of this are Preferences.f and Preferences.frm, and
+ControlPropertyII.f and ControlPropertyII.frm.<BR><BR>
+
+<b>September 29th, 2003 - 20:12</b> - Implemented toolbar support using Windows library
+class. Both toolbars were replaced by one customizable toolbar.<BR><BR>
+
+ForthForm now uses the registry to save its location and size as well as user
+preferences.<BR><BR>
+
+<b>September 19th, 2003 - 1:10</b> - Made the background image support optional in
+preparation for the distribution of ForthForm with Win32Forth
+releases. Anyone so desiring can define a dummy word &quot;withbgnd&quot;
+(without quotes) before loading ForthForm to include background
+image support. They will however have to obtain the FreeImage dynamic
+link library on their own.<BR><BR>
+
+Fixed an interesting bug. Normally I would not think to edit a non-existent form
+but in the first release if that was tried either a crash would result or the
+editor would edit a file by the name &quot;untitled.f&quot;. When
+other persons are going to be using your program you must be
+prepared for anything. I guess that's why they are so many beta
+releases.<BR><BR>
+
+<b>September 15th, 2003 - 16:23</b> - Implemented a feature
+to save current status of system by &quot;Save Session&quot;.
+Right now any open forms and the BackGroundImage are saved. They
+can be restored by &quot;Load Session&quot;.<BR><BR>
+
+<b>September 13th, 2003 - 0:27</b> - I've finally come up with what I think is a
+workable solution. Almost from conception I have wondered how I could
+make forms easily modifiable. If a form was created for an
+application and modified it would normally be difficult to add any
+further controls, due to how controls are implemented in Win32Forth.
+Recompiling the form would erase any application
+specific modications. My work around is to make a control
+optionally global. Therefore controls that would be needed by the
+application would be made global. These would then be reference
+directly by name. Analysing a form I realize that primarily the
+WM_COMMAND and the ParentWindow: method are the most used.
+Methods have therefore been added that allow setting the
+parent window globally as well as test the WM_COMMAND method. The
+form can be later modified without any adverse effect.<BR>
+The following is a code example: ( see TestExample.f for a working
+example )<hr>
+<b>fload testform.frm \ load the form<BR>GetHandle: ThemainWindow
+SetParent: frmTest \ required if form is a modal window<BR>0 value
+obj<BR>: dobutton ( h m w l id obj -- ) \ this is function for
+WM_COMMAND<BR>to obj<BR>case GetID: btnOK \ this button is global<BR>of
+... endof<BR>GetID: btnCancel \ global<BR>of ... endof<BR>;<BR>'
+dobutton SetCommand: frmTest \ install function<BR>Start: frmtest \
+start up the form<BR>s&quot; Hello there&quot; SetText: txtHello \
+another global button<BR>Disable: btnOk<BR>and so forth...</b><hr>
+If I decide to rearrange the controls in the form it wouldn't affect my
+code. Of course the form can still be modified directly as usual
+or pasted into one's program.<BR><BR>
+
+<b>September 9th, 2003 - 23:05</b> - Some minor changes to improve performance.
+Now drawing works on any number of colors display. Why didn't someone tell me about
+the SetRop2 function?<BR><BR>
+
+<b>September 7th, 2003 - 22:23</b> - Added a simple feature to compiled forms to make
+ them behave like modal dialog boxes. If a form is compiled as a modal form
+ (from the properties window) and the form has a parent window, when it
+is started the form will have to be closed before the parent
+window can be accessed. Some of the forms in ForthForm have been
+made modal as well.<BR><BR>
+
+<b>August 29th, 2003 - 22:16</b> - Updated ForthForm with a feature suggested by
+Dirk Busch. Now when the control property window is open switching between
+controls automatically updates the window. This is actually quite a
+useful feature. However, I haven't done the same for the form
+property window. To me editing control properties is a far more
+frequent occurrence than editing those of forms.<BR><BR>
+
+Minor changes in menu items to allow better understanding of function. Also
+some minor bug fixes.<BR><BR>
+I am also going to try to improve code documentation. I like to think that my
+code is self-documenting but...<BR><BR>
+
+<b>July 24th, 2003 - 17:04</b> - I've discovered why I can't run Forthform twice from
+ the command line. For some reason in version 6.06 and also in version 6.07
+the method CloseMenu: in class Menubar was made an empty method, so the menu
+wasn't being deleted when the mainwindow was closed. This was not
+the case with version 4.2671 or version 6.0513. Oh...the stress!<BR><BR>
+
+<b>July 22nd, 2003 - 21:38</b> - Added BackGroundImage to ForthForm. Right click pops
+up a menu with some options, including allowing it to be changed.<BR><BR>
+
+<b>July 7th, 2003 - 19:54</b> - I've now discovered that I can't run Forthform twice
+from the commandline. For some reason CreateWindowEx in MainWindow is failing.
+Again previous versions work fine. Here we go again....<BR><BR>
+
+<b>July 1st, 2003 - 0:03</b> - Ahem.. Looks like these updates are showing up my
+poor coding. Seems that the problem in my support file was that I
+forgot to close the module with MODULE. A control character at the
+end of &quot;Bitmap.f&quot; was responsible for the problem with
+that file, probably inserted whilst copying.<BR><BR>
+
+<b>June 25th, 2003 - 19:39</b> - It seems everytime I upgrade I encounter some quirk.
+ I installed version 6.06 today and one of my support files wouldn't
+load. I had some comments after \s at the bottom of Excontrols.f
+and it seem to try to load the comments. Interestingly this same
+file loaded without a problem in ver 4 and 6.05. Also one my files
+isn't loading. System is saying it can't find the word &quot;load-bitmap&quot;
+from file &quot;Bitmap.f&quot; even though it shows the file has been
+loaded when I do a &quot;.loaded&quot; Oh well...<BR><BR>
+
+<b>May 21st, 2003 - 20:41</b> - Added monitor window. To position form on screen
+just position window on monitor.<BR><BR>
+
+<b>March 30th, 2003 - 11:11</b> - Hadn't got around to making any changes for a while.
+I installed version 6.05 and found I was getting a host of problems. What
+was peculiar was that when I fload in version 4.2 it worked fine.
+After much head scratching and distress I realize that class
+integers that were evidently automatically zeroed in ver 4.2
+weren't being zeroed in ver 6.05. Also the On_Paint: method in
+class Toolbar was causing my toolbar to shift all over the place.
+This was related to the method that sets ints originx and originy
+in super class Window using GetWindowRect which returns absolute
+screen coordinates.<BR><BR>
+
+<b>May 1st, 2001 - 2:10</b> - Implemented multiple form support in ForthForm.
+ Am thinking now of implementing dialog box support using Dialogrc.f.
+At this time not all controls supported in ForthForm will be available in dialog
+boxes. Perhaps when I fully understand (?) windows dialogs better.<BR><BR>
+
+<b>April 27th, 2001 - 21:16</b> - Adapting ForthForm to multiple form support but not
+using Windows MDI windows.<BR><BR>
+
+<b>October 16th, 2000 - 22:18</b> - Using actual controls in forms. There
+are subclassed so that they will behave themselves.<BR><BR>
+
+<b>September 4th, 2000 - 22:29</b> - ForthForm is working! Added form and controledit
+forms. All forms used in ForthForm were designed, compiled and
+edited in ForthForm! I am considering converting it to a Multiple
+Document Interface (MDI) format. May also add other controls if
+inclination permits.<BR><BR>
+
+<b>August 21st, 2000 - 22:21</b> - Functioning prototype with paste, test and compile
+and interfacing with WinView and Forth console . After being dormant for a
+while I decided against using child windows for the controls on the
+form. Will add 'change tab order' properties window and edit
+control properties.<BR><BR>
+
+<b>April 9th, 2000 - 19:33</b> - Development begins.</P>
+<a HREF="#Top"><img src=ff-top.gif align="absmiddle" border=0>Top</a>
+<P ALIGN=LEFT><A HREF="ForthForm.htm#Index"><img src="ff-back.gif" align="absmiddle" border=0>Back to main page</A></P>
+</BODY>
+</HTML>

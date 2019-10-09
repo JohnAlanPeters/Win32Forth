@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Converting numbers to ASCII</h1>
+
+
+<h2>Numbers conversion</h2>
+
+<p><code>(D.)       ( d -- addr len )</code> convert as signed double to ascii string</p>
+<p><code>.          ( n -- )</code> print signed single</p>
+<p><code>U.         ( u -- )</code> print unsigned single</p>
+<p><code>.R         ( n w -- )</code> print signed single right justified in w wide field</p>
+<p><code>U.R        ( u w -- )</code> print unsigned single right justified in w wide field</p>
+<p><code>D.         ( d -- )</code> print signed double</p>
+<p><code>D.R        ( d w -- )</code> print signed double right justified in w wide field</p>
+<p><code>H.         ( u -- )</code> print as signed single in hexadecimal whatever BASE is</p>
+<p><code>?          ( addr -- )</code> print single stored at address</p>
+
+
+
+<h2>Pictured numbers conversion</h2>
+
+<p>The words involved in a pictured number output are :</p>
+
+<p><code><#         ( ud -- ud )</code> begins the conversion of a double into ASCII</p>
+<p><code>#          ( d -- d )</code> convert a digit of a double in ASCII</p>
+<p><code>SIGN       ( n -- )</code> if n<0, insert a "-" sign in the ASCII string</p>
+<p><code>HOLD       ( char -- )</code> insert character char in the ASCII string</p>
+<p><code>#S         ( d -- 0 0 )</code> convert remaining digits of a double in ASCII</p>
+<p><code>#>         ( d -- addr len )</code> end the conversion of a double into ASCII</p>
+
+<p>Here is an example of use :</p>
+<pre>
+     : test   ( n -- ) \ display n as $ currency
+              dup 0< if negate -1 else 0 then >r
+              s>d                \ convert to double
+              <#                 \ begins conversion, start by lower digits
+              [char] $ hold      \ currency at end
+              # #                \ decimal part : 2 digits
+              [char] . hold      \ decimal separator "."
+              # # #              \ a thousand group of digits
+              [char] , hold      \ thousand separator ","
+              #S                 \ convert any digits left
+              r> sign            \ put sign at beginning
+              #>                 \ finished, give addr len
+              cr type ;
+
+     1234599  test    ==>    12,345.99$
+     -1234599 test    ==>   -12,345.99$
+</pre>
+
+
+<p><hr>Document : w32f-dspnumber -- 2008/05/14 -- Camille Doiteau</p>
+</body>
+</html>

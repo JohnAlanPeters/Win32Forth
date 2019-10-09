@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>GdiBrush -- Classes for GDI Brushes.
+</h1><hr /><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><a name="gdiBrush"></a>
+<h2>gdiBrush class
+</h2><pre><b><a name="0">:class gdiBrush &lt;super gdiObject
+</a></b></pre><p>Base class for all brush objects. <br />
+This is an internal class of the GDI Class library. Don't use it yourself.
+</p><pre><b><a name="1">:M SetOrigin: &nbsp;&nbsp;{ xOrg yOrg hdc -- }
+</a></b></pre><p>Set the brush origin that GDI assigns to the next brush an application selects
+into the specified device context. <br />
+Note: hdc can be the address of a gdiDC class instance or a DC handle. <br />
+A brush is a bitmap that the system uses to paint the interiors of filled shapes. <br />
+The brush origin is a pair of coordinates specifying the location of one pixel in
+the bitmap. The default brush origin coordinates are (0,0). For horizontal coordinates,
+the value 0 corresponds to the leftmost column of pixels; the width corresponds to the
+rightmost column. For vertical coordinates, the value 0 corresponds to the uppermost
+row of pixels; the height corresponds to the lowermost row. <br />
+The system automatically tracks the origin of all window-managed device contexts and
+adjusts their brushes as necessary to maintain an alignment of patterns on the surface.
+The brush origin that is set with this call is relative to the upper-left corner of the
+client area. <br />
+An application should call SetOrigin: after setting the bitmap stretching mode to
+HALFTONE by using SetStretchBltMode. This must be done to avoid brush misalignment. <br />
+Windows NT/ 2000: The system automatically tracks the origin of all window-managed device
+contexts and adjusts their brushes as necessary to maintain an alignment of patterns on
+the surface. <br />
+Windows 95/98: Automatic tracking of the brush origin is not supported. Applications must
+use the UnrealizeObject, SetBrushOrgEx, and SelectObject functions to align the brush before
+using it. <br />
+</p><pre><b><a name="2">:M GetOrigin: &nbsp;&nbsp;( hdc -- xOrg yOrg )
+</a></b></pre><p>Get the current brush origin for the specified device context.
+</p><pre><b><a name="3">:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lplb -- f )
+</a></b></pre><p>The Create function creates a logical brush that has the specified style, color, and pattern.
+lplb Pointer to a LOGBRUSH structure that contains information about the brush.
+</p><pre><b><a name="4">;class
+</a></b></pre><p>End of gdiBrush class
+</p><a name="gdiSolidBrush"></a>
+<h2>gdiSolidBrush class
+</h2><pre><b><a name="5">:class gdiSolidBrush &lt;super gdiBrush
+</a></b></pre><p>Solid brush class
+</p><pre><b><a name="6">:M SetRValue: &nbsp;&nbsp;( r -- )
+</a></b></pre><p>Set the red component of the brush color.
+</p><pre><b><a name="7">:M SetGValue: &nbsp;&nbsp;( g -- )
+</a></b></pre><p>Set the green component of the brush color.
+</p><pre><b><a name="8">:M SetBValue: &nbsp;&nbsp;( b -- )
+</a></b></pre><p>Set the blue component of the brush color.
+</p><pre><b><a name="9">:M SetRGB: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( r g b -- )
+</a></b></pre><p>Set the red, green and blue component of the brush color.
+</p><pre><b><a name="10">:M SetColor: &nbsp;&nbsp;&nbsp;( colorref -- )
+</a></b></pre><p>Set color of the brush.
+</p><pre><b><a name="11">:M SetSysColor: ( n -- )
+</a></b></pre><p>Set the color of the brush to a system color.
+</p><pre><b><a name="12">:M ChooseColor: ( hWnd -- f )
+</a></b></pre><p>Open a dialog to choose the color of the brush.
+</p><pre><b><a name="13">:M GetRValue: &nbsp;&nbsp;( -- r )
+</a></b></pre><p>Get the red component of the brush color.
+</p><pre><b><a name="14">:M GetGValue: &nbsp;&nbsp;( -- g )
+</a></b></pre><p>Get the green component of the brush color.
+</p><pre><b><a name="15">:M GetBValue: &nbsp;&nbsp;( -- b )
+</a></b></pre><p>Get the blue component of the brush color.
+</p><pre><b><a name="16">:M GetColor: &nbsp;&nbsp;&nbsp;( -- colorref )
+</a></b></pre><p>Get the color of the brush as a windows COLORREF value.
+</p><pre><b><a name="17">:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</a></b></pre><p>Create the brush with the current color.
+</p><pre><b><a name="18">;class
+</a></b></pre><p>End of gdiSolidBrush class
+</p><a name="gdiHatchBrush"></a>
+<h2>gdiHatchBrush class
+</h2><pre><b><a name="19">:class gdiHatchBrush &lt;super gdiSolidBrush
+</a></b></pre><p>Hatch brush class
+</p><pre><b><a name="20">:M SetStyle: &nbsp;&nbsp;&nbsp;( style -- )
+</a></b></pre><p>Set the style of the brush. Possible values are:
+</p><table border="1"><tr><td>HS_BDIAGONAL
+</td>
+<td>45-degree downward left-to-right hatch
+</td>
+</tr>
+<tr><td>HS_CROSS
+</td>
+<td>Horizontal and vertical crosshatch
+</td>
+</tr>
+<tr><td>HS_DIAGCROSS
+</td>
+<td>45-degree crosshatch
+</td>
+</tr>
+<tr><td>HS_FDIAGONAL
+</td>
+<td>45-degree upward left-to-right hatch
+</td>
+</tr>
+<tr><td>HS_HORIZONTAL
+</td>
+<td>Horizontal hatch
+</td>
+</tr>
+<tr><td>HS_VERTICAL
+</td>
+<td>Vertical hatch
+</td>
+</tr>
+</table><pre><b><a name="21">:M GetStyle: &nbsp;&nbsp;&nbsp;( -- style )
+</a></b></pre><p>Get the style of the brush. Possible return values are:
+</p><table border="1"><tr><td>HS_BDIAGONAL
+</td>
+<td>45-degree downward left-to-right hatch
+</td>
+</tr>
+<tr><td>HS_CROSS
+</td>
+<td>Horizontal and vertical crosshatch
+</td>
+</tr>
+<tr><td>HS_DIAGCROSS
+</td>
+<td>45-degree crosshatch
+</td>
+</tr>
+<tr><td>HS_FDIAGONAL
+</td>
+<td>45-degree upward left-to-right hatch
+</td>
+</tr>
+<tr><td>HS_HORIZONTAL
+</td>
+<td>Horizontal hatch
+</td>
+</tr>
+<tr><td>HS_VERTICAL
+</td>
+<td>Vertical hatch
+</td>
+</tr>
+</table><pre><b><a name="22">:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</a></b></pre><p>Create the brush with the current style and color.
+</p><pre><b><a name="23">;class
+</a></b></pre><p>End of gdiHatchBrush class
+</p><a name="gdiPatternBrush"></a>
+<h2>gdiPatternBrush class
+</h2><pre><b><a name="24">:class gdiPatternBrush &lt;super gdiBrush
+</a></b></pre><p>Pattern brush class. <br />
+</p><pre><b><a name="25">:M SetBitmap: &nbsp;&nbsp;( Bitmap -- )
+</a></b></pre><p>Set the Bitmap for the PatternBrush. The Bitmap can be a DIB section bitmap,
+which is created by the CreateDIBSection function.
+</p><pre><b><a name="26">:M GetBitmap: &nbsp;&nbsp;( -- Bitmap )
+</a></b></pre><p>Get the Bitmap for the PatternBrush.
+</p><pre><b><a name="27">:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</a></b></pre><p>Creates a logical brush with the specified bitmap pattern.
+</p><pre><b><a name="28">;class
+</a></b></pre><p>End of gdiPatternBrush class
+</p><a name="gdiDIBPatternBrush"></a>
+<h2>gdiDIBPatternBrush class
+</h2><pre><b><a name="29">:class gdiDIBPatternBrush &lt;super gdiBrush
+</a></b></pre><p>DIB Pattern brush class
+</p><pre><b><a name="30">:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lpPackedDIB iUsage -- f )
+</a></b></pre><p>The Create function creates a logical brush that has the pattern specified
+by the device-independent bitmap (DIB). &nbsp;&nbsp;&nbsp;<br />
+lpPackedDIB Pointer to a packed DIB consisting of a BITMAPINFO structure immediately
+followed by an array of bytes defining the pixels of the bitmap. &nbsp;&nbsp;<br />
+Windows 95: Creating brushes from bitmaps or DIBs larger than 8 by 8 pixels
+is not supported. If a larger bitmap is specified, only a portion of the bitmap
+is used. &nbsp;&nbsp;<br />
+Windows NT/ 2000 and Windows 98: Brushes can be created from bitmaps or DIBs
+larger than 8 by 8 pixels. <br />
+iUsage Specifies whether the bmiColors member of the BITMAPINFO structure contains
+a valid color table and, if so, whether the entries in this color table contain
+explicit red, green, blue (RGB) values or palette indexes. The iUsage parameter
+must be one of the following values.
+</p><table border="1"><tr><td>DIB_PAL_COLORS
+</td>
+<td>A color table is provided and consists of an array of 16-bit indexes into the logical palette of the device context into which the brush is to be selected.
+</td>
+</tr>
+<tr><td>DIB_RGB_COLORS
+</td>
+<td>A color table is provided and contains literal RGB values.
+</td>
+</tr>
+</table><pre><b><a name="31">;class
+</a></b></pre><p>End of gdiDIBPatternBrush class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

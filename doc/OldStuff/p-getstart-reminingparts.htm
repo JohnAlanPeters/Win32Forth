@@ -1,0 +1,476 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<link rel=File-List href="p-getstart_fichiers/filelist.xml">
+<link rel=Edit-Time-Data href="p-getstart_fichiers/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Win32Forth</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Double Click</o:Author>
+  <o:LastAuthor>Double Click</o:LastAuthor>
+  <o:Revision>9</o:Revision>
+  <o:TotalTime>31</o:TotalTime>
+  <o:Created>2008-03-09T02:43:00Z</o:Created>
+  <o:LastSaved>2008-03-16T07:05:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>1166</o:Words>
+  <o:Characters>6414</o:Characters>
+  <o:Company>Double Click</o:Company>
+  <o:Lines>53</o:Lines>
+  <o:Paragraphs>15</o:Paragraphs>
+  <o:CharactersWithSpaces>7565</o:CharactersWithSpaces>
+  <o:Version>10.2625</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:HyphenationZone>21</w:HyphenationZone>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Courier;
+	panose-1:2 7 4 9 2 2 5 2 4 4;
+	mso-font-alt:"Courier New";
+	mso-font-charset:0;
+	mso-generic-font-family:modern;
+	mso-font-format:other;
+	mso-font-pitch:fixed;
+	mso-font-signature:3 0 0 0 1 0;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;
+	mso-font-charset:0;
+	mso-generic-font-family:swiss;
+	mso-font-pitch:variable;
+	mso-font-signature:1627421319 -2147483648 8 0 66047 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h1
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:Tahoma;
+	font-weight:bold;}
+h2
+	{mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:Tahoma;
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-style-name:"Normal \(Web\)\,Normal \(Web\) Car";
+	mso-style-link:"Normal \(Web\) Car Car";
+	mso-margin-top-alt:auto;
+	margin-right:0cm;
+	mso-margin-bottom-alt:auto;
+	margin-left:0cm;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+address
+	{margin:0cm;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	font-style:italic;}
+span.NormalWebCarCar
+	{mso-style-name:"Normal \(Web\) Car Car";
+	mso-style-link:"Normal \(Web\)\,Normal \(Web\) Car";
+	mso-ansi-font-size:12.0pt;
+	mso-bidi-font-size:12.0pt;
+	mso-ansi-language:FR;
+	mso-fareast-language:FR;
+	mso-bidi-language:AR-SA;}
+span.macrochar
+	{mso-style-name:macrochar;
+	mso-ansi-font-size:10.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:Courier;
+	mso-ascii-font-family:Courier;
+	mso-hansi-font-family:Courier;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:70.85pt 70.85pt 70.85pt 70.85pt;
+	mso-header-margin:35.4pt;
+	mso-footer-margin:35.4pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Tableau Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]-->
+<meta http-equiv=Content-Language content=en-gb>
+<!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="5122"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=FR link=blue vlink=blue style='tab-interval:35.4pt'>
+
+<div class=Section1>
+
+<div>
+
+<h1 align=center style='text-align:center'><img width=32 height=32
+id="_x0000_i1025" src=FORTHPRO.gif border=0><span lang=EN-GB style='mso-ansi-language:
+EN-GB'>&nbsp;&nbsp; Win32Forth<o:p></o:p></span></h1>
+
+<h2 align=center style='text-align:center'><a
+href="mailto:win32forth@yahoogroups.com?subject=DOC:%20Doc%20error%20in%20$Id: p-getstart-reminingparts.htm,v 1.1 2008/05/16 03:31:42 camilleforth Exp $"></a><!--[if gte vml 1]><v:shapetype
+ id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t"
+ path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_s1026" type="#_x0000_t75" alt=""
+ href="mailto:win32forth@yahoogroups.com?subject=DOC:%20Doc%20error%20in%20$Id: p-getstart-reminingparts.htm,v 1.1 2008/05/16 03:31:42 camilleforth Exp $"
+ style='position:absolute;left:0;text-align:left;margin-left:0;margin-top:0;
+ width:24pt;height:24pt;z-index:1;mso-wrap-distance-left:0;
+ mso-wrap-distance-right:0;mso-position-horizontal:left;
+ mso-position-horizontal-relative:text;mso-position-vertical-relative:line'
+ o:allowoverlap="f" o:button="t">
+ <v:imagedata src="TELLUS.gif"/>
+ <w:wrap type="square"/>
+</v:shape><![endif]--><![if !vml]><a
+href="mailto:win32forth@yahoogroups.com?subject=DOC:%20Doc%20error%20in%20$Id: p-getstart-reminingparts.htm,v 1.1 2008/05/16 03:31:42 camilleforth Exp $"><img
+border=0 width=32 height=32 src=TELLUS.gif align=left v:shapes="_x0000_s1026"></a><![endif]><a
+href="mailto:win32forth@yahoogroups.com?subject=DOC:%20Doc%20error%20in%20$Id: p-getstart-reminingparts.htm,v 1.1 2008/05/16 03:31:42 camilleforth Exp $"></a><a
+href="mailto:win32forth@yahoogroups.com?subject=DOC:%20Doc%20error%20in%20$Id: p-getstart-reminingparts.htm,v 1.1 2008/05/16 03:31:42 camilleforth Exp $"></a><a
+href="mailto:win32forth@yahoogroups.com?subject=DOC:%20Doc%20error%20in%20$Id: p-getstart-reminingparts.htm,v 1.1 2008/05/16 03:31:42 camilleforth Exp $"></a><span
+style='mso-no-proof:yes'><a
+href="mailto:win32forth@yahoogroups.com?subject=DOC:%20Doc%20error%20in%20$Id: p-getstart-reminingparts.htm,v 1.1 2008/05/16 03:31:42 camilleforth Exp $"></a></span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'>Getting Started<o:p></o:p></span></h2>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>Explore Win32Forth’s
+menus.<span style='mso-spacerun:yes'>  </span>They will probably seem pretty
+familiar to most Windows users.<span style='mso-spacerun:yes'>  </span>Pay
+particular attention to the Help menu.<span style='mso-spacerun:yes'> 
+</span>It contains links to lots of information that’s been installed on your
+machine and on the internet.<span style='mso-spacerun:yes'>  </span>Try as many
+of them as you want and remember all the resources that are available when you
+get stuck.<o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>From the File menu, select
+the “Edit Forth File” choice.<span style='mso-spacerun:yes'>  </span>It should
+open a “file open” dialog.<span style='mso-spacerun:yes'>  </span>Navigate to
+the Win32Forth\demos folder and double click on the HELLO.F source file.<span
+style='mso-spacerun:yes'>  </span>This should open the SciEdit editor and
+display the hello.f source code file.<o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>Explore SciEdit’s
+menus.<span style='mso-spacerun:yes'>  </span>They will probably also seem
+pretty familiar to most Windows users especially if you’re familiar with source
+code editors.<o:p></o:p></span></p>
+
+</div>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>WORDS</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>
+shows the vocabulary where a word is located, and you must make sure the
+correct vocabulary is selected before using </span><span class=macrochar><span
+lang=EN-GB style='font-size:10.0pt;mso-ansi-language:EN-GB'>SEE</span></span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'> to decompile it. The word that
+displays the current vocabulary search order is </span><span class=macrochar><span
+lang=EN-GB style='font-size:10.0pt;mso-ansi-language:EN-GB'>ORDER </span></span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'>, type; <o:p></o:p></span></p>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>ORDER </span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>A list of the vocabularies
+in the search order is displayed. The Context list is the list of vocabularies
+that is searched, and the Current vocabulary is the vocabulary where new
+definitions are compiled. So for example, if you were to type; <o:p></o:p></span></p>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>WORDS CODE</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>You would see a list of
+words displayed, including the word </span><span class=macrochar><span
+lang=EN-GB style='font-size:10.0pt;mso-ansi-language:EN-GB'>.CODE</span></span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'> (pronounced dot code) in the </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>HIDDEN</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>
+vocabulary. To see </span><span class=macrochar><span lang=EN-GB
+style='font-size:10.0pt;mso-ansi-language:EN-GB'>.CODE </span></span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'>, you would type; <o:p></o:p></span></p>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>HIDDEN SEE .CODE</span></span><span lang=EN-GB style='mso-ansi-language:
+EN-GB'><o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>To select the hidden
+vocabulary and then decompile the word </span><span class=macrochar><span
+lang=EN-GB style='font-size:10.0pt;mso-ansi-language:EN-GB'>.CODE </span></span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'>. If you then type </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>ORDER </span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>,
+you will see that the top (left most) entry of the vocabulary search order is </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>HIDDEN </span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>. <o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>Lets try another example of
+</span><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;
+mso-ansi-language:EN-GB'>CONSTANTS</span></span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'> that you may find useful someday, type; <o:p></o:p></span></p>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>CONSTANTS WM_</span></span><span lang=EN-GB style='mso-ansi-language:
+EN-GB'><o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>which shows<o:p></o:p></span></p>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>----------- Windows Constants --------------------------</span></span><span
+lang=EN-GB style='font-size:10.0pt;font-family:Courier;mso-ansi-language:EN-GB'><br>
+<span class=macrochar>WM_APP WM_CUT WM_CHAR</span><br>
+<span class=macrochar>WM_HELP WM_UNDO WM_MOVE</span><br>
+<span class=macrochar>WM_COPY WM_SIZE WM_NULL</span><br>
+<span class=macrochar>WM_USER WM_QUIT WM_CLEAR</span><br>
+<span class=macrochar>WM_TCARD WM_CLOSE WM_PAINT</span><br>
+<span class=macrochar>WM_PASTE WM_TIMER WM_PRINT</span><br>
+<span class=macrochar>WM_POWER WM_KEYUP WM_ENABLE</span><br>
+<span class=macrochar>WM_CREATE WM_MOVING WM_HOTKEY</span><br>
+<span class=macrochar>WM_SIZING WM_NOTIFY WM_DDE_ACK</span><br>
+<span class=macrochar>WM_COMMAND WM_MDITILE WM_GETICON</span><br>
+<span class=macrochar>WM_NCPAINT WM_AFXLAST WM_SETICON</span><br>
+<span class=macrochar>...</span></span><span lang=EN-GB style='mso-ansi-language:
+EN-GB'><o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>You should have seen all of
+the windows message constants listed. These are all of the messages windows can
+send to an application. Don't worry, most of these are handled automatically,
+you only need to handle the ones your application needs to handle in a special
+way. All of the standard windows constants are kept in the WINCON vocabulary. <o:p></o:p></span></p>
+
+<address><span lang=EN-GB style='mso-ansi-language:EN-GB'>NOTE: You can also notice
+that the scroll bar at the right of the console window allows you to scroll
+back to the last 500 lines displayed in the console window. This can be very
+handy for looking back at the output of a long debugging session. <o:p></o:p></span></address>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>Since we are talking about
+vocabularies, type; <o:p></o:p></span></p>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>VOCS</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p></o:p></span></p>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>VOCS</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'> will
+display some statistics on all of the vocabularies in Win32Forth. There are 12
+vocabularies. The </span><span class=macrochar><span lang=EN-GB
+style='font-size:10.0pt;mso-ansi-language:EN-GB'>VOCS</span></span><span
+lang=EN-GB style='mso-ansi-language:EN-GB'> display includes information about
+the number of hash threads for each vocabulary, the number of words in the vocabulary,
+and the average hash bucket thread depth for the vocabulary. Win32Forth uses a
+hashed dictionary, with a variable number of hash buckets for each vocabulary
+defined. As you can probably guess, since most vocabularies have seven threads,
+seven threads is the default number of threads for a vocabulary you create. The
+more threads a vocabulary has, the faster it is to search that vocabulary (up
+to a point). But as you can see some vocabularies (like </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>HIDDEN</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>
+and </span><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;
+mso-ansi-language:EN-GB'>ASM-HIDDEN</span></span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>) have a large average thread depth. This is
+done because those vocabularies are not searched very often. <o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>It is useful to note that
+all vocabulary threads are kept in the SYSTEM dictionary, so when you create a </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>TURNKEY</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>ed
+application, the vocabularies are thrown away. <o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>Having installed
+Win32Forth, and gotten to this point, you are probably starting to become
+familiar with the hyper-text editor/browser (and now also debugger) integrated
+into Win32Forth. <o:p></o:p></span></p>
+
+<address><span lang=EN-GB style='mso-ansi-language:EN-GB'>NOTE: If you aren't
+using one of the Win32Forth integrated editors called WinEd and SciEditMDI at
+this moment (look at the title bar of the program you are running, it should
+say WinEd or SciEdit in the upper left corner), then you should quit your
+current editor, start Win32Forth by double clicking the Win32Forth icon in the
+Win32Forth program group and Press F2 from within Forth to start up the default
+editor on this file. The tutorial information following requires you to be
+running either SciEditMdi or WinEd. If you really can't stand to use WinEd,
+then you can always go back to your own editor later, after trying the
+examples. <o:p></o:p></span></address>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p>&nbsp;</o:p></span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<address><span lang=EN-GB style='mso-ansi-language:EN-GB'>NOTE: in the
+following section, you will be told to view and edit the source for various
+words in the Win32Forth dictionary. To return to this document after viewing a
+source file, press Ctrl-PgUp, or use the 'Previous Hyper Link' menu item under
+the 'Hyper' menu. If you view or open several files, you may need to press
+Ctrl-PgUp several times to get back to this file. <o:p></o:p></span></address>
+
+</blockquote>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>You can also View the
+source for any word in the dictionary, with the word </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>V </span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>or </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>VIEW </span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>, used
+as; <o:p></o:p></span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>V DUP</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'><o:p></o:p></span></p>
+
+</blockquote>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>If you type the above into
+the Forth console window, Win32Forth will tell WinEd to display the source for </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>DUP </span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'>. The
+editor will dutifully open the file FKERNEL.F and display the desired line.
+When viewing a word, The editor uses BROWSE mode (BLUE left border in the
+editor) to prevent you from accidentally changing a source file. Notice the
+BLUE words &quot;Browse Mode&quot; in the toolbar to the right of the toolbar
+buttons. </span><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;
+mso-ansi-language:EN-GB'>V</span></span><span lang=EN-GB style='mso-ansi-language:
+EN-GB'> and </span><span class=macrochar><span lang=EN-GB style='font-size:
+10.0pt;mso-ansi-language:EN-GB'>VIEW</span></span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'> search all vocabularies for the requested
+word, so the vocabulary search order is not important unless you have defined a
+particular word more than once. Return here as described in the note above. <o:p></o:p></span></p>
+
+<p><span lang=EN-GB style='mso-ansi-language:EN-GB'>The forth word </span><span
+class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+EN-GB'>EDIT</span></span><span lang=EN-GB style='mso-ansi-language:EN-GB'> is
+like </span><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;
+mso-ansi-language:EN-GB'>V</span></span><span lang=EN-GB style='mso-ansi-language:
+EN-GB'> and </span><span class=macrochar><span lang=EN-GB style='font-size:
+10.0pt;mso-ansi-language:EN-GB'>VIEW</span></span><span lang=EN-GB
+style='mso-ansi-language:EN-GB'> except that WinEd is told to enter EDIT mode
+(CYAN left border) instead of BROWSE mode on the requested word. Notice the
+words &quot;Edit Mode&quot; to the right of the toolbar buttons for an
+unmodified file, and &quot;* MODIFIED *&quot; in RED to the right of the
+toolbar buttons for a file you have changes. <o:p></o:p></span></p>
+
+<blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+
+<address><span lang=EN-GB style='mso-ansi-language:EN-GB'>NOTE: The editor keys
+Ctrl-PgUp and Ctrl-PgDn can be used to walk around between the files you have
+opened. WinEd can handle 128 files opened during an edit session. You can
+display a selectable list of files opened by dragging the vertical splitter bar
+at the left of this window to the right. This will show the list of files
+currently being edited. You can move to a file that has been opened by clicking
+on the filename in the list window, or by using Ctrl-PgUp and Ctrl-PgDn to move
+to a desired file. You can close and remove a file from the list by selecting
+the file and then selecting 'Close File' under the 'File' menu. <o:p></o:p></span></address>
+
+</blockquote>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=2 width="100%" align=center>
+
+</div>
+
+<p>Document $Id: p-getstart.htm<span class=GramE>,v</span> 1.1 2004/12/21
+00:18:56 <span class=SpellE>alex_mcdonald</span> <span class=SpellE>Exp</span>
+$</p>
+
+</div>
+
+</body>
+
+</html>

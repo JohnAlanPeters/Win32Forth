@@ -1,0 +1,109 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Flow control</h1>
+
+<p>Many words are available to control the program flow of execution. We start with
+the basic ones, mainly from the ANS standard. Then we show some words that may be
+used for the same purpose, althought this is not obvious at first glance. Some more
+uncommon flow control words are detailed on next pages.</p>
+
+
+<h2>Flow control</h2>
+
+<pre>
+( limit index -- ) DO ... LOOP            iterative loop, increment = 1
+( limit index -- ) DO ... ( n -- ) +LOOP  iterative loop, increment = n
+
+Example with -1 +LOOP
+   : test 200 205 DO I . -1 +LOOP ;   test ==> 205 204 203 202 201 200
+
+( limit index -- ) ?DO ... LOOP           conditional loop (if limit<>index), increment = 1
+( limit index -- ) ?DO ... ( n -- ) +LOOP conditional loop (if limit<>index), increment = n
+I         ( -- n )                        get loop index in current loop
+J         ( -- n )                        get loop index in outermost loop
+LEAVE       ( -- )                        unconditional exit from a do ... loop
+?LEAVE  ( flag --)                        exit from a do ... loop if flag is true
+UNLOOP      ( -- )                        discard do ... loop parameters from return stack
+</pre> <pre>
+BEGIN ... AGAIN                           infinite loop
+BEGIN ... (flag -- ) WHILE ... REPEAT     while condition is true, execute code between
+                                             WHILE and REPEAT
+BEGIN ... ( flag -- ) UNTIL               loop to BEGIN until condition is true
+</pre> <pre>
+( flag -- ) IF ... ELSE ... THEN          conditional execution if flag true
+                                             (ELSE ... is optionnal)
+</pre> <pre>
+( index -- ) CASE                         multiple cases conditional execution
+  ( n -- ) OF ... ENDOF                   OF ... ENDOF executed if n = index,
+  ...                                        then branch after ENDCASE
+  ...                                     executed if no condition OF...ENDOF was executed
+    DEFAULTOF ... ENDOF
+  ENDCASE    (index) --                   drops index if no OF...ENDOF was executed
+</pre>
+
+<p>The <code>DEFAULTOF</code> instruction avoids stack gymnastic to preserve the
+index. It must be the last case, just before <code>ENDCASE</code> .</p>
+
+<h2>CASE and IF Extensions</h2>
+
+<p>The library (fcases.f) offers extensions for IF and CASE statement</p>
+
+<p><code>RANGEOF</code> allows to test an index being between two bounds.</p>
+
+<p><code>| ... |OF</code> and <code>| ... |IF</code> allow to test an index
+against an enumeration. BEWARE : theese two words are not reentrant.</p>
+
+<p>String case extension : in the following, the <code>CASE</code> index is a
+countedstring, given by its count address. addr len are a given string
+to be compared to the index. </p>
+<pre>
+"OF	     ( addr len -- n1 )  \ execute "OF ... ENDOF if string addr len
+                                 \ exactly matches the index
+
+"OF-BEGIN    ( addr len -- n1 )  \ execute "OF-INCLUDE ... ENDOF if string
+                                 \ addr len is found at the beginning of index
+
+"OF-CONTAIN  ( addr len -- n1 )  \ execute "OF-CONTAIN ... ENDOF if string
+                                 \ addr len is part of index
+</pre>
+
+
+<h2>DEFERed words</h2>
+
+<p>Defered words are typically used when the behaviour of a word has to
+change with some context. An example in Forth are the output routines (eg:
+<code>EMIT</code> , <code>TYPE</code> etc.) than can be redirected to
+different output devices (eg: Console, Printer, etc.).</p>
+
+<p>Here is a little example where we want to have a choice to display one
+or two CR between lines : <p>
+<pre>
+     DEFER MYCR
+     : 2CR   CR CR ;
+     ' CR IS MYCR
+     ...             \ use of MYCR will display 1 CR
+     ' 2CR IS MYCR
+     ...             \ use of MYCR will display 2 CR
+</pre>
+
+
+<h2>Other flow control words</h2>
+<pre>
+EXECUTE ( cfa -- )  execute a word, given its cfa on data stack
+PERFORM ( addr -- ) execute a word, given its cfa stored at addr
+EXIT    ( -- ) unconditional exit form current word (goes back to calling word)
+QUIT    ( -- ) unconditional return to Forth interpreter
+RECURSE ( -- ) recursive call to the word currently being defined
+NOOP    ( -- ) no-operation : does nothing, can be used as a place holder for a cfa
+</pre>
+
+
+<p><hr>Document : w32f-flowcontrol -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

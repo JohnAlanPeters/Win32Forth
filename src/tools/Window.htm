@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>Window -- Class for window objects.
+</h1><hr /><h2>Glossary
+</h2><pre><b><a name="0">:CLASS Window &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SUPER Generic-Window
+</a></b></pre><p>Base class for window objects.
+</p><pre><b><a name="1">:M ClassInit: &nbsp;&nbsp;( -- )
+</a></b></pre><p>Initialise the class.
+</p><h3>Window sizing
+</h3><pre><b><a name="2">:M GetSize: &nbsp;&nbsp;&nbsp;&nbsp;( --width height )
+</a></b></pre><p>Get the size (width and height) of the window.
+</p><pre><b><a name="3">:M Width: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- width )
+</a></b></pre><p>Get the width of the window.
+</p><pre><b><a name="4">:M Height: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- height )
+</a></b></pre><p>Get the height of the window.
+</p><pre><b><a name="5">:M SetSize: &nbsp;&nbsp;&nbsp;&nbsp;( width height -- )
+</a></b></pre><p>Set the size of the window. <br />
+Note: The window itself will not be resized.
+</p><pre><b><a name="6">:M On_Size: &nbsp;&nbsp;&nbsp;&nbsp;( hndl msg wParam -- )
+</a></b></pre><p>User windows should override the On_Size: method. When this method is
+called, the variables Width and Height will have already been set. <br />
+Default does nothing
+</p><pre><b><a name="7">:M MinSize: &nbsp;&nbsp;&nbsp;&nbsp;( -- width height )
+</a></b></pre><p>To change the minimum window size, override the MinSize: method. Default is 10 by 10.
+</p><pre><b><a name="8">:M MaxSize: &nbsp;&nbsp;&nbsp;&nbsp;( -- width height )
+</a></b></pre><p>To change the maximum window size, override the MaxSize: method. Default is 8192 by 8192.
+</p><pre><b><a name="9">:M StartSize: &nbsp;&nbsp;( -- width height )
+</a></b></pre><p>To change the size of the window when it's created, override the StartSize: method
+or call the SetSize: method before you create the window.
+</p><pre><b><a name="10">:M SetOrigin: &nbsp;&nbsp;( x y -- )
+</a></b></pre><p>To set the upper left corner of the window when it's created
+call the SetOrigin: method before you create the window.
+</p><pre><b><a name="11">:M StartPos: &nbsp;&nbsp;&nbsp;( -- left top )
+</a></b></pre><p>User windows should override the StartPos: method to set
+the upper left corner of the window when it's created.
+</p><h3>Window creation
+</h3><pre><b><a name="12">:M SetClassLong: ( long offset -- )
+</a></b></pre><p>The SetClassLong method replaces the specified 32-bit (long) value at the
+specified offset into the extra class memory or the WNDCLASS structure for
+the class to which the window belongs.
+</p><pre><b><a name="13">:M GetClassLong: ( offset -- long )
+</a></b></pre><p>The GetClassLong function retrieves the specified 32-bit (long) value from
+the WNDCLASS structure associated with the window.
+</p><pre><b><a name="14">:M WndClassStyle: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- style )
+</a></b></pre><p>User windows should override the WndClassStyle: method to
+set the style member of the the WNDCLASS structure associated with the window.
+Default style is CS_DBLCLKS, CS_HREDRAW and CS_VREDRAW.
+</p><p>To prevent flicker on sizing of the window your method should return CS_DBLCLKS
+only.
+</p><pre><b><a name="15">:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Create the window.
+</p><p>Before the window is created a default window class name for this window will
+be set. Every window will become it's own class name and it's own window class.
+Note: If the window class name is set with SetClassName: before the Start: method
+is called no default class name will be set.
+</p><p>On_Init: and On_Done were moved to Generic-Window.
+</p><pre>Your On_Init: and On_Done: methods should look like this:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:M On_Init: &nbsp;( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Init: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... other initialization ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:M On_Done: &nbsp;( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... other cleanup ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Done: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+
+The main application window will need the following methods, which cause the
+program to terminate when the user closes the main application window.
+Don't uncomment these out here, copy them into your application window
+Object or Class, and then uncomment them out.
+
+:M WM_CLOSE &nbsp;( h m w l -- res )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bye
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 ;M
+
+:M On_Done: &nbsp;( h m w l -- res )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 call PostQuitMessage drop &nbsp;&nbsp;&nbsp;&nbsp;\ terminate application
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Done: super &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ cleanup the super class
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 ;M
+
+For multi-tasking applications the main window of each task should define
+the following method, to quit the message loop and exit the task.
+
+:M On_Done: &nbsp;( h m w l -- res )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 call PostQuitMessage drop &nbsp;&nbsp;&nbsp;&nbsp;\ terminate application
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Done: super &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ cleanup the super class
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 ;M
+</pre><pre><b><a name="16">:M SetClassName: ( addr len -- )
+</a></b></pre><p>Set the window class name.
+</p><pre><b><a name="17">:M GetClassName: ( -- addr len )
+</a></b></pre><p>Get the window class name.
+</p><pre><b><a name="18">:M SetParentWindow: ( hWndParent -- )
+</a></b></pre><p>Set handle of the owner window (0 if no parent).
+</p><pre><b><a name="19">:M GetParentWindow: ( -- hWndParent )
+</a></b></pre><p>Get the handle of the owner window (0 if no parent).
+</p><pre><b><a name="20">:M SetParent: &nbsp;&nbsp;( hWndParent -- )
+</a></b></pre><p>Set handle of the owner window (0 if no parent).
+</p><p>NOTE: This method is deprecated. Use SetParentWindow: instead.
+</p><pre><b><a name="21">:M ParentWindow: ( -- hWndParent )
+</a></b></pre><p>Get the handle of the owner window (0 if no parent).
+</p><p>NOTE: This method is deprecated. Use GetParentWindow: instead.
+</p><pre><b><a name="22">:M DefaultCursor: ( -- cursor-id )
+</a></b></pre><p>User windows should override the DefaultCursor: method to
+set the default cursor for window. Default is IDC_ARROW.
+</p><pre><b><a name="23">:M DefaultIcon: ( -- hIcon )
+</a></b></pre><p>User windows should override the WindowStyle: method to
+set the default icon handle for window. Default is the W32F icon.
+</p><pre><b><a name="24">:M WindowStyle: ( -- style )
+</a></b></pre><p>User windows should override the WindowStyle: method to
+set the window style. Default is WS_OVERLAPPEDWINDOW.
+</p><pre><b><a name="25">:M ExWindowStyle: ( -- extended_style )
+</a></b></pre><p>User windows should override the ExWindowStyle: method to
+set the extended window style. Default is NULL.
+</p><pre><b><a name="26">:M WindowTitle: ( -- Zstring )
+</a></b></pre><p>User windows should override the WindowTitle: method to
+set the window caption. Default is &quot;Window&quot;.
+</p><h3>Painting
+</h3><pre><b><a name="27">WinDC dc
+</a></b></pre><p>The window's device context. <br />
+It will be valid only when handling the WM_PAINT message
+(see On_Paint: method)
+</p><pre><b><a name="28">Record: &amp;ps
+</a></b></pre><p>The PAINTSTRUCT for Begin- and EndPaint <br />
+It will be valid only when handling the WM_PAINT message
+(see On_Paint: method)
+</p><pre><b><a name="29">:M On_EraseBackground: ( hwnd msg wparam lparam -- res )
+</a></b></pre><p>User windows should override the On_EraseBackground: method to handle
+WM_ERASEBKGND messages. <br />
+Default does nothing.
+</p><pre><b><a name="30">:M On_Paint: &nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>User windows should override the On_Paint: method to handle WM_PAINT messages. <br />
+Before this method is called BeginPaint will be called so that the PAINTSTRUCT
+(&amp;PS ivar) and the window device context (DC ivar) are initialized. <br />
+Check ps_fErase in your method to see if the background of the window should
+be drawn and use ps_left, ps_top, ps_right and ps_bottom to see which part of
+the window should be painted. <br />
+Default does nothing.
+</p><h3>Menu support
+</h3><pre><b><a name="31">:M WindowHasMenu: ( -- flag )
+</a></b></pre><p>Flag is true if the window has a menu. Override this method if your window has a
+menu. Default is false.
+</p><h3>Cursor (caret) support
+</h3><pre><b><a name="32">:M MoveCursor: &nbsp;( gx gy -- )
+</a></b></pre><p>Move the caret.
+</p><pre><b><a name="33">:M MakeCursor: &nbsp;( gx gy width height -- )
+</a></b></pre><p>Create the caret.
+</p><pre><b><a name="34">:M DestroyCursor: ( -- )
+</a></b></pre><p>Destroy the caret.
+</p><pre><b><a name="35">:M ShowCursor: &nbsp;( -- )
+</a></b></pre><p>Show the caret.
+</p><pre><b><a name="36">:M HideCursor: &nbsp;( -- )
+</a></b></pre><p>Hide the caret.
+</p><pre><b><a name="37">:M On_SetFocus: ( h m w l -- )
+</a></b></pre><p>Override the method to handle the WM_SETFOCUS message. <br />
+Example: When cursor is used, you will need something like the following
+to control the position of the cursor in the window:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor-col char-width &nbsp;*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor-row char-height *
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char-width char-height MakeCursor: self
+</pre><pre><b><a name="38">:M On_KillFocus: ( h m w l -- )
+</a></b></pre><p>Override the method to handle the WM_KILLFOCUS message. <br />
+Example: Use only when you are displaying a cursor in the window:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DestroyCursor: self
+</pre><h3>Keyboard and mouse handling
+</h3><pre><b><a name="39">:M PushKey: &nbsp;&nbsp;&nbsp;&nbsp;( c1 -- )
+</a></b></pre><p>override to process keys yourself.
+</p><h3>Message handling
+</h3><pre><b><a name="40">:M DefWindowProc: ( h m w l -- res )
+</a></b></pre><p>Call the DefaultWindowProc for the window.
+</p><h3>everything else...
+</h3><pre><b><a name="41">:M CenterWindow: ( -- x y )
+</a></b></pre><p>Calculate the position of the window to center it in the middle of it's parent window.
+When the windows has no parent it will be placed in the middle of the primary display
+monitor.
+</p><pre><b><a name="42">:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f1 -- )
+</a></b></pre><p>Enable or disable the window.
+</p><pre><b><a name="43">:M SetTitle: &nbsp;&nbsp;&nbsp;{ adr len \ temp$ -- }
+</a></b></pre><p>Set the window title.
+</p><pre><b><a name="44">;CLASS
+</a></b></pre><p>End of window class.
+</p><h2>Helper words outside the class
+</h2><pre><b><a name="45">: find-window &nbsp;&nbsp;( z&quot;a1 -- hWnd ) \ w32f
+</a></b></pre><p>Find a window.
+</p><pre><b><a name="46">: send-window &nbsp;&nbsp;( lParam wParam Message_ID hWnd -- ) \ w32f
+</a></b></pre><p>Send a message to a window.
+</p><pre><b><a name="47">: LoadIconFile &nbsp;( adr len -- hIcon ) \ w32f
+</a></b></pre><p>Load an icon from an icon file.
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>TrayWindow class
+</h1><hr /><p>Windows that are created with this class will hide themself
+in the windows traybar when they are minimized, rather than on the task bar.
+</p><a name="TrayWindow"></a>
+<h2>Glossary
+</h2><pre><b><a name="0">:class TrayWindow &lt;super window
+</a></b></pre><p>TrayWindow class
+</p><pre><b><a name="1">:M GetTooltip: &nbsp;( -- addr len )
+</a></b></pre><p>Get the tooltip text for the traybar icon. Default is to print the title of the window
+</p><pre><b><a name="2">:M AddIcon: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Add our icon to the traybar
+</p><pre><b><a name="3">:M DeleteIcon: &nbsp;( -- )
+</a></b></pre><p>Remove our icon from the traybar
+</p><pre><b><a name="4">:M ShowWindow: &nbsp;( -- )
+</a></b></pre><p>Show the window and remove the icon from the traybar.
+</p><pre><b><a name="5">:M HideWindow: &nbsp;( -- )
+</a></b></pre><p>Hide the window and add the icon to the traybar.
+</p><pre><b><a name="6">:M WM_SIZE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( hWnd uMsg wParam lParam -- res )
+</a></b></pre><p>Handle the WM_SIZE message. If the window is minimized
+it will be hidden and the icon will be added to the traybar.
+</p><pre><b><a name="7">:M WM_SYSCOMMAND ( hWnd uMsg wParam lParam -- res )
+</a></b></pre><p>Handle the WM_SYSCOMMAND message. If the window is minimized
+it will be hidden and the icon will be added to the traybar.
+</p><pre><b><a name="8">:M On_IconNotify: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( hWnd uMsg wParam lParam -- res )
+</a></b></pre><p>Handle the messages from the traybar icon.
+</p><p>The default handler removes the icon for the traybar and shows the window,
+when the user click's with the left mouse button on the tray icon.
+</p><p>If the right mouse button is used the popup menu of the window is shown.
+Use the <b>&nbsp;SetPopupBar: </b>&nbsp;method to assign a popup menu to the window.
+</p><pre><b><a name="9">;class
+</a></b></pre><p>End of TrayWindow class
+</p><h2>Example
+</h2><pre>
+\&nbsp;Create a tray window
+:object TestWindow &lt;super TrayWindow
+
+:M GetTooltip: &nbsp;( -- addr len )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&quot; TrayWindow Test&quot; ;M
+
+;object
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start: TestWindow \&nbsp;open the window
+SW_MINIMIZE Show: TestWindow \&nbsp;minimize it to hide it in the TrayBar
+</pre><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+floadcmdline.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Experimental shell integration for Win32Forth
+</h1><br />FloadCmdLine allows compiling from the context menu.
+<br />Use CMenuExtender v1.2.1.2 to create a new context entry.
+<br />The CMenuExtender can be downloaded from:
+<a href="http://www.monctoncomputerservice.com/revenger_inc/download.html">here.</a>
+<p><b>How it works when Win32Forth is in c:\win32forth :</b>
+</p><br />1.Start CMExtEd.
+<br />2.Create a New item for Win32Forth using the Custom Command option.
+<br />3.Caption: Win32Forth.
+<br />4.Command: c:\win32forth\Win32for.exe
+<br />5.commandline: FloadCmdLine
+<br />6.Activate: Append file.
+<br />7.Icon: Choose a nice Icon and Click op OK
+<br />8.Use change to check it.
+<br />9.Fload c:win32forth\src\FloadCmdLine.f
+<br />10.Copy c:\win32forth\src\Win32for.exe &nbsp;to &nbsp;c:\win32forth\Win32for.exe
+<br />11.Overwrite the orginal version.
+<br />12.Then start the explorer and click right on a *.f file.
+<br />13.Choose Win32Forth.
+<p><b>Notes:</b>
+<br />1.Only testet under XP.
+<br />2.It is also possible to add WinEd to the context menu.
+Then leave the commandline in CMExtEd empty and activate: Append file.
+</p><p><b><code>: FloadCmdLine ( - )
+</code></b><br>&nbsp;Compiles the file in the command line.
+</p></body></html>

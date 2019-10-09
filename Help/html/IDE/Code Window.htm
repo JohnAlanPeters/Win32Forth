@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Code Window</title>
+    <link rel="stylesheet" type="text/css" href="IDEstyle.css">
+</head>
+<body>
+
+<h1>Adding code at design time</h1>
+
+<br>
+
+
+<p>The Forms Code Window allow quick navigating of code at design time to a form. It can be opened
+from the right-click menu of a control or a formor selected from the Form Designer tab.
+Consider the below example.</p>
+
+<br>
+
+<center><img src="Directory Demo.gif" alt="" border="0"></center><br><br>
+<center><img hspace=70 src="Forms Code Window.gif" alt="" border="0"></center><br><br>
+
+<p>The top pane of the Code Window lists any open forms. Click on a
+form name to see its associated controls. <br><br>
+
+The bottom pane lists the controls of the selected form as well
+as three other items- Global Code, Local Code and On_InitFunction. Clicking any of these or a control
+will display any code entered for that item in an IDE window and allow editing said code. All the functionality
+of the IDE editor is available for editing form code.
+</p>
+
+<ul>
+  <li><p>Global Code - any code can be added here, e.g needed files, global variables or
+  definitions etc. If any controls for a form are global any code added here will be
+  inserted after the controls definitions, thereby allowing reference to the
+  controls.</p></li>
+
+  <li><p>Local Code - Code that will be local to the form object. Again any code here
+  will be inserted after controls are defined.</p></li>
+
+  <li><p>On_InitFunction - this is a colon definition into which any initialization code
+  can be added. It is added after local code has been added. It is inserted as the
+  last function in the On_Init: method of the form.</p></li>
+
+  <li><p>Controls - Code entered for a control will become part of a colon definition. This
+  definition will have the name On_NameOfControl e.g in the example form above btnDelete
+  will have a function name On_btnDelete. These functions are only created if code is
+  entered for a control. Note that while code can be entered for all controls, not all
+  controls code is added to the form. Currently only code for Pushbuttons, Radiobuttons,
+  Checkboxes, Listboxes, ComboListboxes and Horizontal and Vertical Scroll bars are added
+  to a form. Any code added will then become part of a default Wm_Command-Func.</p></li>
+</ul>
+
+<p>Please note that code for controls as well as the On_InitFunction become part
+of a colon definition. Be guided in your coding accordingly.</p>
+
+<p>When a form is saved as a .ff file any code entered will be saved in a separate
+file under the same name but with "_code" added to the name e.g Dirbox.ff, Dirbox.ff_code.
+On opening a .ff file a code file is searched for in the same directory as the
+form file. If found, it is loaded, otherwise the form is loaded as if no code ever
+existed.</p>
+
+<br>
+<p>The lower buttons are used as follows :</p>
+
+<ul>
+  <li><p><b>Preview</b> - opens a window to show continously updated form code.</p></li>
+
+
+  <li><b>Test</b> - opens the Win32Forth console to test the form. A temporary file, not the
+  .frm file, is created and loaded to allow for testing any code entered. Breakpoints
+  can be set in the entered code to allow for debugging. While forms can also be tested
+  from the IDE ( click test from the form toolbar or the form's right-click menu ) it is
+  recommended that such forms, especially if significant code has been added, be
+  tested from a fresh Win32Forth instance.</li>
+
+  </ul>
+
+<hr>
+
+<p>Document : Code Window.htm -- 2008/08/26 -- Ezra Boyce</p>
+
+</body>
+
+</html>

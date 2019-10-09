@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>gdiWindowDc -- Window device context class
+</h1><hr /><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><h2>Glossary
+</h2><pre><b><a name="0">:class gdiWindowDC &lt;super gdiDC
+</a></b></pre><p>Window device context class
+</p><pre><b><a name="1">:M Release: ( -- )
+</a></b></pre><p>The Release: method releases a device context (DC), freeing it
+for use by other applications. The effect of the ReleaseDC function depends
+on the type of DC. It frees only common and window DCs. It has no effect on
+class or private DCs.
+</p><pre><b><a name="2">:M GetDC: &nbsp;&nbsp;&nbsp;( hWnd -- f )
+</a></b></pre><p>The GetDC method retrieves a handle to a display device context
+for the client area of a specified window.
+</p><pre><b><a name="3">:M GetDCEx: &nbsp;&nbsp;&nbsp;&nbsp;( hrgnClip flags hWnd -- f )
+</a></b></pre><p>The GetDCEx method &nbsp;retrieves a handle to a display device context
+for the client area of a specified window or for the entire screen.
+You can use the returned handle in subsequent GDI functions to draw in the DC.
+</p><p>This function is an extension to the GetDC function, which gives an application
+more control over how and whether clipping occurs in the client area.
+</p><p><i>&nbsp;hrgnClip </i>&nbsp;Specifies a clipping region that may be combined with the visible region
+of the DC. If the value of flags is DCX_INTERSECTRGN or DCX_EXCLUDERGN, then the
+operating system assumes ownership of the region and will automatically delete it
+when it is no longer needed. In this case, applications should not use the region
+not even delete it after a successful call to GetDCEx.
+</p><p><i>&nbsp;flags </i>&nbsp;Specifies how the DC is created. This parameter can be one or more of the
+following values.
+</p><p><b>&nbsp;DCX_WINDOW </b>&nbsp;Returns a DC that corresponds to the window rectangle rather
+than the client rectangle.
+</p><p><b>&nbsp;DCX_CACHE </b>&nbsp;Returns a DC from the cache, rather than the OWNDC or CLASSDC
+window. Essentially overrides CS_OWNDC and CS_CLASSDC.
+</p><p><b>&nbsp;DCX_PARENTCLIP </b>&nbsp;Uses the visible region of the parent window. The parent's
+WS_CLIPCHILDREN and CS_PARENTDC style bits are ignored. The
+origin is set to the upper-left corner of the window identified
+by hWnd.
+</p><p><b>&nbsp;DCX_CLIPSIBLINGS </b>&nbsp;Excludes the visible regions of all sibling windows above the
+window identified by hWnd.
+</p><p><b>&nbsp;DCX_CLIPCHILDREN </b>&nbsp;Excludes the visible regions of all child windows below the
+window identified by hWnd.
+</p><p><b>&nbsp;DCX_NORESETATTRS </b>&nbsp;Does not reset the attributes of this DC to the default attributes
+when this DC is released.
+</p><p><b>&nbsp;DCX_LOCKWINDOWUPDATE </b>&nbsp;Allows drawing even if there is a LockWindowUpdate call in effect
+that would otherwise exclude this window. Used for drawing during
+tracking.
+</p><p><b>&nbsp;DCX_EXCLUDERGN </b>&nbsp;The clipping region identified by hrgnClip is excluded from the
+visible region of the returned DC.
+</p><p><b>&nbsp;DCX_INTERSECTRGN </b>&nbsp;The clipping region identified by hrgnClip is intersected with the
+visible region of the returned DC.
+</p><p><b>&nbsp;DCX_VALIDATE </b>&nbsp;When specified with DCX_INTERSECTUPDATE, causes the DC to be
+completely validated. Using this function with both DCX_INTERSECTUPDATE
+and DCX_VALIDATE is identical to using the BeginPaint function.
+</p><pre><b><a name="4">:M GetWindowDC: ( hWnd -- f )
+</a></b></pre><p>The GetWindowDC method retrieves the device context (DC) for the entire
+window, including title bar, menus, and scroll bars. A window device
+context permits painting anywhere in a window, because the origin of
+the device context is the upper-left corner of the window instead of
+the client area.
+</p><pre><b><a name="5">:M GetDCOrg: &nbsp;&nbsp;&nbsp;( -- x y )
+</a></b></pre><p>The GetDCOrgEx function retrieves the final translation origin for a specified device
+context (DC). The final translation origin specifies an offset that the system uses to
+translate device coordinates into client coordinates (for coordinates in an application's
+window).
+</p><pre><b><a name="6">;class
+</a></b></pre><p>End of gdiWindowDC &nbsp;class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

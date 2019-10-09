@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>The Forth engine</span></h1>
+
+<p>Note : all the explanations that follow are a bit simplified, compared to the
+real life - but just a bit - Forth is a very simple language</p>
+
+<p>The Forth language is quite original compared to other computer languages. It can
+be fully described in short as a dictionary + an interpreter + a data stack.</p>
+
+
+
+<h3>The dictionary</h3>
+
+<p>Forth functions are called "words". Each word is made of a "header" and a "body".
+The body contain the actual code to execute the function.  The headers, containing the
+word's name and some flags, are linked together in a list. So, in the same way functions
+are called "words", this list is called the "dictionary".</p>
+
+<p>To execute a function, we type it's name. Then the word is searched in the
+dictionary (in "headers" list) and, if found, the code ("body") is executed. If
+the word is not found in the dictionary, we will get an error.</p>
+
+
+
+<h3>The interpreter</h3>
+
+<p>This is the job of the interpreter, which can be basically represented by the
+following pseudo code : </p>
+<pre>
+: INTERPRET  ( -- )
+             BEGIN get-next-word-from-input-stream   \ false flag if no more word
+                   WHILE
+                   search-word-in-dictionary         \ give cfa and "immediacy" flag
+                   IF   STATE @ =
+                        IF   compile-word
+                        ELSE execute-word
+                   ELSE convert-word-to-a-number
+                        compile-number
+                   THEN
+            REPEAT ;
+</pre>
+<p>Here is how it works :</p>
+
+<p>A word is read from the "input-stream". Then a dictionary
+search is made for this word. If the word is found we will get its "cfa", or "code
+field address" (also sometimes called xt for "execution token"), which is
+its code address (or "body" although it is a very little bit different) and a flag,
+named "immediate flag".</p>
+
+<p>The immediate flag tells the interpreter if the word must be immediately
+executed or compiled. The STATE variable is the current interpreter state :
+compiling or executing ? With theese flags a decision is made weither the word
+will be compiled or executed.</p>
+
+<p>If the word is not found in the dictionary, then it is assumed to be a number
+and the word's string is converted to a number and compiled as a number.</p>
+
+<p>If the conversion to a number fails, then the interpreter will issue a message
+"word xxx is undefined".</p>
+
+<p>If all goes well, the interpreter gets the next word in the input stream, and so
+on until the input stream is empty.</p>
+
+
+<p><br><br>The heart of Forth is in the compile/execute decision part.</p>
+
+<p>By default STATE is set to "interpret" (or "execute"). If nothing is made to
+change this state, it remains the same, as in :</p>
+
+<pre>     2 3 + . [enter]</pre>
+
+<p>which will interpretively display 5 as a result (2 and 3 are numbers converted
+from input stream and pushed on the "data stack" and <code>+</code> and <code>.</code>
+are Forth words already present in the dictionary).</p>
+
+<p>To turn on "compile" state, we need "defining words", that is words able to define (compile)
+new words. The most common one is <code>:</code> (colon) which creates what is called a "colon
+definition". Each colon definition must end with <code>;</code> (semicolon). <code>:</code> accepts
+a name from the input stream, builds a header with that name (the new word's name) and
+<b>sets the interpreter to compile mode</b>. <code>;</code> ends the word definition
+and <b>resets the interpreter back to interpret mode</b>. In between words are compiled
+in the new word's body. So if we type : </p>
+
+<pre>     : newword 2 3 + . ; [enter]</pre>
+
+<p>We won't see anything happen, but the word <code>newword</code> will have been
+added to the dictionary and its function compiled (that is 2 3 + . compiled in its
+body). <code>;</code> has reset the interpreter to interpret mode, so if we now type :</p>
+
+<pre>     newword [enter]</pre>
+
+<p>a 5 is displayed, because newword has been executed.</p>
+
+
+<p><br>Well, simple enough isn't it ? But things can get a bit trickier when you know that
+some words exist that are able to switch from compile state to interpret state (and
+conversely) <b>while compiling</b> . Among them are <code>[</code> and <code>]</code> ,
+which can be used like this :</p>
+<pre>     : aword 2 [ 2 1 + ] + . ;</pre>
+<p>Executing <code>aword</code> will give the same result (5) but the number 3 has
+been generated while compilation, by interpretively adding 2 + 1 and compiling the
+result 3 as a literal. As a result, the <code>aword</code>'s body is exactly the same
+as the <code>newword</code>'s one.</p>
+
+<p>Conversely, you can compile in the dictionary while interpreting, thanks to words
+like <code>,</code> (comma) and many others (see Data Types help sheet for their usage).</p>
+
+
+
+<h3>The data stack</h3>
+
+<p>The data stack and its usage are described in details in the tutorials</p>
+
+
+
+<h3>More defining words</h3>
+
+<p>Among other defining words is <code>CODE</code> which make a "code definition", that is a
+word whose body is not made of other words' cfas but of assembler code.</p>
+
+<p>Many words are used to define data : <code>CONSTANT</code> <code>VARIABLE</code> etc. and
+the versatile <code>CREATE</code>.</p>
+
+<p>Finally, the association of <code>CREATE</code> and <code>DOES></code> offers you the
+definitive McGiver-tool as it allows to create <b>new defining words !</b></p>
+
+<p>You will find more detailed info about all theese in the tutorials and the "data types"
+help sheet in this help.</p>
+
+
+
+<p><hr>Document : w32f-forthengine -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

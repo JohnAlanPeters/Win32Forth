@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Creating and Compiling a Form</title>
+    <link rel="stylesheet" type="text/css" href="IDEstyle.css">
+</head>
+<body>
+
+<h1>Creating and Compiling a Form</h1>
+
+<br>
+
+
+<p>Click on New form in the toolbar or select 'New' from  the "Form" menu to create
+a form with default parameters. After a form is displayed click on the desired control
+in the toolbar. That control will appear pressed and remain pressed until another
+control is selected or the select button is clicked. Click at the location on the
+form where the control is to be placed and drag the mouse to create the control.
+Alternatively just click at desired location to create a control of default size.
+Additional controls of the same type can quickly be added by simply clicking on the
+form ( if enabled from the Preferences dialog). <b>Note that if you need to select
+a group of controls or position any you may need to click the select button from
+the toolbar.</b> (If the mouse cursor changes to a hand when hovering over a control
+it indicates "select" mode - a control can be selected and/or moved - otherwise it
+is in "control" mode i.e the selected control will be added if the mouse is
+clicked)</p>
+
+<p>Below is an example of a new form with a single pushbutton control.</p>
+
+
+<p align="center"><img src="New Window.gif" border="0"><br clear="LEFT"></p>
+
+
+<p>Click and drag controls ( make sure you are in "select" mode! ) to reposition
+them on the form. Click and drag on any of the four handles at the corner of the
+control to modify its size.</p>
+
+<p><img src="forthform.gif" align="LEFT" width="32" height="32" border="0">
+The functions "Size sequential controls" , "Arrange sequential controls vertically"
+and  "Arrange sequential controls horizontally" in the menus are very useful for
+quickly positioning controls.</p>
+
+<p>Any group of controls can be selected and aligned or adjusted in size. Left click
+and drag on the form to select the desired controls, indicated by a dashed-line box
+(controls are considered selected if their top left corner falls inside the box).
+Right click anywhere on the form and select "Group Action" from the menu. Select
+desired operation from the "Group Action" dialog. Below is an example form with
+four label controls selected.</p>
+
+
+<p align="center"><img src="GroupExample.gif" alt="" border="0"><br clear="LEFT"></p>
+
+
+<p>The dimensions of the selection box can be fine tuned by using the arrow keys
+(up, down, left, right). These keys increase the area of the selection box only.
+This can be useful in the instance where selected controls are moved outside the
+selection box. By adjusting the box these controls can once again be adjusted.</p>
+
+<p>The Group Action dialog is shown below. The designated function for each button
+should be self-explanatory. However, a word of explanation for the position/size
+adjustment. Set the value for the adjustment in the spinnercontrol, select from the
+radiobuttons which attribute to change, then click the appropiate arrow. The up/right
+arrows and the left/down arrows achieve identical results for size adjustments.</p>
+
+
+<p align="center"><img src="GroupAction.gif" alt="" border="0">
+
+
+<p>Right click on a control and select 'Properties' to modify its name, caption etc.</p>
+
+
+<p align="center"><img src="Control Property Window.gif" border="0"><br clear="LEFT"></p>
+
+
+<p>The Control Properties Window can remain open as you modify controls. However,
+before switching to another control you must 'Apply' the current control's properties
+to save any modifications. To close the property window click 'Close'.</p>
+
+<p>The XPos, YPos, Width and Height parameters are in pixels - no units, twips
+or dips! The Xpos and Ypos are relative to the top left corner of the form. Click
+the arrow to change the value of a property or alternatively enter a number directly
+in the control.</p>
+
+<ul>
+  <li><p>Tooltip - use primarily for bitmap buttons. Enter the text to be displayed
+  when the mouse is hovering over the control.</p></li>
+
+  <li><p>... Pushbutton - if enabled click to browse for a bitmap file.</p></li>
+
+  <li><p>Group - Begins or ends a group of controls. Used to group radiobuttons and
+  checkboxes.</p></li>
+
+  <li><p>Global - If selected the control will be available accessible to the entire
+  program, otherwise it is private to the form object.</p></li>
+
+  <li><p>Spinner - Valid only for textboxes. Converts the control to what is called a
+  spinbutton.</p></li>
+
+  <li><p>Justification - select how text will be shown in control.</p></li>
+
+  <li><p>Previous and Next - Cycle through controls of a form.</p></li>
+  
+  <li><p>SetID - A combolistbox to allow setting an ID from the Windows API to the 
+  control. A default Forth ID is usually set.</p></li>
+  
+  </ul>
+
+<b>Font Selection</b> - To change the default font for a control right click on the
+desired control and select "Change Font" from the menu. Having selected a font its
+properties will be compiled to the form in a definition based on the control's name.
+If a font is needed for the form but not for a control then add a generic control
+and select the font for it. When the form is compiled the selected font will be
+available for general use.</p>
+
+<p><img src="forthform.gif" align="LEFT" width="32" height="32" border="0">
+It is a good idea to choose names for the controls that will indicate the type of
+control. This will be useful especially if the controls are global: e.g<br>
+          txtName - identifies this control as a text box<br>
+          lblName - this a label<br>
+          btnOk   - a pushbutton control etc.</p>
+
+<p>To modify a form's properties right click anywhere in the form and select 'Properties' from the menu. The following
+form will be displayed.</p>
+
+
+<p align="center"><img src="Form Property Window.gif" border="0"><br clear="LEFT">
+<br>
+<br>
+</p>
+
+<p>If 'Modal Form' is selected the form will behave like a modal dialog i.e. access
+to it's parent will be denied until the form is closed. Note that the parent window
+must be set for the form. Note too that a modal form will not return to its caller
+until it is closed.</p>
+
+<p>'Save screen location' allows a form to remember its last screen location when
+it is closed. When next displayed it will return to that saved location.</p>
+
+<p>If 'Status Bar' is checked the form will be compiled and shown with a status bar.
+
+<p> A form can be compiled as a default dialog window, a child window (useful for
+instance in tab controls) or as a multiple document interface (MDI) dialog window.
+Select the appropiate option before compiling. The option 'Initially Hidden' applies
+only to child windows, where a form will be invisible when it is first started.
+Methods are also compiled to allow hiding and unhiding the form.</p>
+
+<p>Multiple forms can be created or open and edited simultaneously. If you are
+working on multiple forms saving a session ( from the Form Toolbar ) will allow
+you to resume where you stopped off.</p>
+
+<p>When a form is compiled to disk it will use the same name as the binary form
+file but with a .frm extension. If a form has been designed and compiled and will
+not need to be modified at a later time the corresponding binary .ff file can be
+deleted if desired.</p>
+
+<br>
+
+<p>To set the position of the compiled form on screen move the mini window in
+the Monitor window or alternatively set the position in the form property window .</p>
+
+<p>The status window in the Form Designer Tab window displays some properties of the
+currently selected control.</p>
+
+
+<center><img src="FormDesignerTab.gif" alt="" border="0"></center>
+
+<hr>
+
+<p>Document : project navigator.htm -- 2008/08/26 -- Ezra Boyce</p>
+
+</body>
+
+</html>
+

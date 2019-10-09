@@ -1,0 +1,28 @@
+/* Note: to set a local style in text, use span: <span style='color:red'> ... </span>*/
+
+body       { font-family: Arial, Verdana, Times, sans-serif;
+             font-size: 14px; text-align: left; margin: 3;
+             background-color: #FFFFFF; }
+
+h1, h2, h3, h4 { color: blue; }
+
+h1         { font-size: 28px; line-height: 48px;
+             border-bottom: 1px solid black;
+             text-align: center; margin: 0;  /*navigators assign a margin to title by default*/
+             background: url('WIN32FORTHIDE.ICO') 0% 50% no-repeat;
+             text-indent: 50px; }
+
+h2         { font-size: 24px; margin-top: 50px; }
+h3         { font-size: 18px; margin-top: 32px; }
+h4         { font-size: 14px; margin-top: 20px; }
+
+pre, code  { color: green; font-weight: bold; }
+
+table      { border: 1px solid gray; }
+th         { background-color: #D3E2ED; } /* th is better than thead : more possibilities */
+td         { border: 1px inset gray; }
+
+a                 { color: #0066CC; }
+a:visited         { color: #78534a;   }
+a:hover, a:active { color: white; background-color: #0066CC; } /*white chars on blue background*/
+

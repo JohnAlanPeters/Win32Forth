@@ -1,0 +1,49 @@
+ProjectName= Player 4th
+BuildFile= apps\Player4\PLAYER4.F
+SearchPath= 
+Player 4th,0
+Modules,37
+apps\Player4\PLAYER4.F
+SRC\CONSOLE\NoConsole.f
+SRC\LIB\excontrols.f
+SRC\LIB\StatusBar.f
+SRC\LIB\Textbox.f
+SRC\LIB\Listbox.f
+SRC\LIB\UpDownControl.f
+SRC\LIB\Buttons.f
+SRC\LIB\Label.f
+SRC\LIB\ScrollBar.f
+SRC\LIB\TabControl.f
+SRC\LIB\w_search.f
+SRC\LIB\volinfo.f
+SRC\LIB\sub_dirs.f
+SRC\LIB\TrayWindow.f
+SRC\LIB\Resources.f
+SRC\LIB\multiopen.f
+SRC\LIB\AcceleratorTables.f
+SRC\LIB\Joystick.f
+SRC\LIB\ExtStruct.f
+SRC\LIB\security.f
+SRC\LIB\struct.f
+APPS\PLAYER4\Pl_Toolset.f
+APPS\PLAYER4\number.f
+APPS\PLAYER4\mshell_r.f
+APPS\PLAYER4\catalog.f
+APPS\PLAYER4\view.f
+APPS\PLAYER4\SearchPath.f
+APPS\PLAYER4\Pl_MciWindow.f
+APPS\PLAYER4\MCIWnd.f
+APPS\PLAYER4\MediaTree.f
+SRC\LIB\TreeView.F
+APPS\PLAYER4\PopupWindow.f
+APPS\PLAYER4\CommandID.f
+APPS\PLAYER4\Pl_About.f
+APPS\PLAYER4\Pl_Version.f
+APPS\PLAYER4\Commands.f
+DLLs,0
+Forms,1
+APPS\PLAYER4\Player4.frm
+Auxiliary Files,0
+Resources,1
+APPS\PLAYER4\Player4.ico
+Docs,0

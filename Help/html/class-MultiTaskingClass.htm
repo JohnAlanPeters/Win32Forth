@@ -1,0 +1,514 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+MultiTaskingClass.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>MultiTaskingClass -- For clustered tasks in objects.
+</h1><h2>Abstract
+</h2><p>CPU's with multiple cores can execute a program faster than cpu's with a single core. <br />
+This is done by breaking up a program in smaller pieces and than execute all pieces simultaneously. <br />
+In multiTaskingClass.f this idea is supported as follows: <br />
+Breaking up is possible at the definition level or at the program level by the 2 classes <b>iTask</b> and <b>wTask</b>. <br />
+Then the pieces are submitted and simultaneously executed in a number of tasks. <br />
+Tasks are coverted to jobs and clustered in an object for easy access.
+</p><p>Objects defined with <b>iTask</b> can be used as soon as ONE definition should be executed in a parallel way
+and the definition uses a do...loop. <br />
+The method <i>Parallel:</i> &nbsp;divides, distributes and submits for execution the specified cfa over a number of jobs. <br />
+A started job can pickup its range for the do...loop part by using the method <i>GetRange:</i>. <br />
+It is possible to change the number of simultaneous jobs before they run.
+</p><p>Objects defined with <b>wTask</b> can be used to execute concurrently one or more different definitions. <br />
+Use the method <i>Submit:</i> for executing a definition in a job. <br />
+When a new job is submitted and the maximum number of jobs has been reached the following will happen at the next job: <br />
+1) The system will wait till all the jobs in one que of one thread are complete. <br />
+2) Then it will allow the submitting more jobs. <br />
+</p><p>Tasks of both classes will get their parameters at the start on the stack
+as soon as the method <i>ToStack:</i> is used just before the job is submitted. <br />
+MultiTaskingClass.f uses the <b>preemptive</b> multitasking system of windows. No need to use pause. <br />
+</p><p><b>Typical passing of parameters to a Job:</b> <br />
+LockJobEntry[: myTasks 10 20 30 <b>3</b> ToStack: myTasks &nbsp;['] TestTask ]Submit: myTasks <br />
+<b>Explanation:</b><br />
+&nbsp;LockJobEntry[: Locks the entrypoint to protect it against overwriting.<br />
+&nbsp;ToStack: Passes the <b>3</b> stack items to the stack of the job.<br />
+&nbsp;]Submit: Submits the task and unlocks the entrypoint just before it returns.
+</p><h2>Glossary
+</h2><p><b><code>code cells+@ &nbsp;( a1 n1 -- n ) \
+</code></b><br>Multiply n1 by the cell size and add the result to address a1
+then fetch the value from that address.
+</p><p><b><code>code cells+! &nbsp;( n a1 n1 -- )
+</code></b><br>Multiply n1 by the cell size and add the result to address a1
+then store the value n to that address.
+</p><p><b><code>: GetValueSpMainThread ( - UpMainThread )
+</code></b><br>Get sp0 of the main thread. Even when a secondary thread is running.
+</p><p><b><code>: SetValueSpMainThread ( - )
+</code></b><br>Sets the sp0 value of the main thread. This is done at the start of Forth or at the start
+of a turnkey
+</p><p><b><code>: MainThread? ( - flag )
+</code></b><br>Detects if a definition is running in the main thread.<br />
+MainThread? returns true when a definition runs in the main thread.
+</p><p><b><code>: GetThreadIndex ( - IDindex )
+</code></b><br>Each thread gets an index. GetThreadIndex returns that index.
+GetThreadIndex in a job can be used to target a value in an array
+for one thread.
+</p><p><b><code>: #Hardware-threads ( - #Hardware-threads )
+</code></b><br>&nbsp;Returns the number of hardware threads found in the CPU.
+</p><p><b><code>: SetPriority ( Prio - )
+</code></b><br>Changes the priority of the thread.
+</p><p><b><code>: below &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Lowers the priority of the thread in order to keep the main thread responsive to the mouse etc.
+</p><p><b><code>: #do &nbsp;\ Compiletime: ( &lt;name&gt; -- ) &nbsp;Runtime: ( limit start - )
+</code></b><br>To construct: &nbsp;&nbsp;&nbsp;&nbsp;do &nbsp;i &nbsp;cfa &nbsp;&nbsp;loop <br />
+EG: <br />
+: test &nbsp;10 0 &nbsp;&nbsp;#do . ; <br />
+Will be compiled as: <br />
+: TEST &nbsp;10 0 &nbsp;&nbsp;&nbsp;DO &nbsp;I . LOOP &nbsp;&nbsp;&nbsp;; <br />
+</p><b>Parameters for 1 job entry in a jobblock:</b>
+<table><tr><th>Name:
+</th>
+<th>Use:
+</th>
+</tr>
+<tr><td>--
+</td>
+<td>-- <b>Note:</b> Parameters starting wih a '&gt;' use the &amp;JobEntry address to get to their adress.
+</td>
+</tr>
+<tr><td>&amp;JobEntry
+</td>
+<td>-- The start adress of one job entry.
+</td>
+</tr>
+<tr><td>&gt;JobCFA
+</td>
+<td>-- Contains the CFA to be executed by a job.
+</td>
+</tr>
+<tr><td>&gt;JobStkDepth
+</td>
+<td>-- The number of stack items for a job.
+</td>
+</tr>
+<tr><td>&gt;JobStkLast
+</td>
+<td>-- A stack for a job to be executed.
+</td>
+</tr>
+<tr><td>&gt;StartTic
+</td>
+<td>-- A double containing the StartTic when a job was started.
+</td>
+</tr>
+<tr><td>&gt;EndTic
+</td>
+<td>-- A double containing the &gt;EndTic when a job became complete.
+</td>
+</tr>
+<tr><td>&gt;CfaDone
+</td>
+<td>-- Contains the previous Cfa of a job entry.
+</td>
+</tr>
+<tr><td>&gt;StartTime
+</td>
+<td>-- A structrure containing the StartTime when a job was started.
+</td>
+</tr>
+<tr><td>&gt;EndTime
+</td>
+<td>-- A structrure containing the EndTime when a job became complete.
+</td>
+</tr>
+<tr><td>&gt;Schedule
+</td>
+<td>-- Reserved to hold a Schedule.
+</td>
+</tr>
+<tr><td>&gt;range
+</td>
+<td>-- 2 cells to hold the start- end-index for a do...loop. used by the class iTasks.
+</td>
+</tr>
+<tr><td>/StkParams
+</td>
+<td>-- The maximum number of parameters to pass to a job. Default is 8.
+</td>
+</tr>
+<tr><td>/JobEntry
+</td>
+<td>-- The size of 1 Job entry.
+</td>
+</tr>
+<tr><td>MinimumSizeJobBlock
+</td>
+<td>-- Minimum size of one job entry.
+</td>
+</tr>
+<tr><td>#JobParms
+</td>
+<td>-- Number of parameters in one job entry.
+</td>
+</tr>
+<tr><td>/TimeParams
+</td>
+<td>-- Partial size of job entry to be used to erase statistics.
+</td>
+</tr>
+</table><p><b><code>: .Timestamp ( &amp;entry - )
+</code></b><br>Displays the time when a job was started.
+</p><p><b><code>: ms@TB &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( time-buf -- ms )
+</code></b><br>Returns the content of a timebuffer into milli-seconds on the stack.
+</p><p><b><code>: .ElapsedJob &nbsp;&nbsp;( start-time-buf end-time-buf -- )
+</code></b><br>Displays the time that has been elapsed betweeen 2 time buffers
+</p><p><b><code>0x7FFFFFFF constant MaxCountSemaphore
+</code></b><br>The maximum count of a Semaphore
+</p><h2>Semaphore class
+</h2><p><b><code>:Class Semaphore &nbsp;&nbsp;&nbsp;&lt;Super Object
+</code></b><br>A semaphore act as a lock that allows multiple threads to wait in line for the resource to be free.
+The state of a semaphore is set to <b>signaled</b> when its count is greater than zero,
+and nonsignaled when its count is zero.
+If the current state of the semaphore is signaled,
+the wait function DECREASES the count by one and waits till the semphomere gets <b>signaled</b>.
+</p><p><b><code>:M CreateSemaphore: ( lpName lMaximumCount lInitialCount lpSemaphoreAttributes -- &nbsp;)
+</code></b><br>Creates a semaphore.<br /> Parameters:<br />
+lpSemaphoreAttributes: Pointer to security attributes can be NULL.<br />
+lInitialCount: Specifies an initial count for the semaphore object.
+This value must be greater than or equal to zero and less than.<br />
+lMaximumCount: Maximum count <br />
+lpName: Pointer to a null-terminated string specifying the name of the semaphore object.
+Can be NULL.
+</p><p><b><code>:M ReleaseSemaphore: ( lpPreviousCount lReleaseCount -- PreviousCount )
+</code></b><br>Increases the count of the specified semaphore.
+Parameters:<br />
+lReleaseCount: Specifies the amount by which the semaphore object's current count is to be INCREASED.
+The value must be greater than zero. If the specified amount would cause the semaphore's
+count to exceed the maximum count that was specified when the semaphore was created,
+the count is not changed and the function returns FALSE.<br />
+lpPreviousCount: Pointer to receive the previous count for the semaphore.
+Can be NULL if the previous count is not required
+</p><p><b><code>:M Increase: &nbsp;{ \ lpPreviousCount -- } ( -- PreviousCount )
+</code></b><br>Releases the semaphore by one.
+</p><p><b><code>:M DecreaseWait: ( ms -- )
+</code></b><br>DECREASES the count of the semaphore by one.
+</p><p><b><code>: SignalObjectAndWait ( bAlertable &nbsp;dwMilliseconds hObjectToWaitOn hObjectToSignal -- res )
+</code></b><br>Allows the caller to atomically signal an object and wait on another object.
+</p><p><b><code>: OpenSemaphore ( dwDesiredAccess bInheritHandle lpName -- hdnl )
+</code></b><br>Returns a handle of an existing named semaphore object.
+</p><p><b><code>:M CloseSemaphore:
+</code></b><br>Closes the semaphore.
+</p><h2>ExclExecute class
+</h2><p><b><code>:Class ExclExecute &nbsp;&nbsp;&nbsp;&lt;Super Object
+</code></b><br>To be used to execute a definition in a serial way by using LockExecute:
+</p><p><b><code>int Executing?
+</code></b><br>Is true when executing
+</p><p><b><code>Semaphore SemaphoreEntryPoint
+</code></b><br>A Semaphore used to lock or unlock an entry point.
+That will protect definitions that are not able to be executed simultanously
+It will also protect data against overwriting by another thread while a previous thread still needs that data.
+</p><p><b><code>:M LockExecute: ( cfa - )
+</code></b><br>Locks, executes and unlocks the specified cfa.
+When more than 1 job try to use LockExecute: at nearly the same time of the same object
+the second job will be executed after the previous job is ready.
+</p><p><b><code>:M Ready?: ( -- Flag )
+</code></b><br>Returns true when LockExecute: is ready.
+</p><h2>TaskPrimitives class
+</h2><p><b><code>:Class TaskPrimitives &nbsp;&nbsp;&nbsp;&lt;Super ExclExecute
+</code></b><br>Contains the <b>general</b> definitions for a task object.
+In task.f a task in Forth is passed to a thread and when it is complete the task will be destroyed.
+That takes more than 1.000.000 cycles for each time a task starts.
+Now a task in Forth will be passed to a job. The Job will be placed in a que of a thread and then be executed.
+Threads will not be destroyed anymore, they simply wait till an ohter job has been submitted.
+All Job entries are located in an array starting at &amp;JobBlock.
+When all job entries are in use and not complete and the next job is submitted,
+then the system waits till one thread is ready.
+All parameters for the used threads are located in an array starting at &amp;ThreadBlocks
+</p><b>Internal parameters defined in the class TaskPrimitives:</b>
+<table><tr><th>Name:
+</th>
+<th>Use:
+</th>
+</tr>
+<tr><td>#threads
+</td>
+<td>-- The maximum number of threads in use in the object.
+</td>
+</tr>
+<tr><td>/Threadblock
+</td>
+<td>-- The size of one Thread-block.
+</td>
+</tr>
+<tr><td>&amp;ThreadBlocks
+</td>
+<td>-- The starting address of a threadblock array when it has been allocated.
+</td>
+</tr>
+<tr><td>OnlyOneThread
+</td>
+<td>-- A flag used to force to use 1 thread only for testing
+</td>
+</tr>
+<tr><td>LastUsedThreadId
+</td>
+<td>-- Used to a next free thread.
+</td>
+</tr>
+<tr><td>FoundJobId
+</td>
+<td>-- Keeps the last found free jobID.
+</td>
+</tr>
+<tr><td>LastUsedJobId
+</td>
+<td>-- Used to find a next free jobID.
+</td>
+</tr>
+<tr><td>&amp;JobBlock
+</td>
+<td>-- Start address of the JobBlock when it has been allocated.
+</td>
+</tr>
+<tr><td>#Jobs
+</td>
+<td>-- Number of entries in the JobBlock.
+</td>
+</tr>
+<tr><td>'CallBack
+</td>
+<td>-- callback function for QueueUserAPC (PAPCFUNC).
+</td>
+</tr>
+<tr><td>FastJobs
+</td>
+<td>-- If true the elapsed times are diplayed in cycles.
+</td>
+</tr>
+<tr><td>QueFull
+</td>
+<td>-- Increments when the que is full. Then the system waits at the next job till one thread is ready unless one job gets complete.
+</td>
+</tr>
+</table><p><b><code>: ResetJob-ThreadID ( - )
+</code></b><br>Set LastUsedJobId and LastUsedThreadId to -1 to reset various ID's
+</p><p><b><code>:M GetQueFull: &nbsp;&nbsp;( -- n )
+</code></b><br>Returns the number of times that all job entries are used.
+</p><p><b><code>:M ResetQueFull: ( -- )
+</code></b><br>Set the count of QueFull to 0.
+</p><p><b><code>:M .QueFull: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Displays the count of QueFull.
+</p><p><b><code>: JobEntryID&gt; &nbsp;( JobEntryAdr - Index )
+</code></b><br>Returns the index of a JobEntry given its address.
+</p><p><b><code>1 CALLBACK: ExecuteJob &nbsp;&nbsp;&nbsp;{ \ #bytes } ( JobEntry -- res ) \ Also defines &amp;ExecuteJob
+</code></b><br>Callback fuction for all jobs that are submitted and need no analyzing.
+</p><p><b><code>1 CALLBACK: ExecuteAnalizeJob &nbsp;&nbsp;&nbsp;{ \ #bytes } &nbsp;( JobEntry -- res ) \ Also defines &amp;ExecuteAnalizeJob
+</code></b><br>Callback fuction for all jobs that are submitted and need to be analyzed.
+</p><p><b><code>:M Set#Jobs: ( n -- )
+</code></b><br>Specify the maximum number of jobs. Set it before starting the object when needed.
+</p><p><b><code>:M Get#Jobs: ( -- n )
+</code></b><br>Get the maximum number of jobs.
+</p><p><b><code>:M GetLockedJobID: ( -- n )
+</code></b><br>Retuns the JobID that is locked
+</p><p><b><code>:M &gt;JobEntry: ( index - adr )
+</code></b><br>Returns the address of a jobentry given its index.
+</p><p><b><code>:M .Jobblock: ( -- )
+</code></b><br>Produces a primitive dump of a jobblock.
+</p><p><b><code>: GetThreadBlock &nbsp;&nbsp;&nbsp;&nbsp;( IDindex - ThreadBlock )
+</code></b><br>Returns the address of the threadblock array for its index.
+</p><p><b><code>: tcb&gt;cfa &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( tcb - tcb&gt;cfa )
+</code></b><br>Returns the address of the CFA to be executed from the threadblock.
+</p><p><b><code>: ThreadIndex &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( - #threads 0 )
+</code></b><br>Returns 0 and the maximum number of simultaneously threads in use by the object.
+</p><p><b><code>:M GetThreadcount: &nbsp;( -- #threads )
+</code></b><br>Returns the maximum number of simultaneously threads in use.
+</p><p><b><code>:M SetThreadcount: &nbsp;( #threads -- )
+</code></b><br>Sets the maximum number of simultaneously threads in use.
+</p><p><b><code>:M Max#threads: &nbsp;&nbsp;&nbsp;&nbsp;( -- #threads )
+</code></b><br>Returns the number of hardware threads. <br />
+It returns 2 for older cpu's.
+</p><p><b><code>: CreateRunThread &nbsp;&nbsp;&nbsp;( IDindex -- )
+</code></b><br>Creates and runs the thread for windows given the ID and use the parameters of a filled entry in the threadblock.
+</p><p><b><code>:M SuspendThread: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( IDindex -- )
+</code></b><br>Suspend a thread with the specified ID.
+</p><p><b><code>:M ResumeThread: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( IDindex -- )
+</code></b><br>Resumes the thread with the specified ID.
+</p><p><b><code>:M SuspendThreads: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Suspend all threads in use by the object.
+</p><p><b><code>:M ResumeThreads: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Resume all threads in use in the object by the object.
+</p><p><b><code>:M TerminateThread: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( IDindex -- )
+</code></b><br>To terminate a thread with the specified ID. <br />
+This will also terminate all running jobs of the thread.
+</p><p><b><code>:M TerminateThreads: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( IDindex -- )
+</code></b><br>Terminates all threads in use in the object by the object.
+This will also terminate all running jobs in the object.
+</p><p><b><code>:M ReleaseArrays: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Release the allocated arrays.
+</p><p><b><code>: MallocJobBlock ( -- )
+</code></b><br>Allocate the needed arrays.
+</p><p><b><code>:M CloseSemaphores: ( -- )
+</code></b><br>Close the semaphores on use by the object.
+</p><p><b><code>: *Canceled* ( ?? - )
+</code></b><br>Resets the stack. *Canceled* is used for reporting.
+</p><p><b><code>: CancelwaitingJob ( index - )
+</code></b><br>Cancel the entry of a job. When a job is running it will continue.
+</p><p><b><code>:M CancelWaitingJobs: ( -- )
+</code></b><br>Cancel waiting and pending jobs of the object.
+Running Jobs will continue
+This might give confusing results a job analysis.
+</p><p><b><code>:M TerminateAllJobs: ( -- )
+</code></b><br>Closes all semaphores and terminate all jobs and threads of one object.
+All waiting jobs will be gone.
+Use Start: to restart mulitasking again.
+</p><p><b><code>:M UseOneThreadOnly: ( -- )
+</code></b><br>Overwrite the number of simultaneously threads in use by the object.
+Use it before submitting a job.
+</p><p><b><code>:M UseALLThreads: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>To overwrite UseOneThreadOnly:. This is default.
+</p><p><b><code>:M GetThreadBlockSize: ( - Size )
+</code></b><br>Returns the threadblock size.
+</p><p><b><code>:M #ActiveThreads: &nbsp;{ \ lpExitCode } ( - #ActiveThreads )
+</code></b><br>Returns the number active threads in the object.
+</p><p><b><code>:M SetThreadBlockSize: &nbsp;( NewSize - )
+</code></b><br>Sets a new size for the thread block.
+</p><p><b><code>:M #IncompleteJobs1Thread: &nbsp;( index -- #jobs )
+</code></b><br>Returns the number of incomplete jobs of one 1 thread given its ID.
+</p><p><b><code>:M #JobsSubmitted: &nbsp;( -- #TotalSubmittedjobs )
+</code></b><br>Returns the total number of submitted jobs in the object.
+</p><p><b><code>:M #IncompleteJobs: &nbsp;( -- #Totaljobs )
+</code></b><br>Returns the total number of incomplete jobs in the object.
+</p><p><b><code>:M Ready?: &nbsp;( -- flag )
+</code></b><br>Returns true when all jobs are ready.
+</p><p><b><code>:M GetFreeJobId: ( -- Index|-1 )
+</code></b><br>Return an index for a free JobEntry or -1 when it fails.
+The result is also stored in FoundJobId.
+</p><p><b><code>: AlertableState &nbsp;( - )
+</code></b><br>Puts a thread in a alertable state. So it can receive and handle submitted jobs (APC's).
+</p><p><b><code>:M FindThread: { \ cand least } ( -- i )
+</code></b><br>Finds a thread to be used for a job. &nbsp;&nbsp;<br />
+This is done by looking for a waiting thread. &nbsp;<br />
+When there is no thread waiting the thread with the least jobs is returned.
+Some threads are not as often used as others, since it is faster to find a waiting thread.
+</p><p><b><code>: 5.r ( n - )
+</code></b><br>Display n right justified using 5 positions followed by a space.
+</p><h2>Analyzer tool
+</h2><p><b>----- Display definitions to be used when the analyzer is ON. -----</b><br />
+(See Analyze:)
+</p><p><b><code>: .JobStatus ( &amp;JobEntry - )
+</code></b><br>Displays the jobstatus of a job given its &amp;JobEntry address.
+</p><p><b><code>: .DifCycles ( startL startH endL endH - )
+</code></b><br>Calculates and displays the difference between a start time and end time in cycles.
+</p><p><b><code>: AverageElapsed \ : ( -- F:AverageInCycles )
+</code></b><br>Calculates the average time In cycles of all jobs in an object.
+</p><p><b><code>: .AverageTime ( F: AverageTime ActTime - )
+</code></b><br>Calculates and displays the relative difference between the average time and actual time of a job.
+</p><p><b><code>:M .JobAnalysis: ( -- )
+</code></b><br>Displays a Job analysis of an object that include elapsed times status and the name of the executed CFA.
+Note: Job entries can be recycled!
+</p><p><b><code>:M .ThreadBlock: ( - )
+</code></b><br>Displays the number of submitted jobs and the number of completed jobs for each thread of an object.
+</p><p><b><code>:M TimeSeconds: ( -- )
+</code></b><br>Displays the time in seconds in .JobAnalysis:.
+</p><p><b><code>:M TimeCycles: ( -- )
+</code></b><br>Displays the time in cycles in .JobAnalysis:.
+</p><p><b><code>:M AnalyzerOff: ( -- )
+</code></b><br>Puts the analyzer for .JobAnalysis: off. This is default. This will be a bit faster.
+</p><p><b><code>:M EraseStats: ( -- )
+</code></b><br>Erase statistics fome the thread block and Job block of an object.
+</p><p><b>----- End of display definitions for the analyzer -----</b>
+</p><p><b><code>: ExecuteInThread &nbsp;( -- )
+</code></b><br>Will run first in any thread.
+</p><p><b><code>:M PrepairThread: &nbsp;&nbsp;( cfa IDindex -- )
+</code></b><br>Prepairs a threadblock with various parameters.
+</p><p><b><code>:M StartQueue: ( cfa IDindex -- )
+</code></b><br>Submits the specified cfa in a new thread and returns.
+</p><p><b><code>:M StartQueues:
+</code></b><br>Start all queues and threads in an object.
+All started threads will get in an alertable state and will
+be ready to receive APC's that use an entry a JobBlock of an object.
+</p><p><b><code>:M MallocThreadArrays: ( -- )
+</code></b><br>Allocates and initializes the ThreadBlock and JobBlock.
+</p><p><b><code>:M Start: ( -- )
+</code></b><br>Used to initialize the object. Must be used before jobs can be submitted
+</p><p><b><code>:M WaitForFreeJobEntry: ( - addr )
+</code></b><br>Waits for a free job entry. When found it will return the addres of the found entry.
+</p><p><b><code>:M LockJobEntry[: ( - )
+</code></b><br>Locks a job entry so it can receive parameters.
+</p><p><b><code>:M ToStack: &nbsp;( ni...n0 &nbsp;n -- &nbsp;)
+</code></b><br>To pass n (maximal 8) parameters to the stack of a job.
+</p><p><b><code>:M WaitForAll: ( - )
+</code></b><br>Wait till LockExecute and all Jobs in the object are complete.
+The definition AlertableState will increase the semaphore when ready.
+</p><p><b><code>: CheckTasbObject ( - )
+</code></b><br>To check if a TasbObject has been started.
+</p><p><b><code>:M Analyze:
+</code></b><br>Starts the analyzer for .JobAnalysis:
+</p><p><b><code>:M StopAnalyzing:
+</code></b><br>Stops the analyzer.
+</p><p><b><code>:M ClassInit: &nbsp;( -- )
+</code></b><br>Initializes the object. Happens automaticly when Forth or a turnkey starts.
+</p><h2>wTasks class
+</h2><p><b><code>:Class wTasks &nbsp;&nbsp;&nbsp;&lt;Super TaskPrimitives
+</code></b><br>To run a number of tasks concurrently that can not be indexed. <br />
+Each task is converted to a job.
+A job can already be complete while the submit action has not yet returned.
+</p><p><b><code>:M ]Submit: ( cfa -- )
+</code></b><br>Submits the specified cfa to a locked JobEntry and return after that job is submitted.
+</p><p><b><code>:M Submit: ( cfa -- )
+</code></b><br>Locks and Submits the specified cfa to a new job and return after that job is submitted.
+To be used when a job needs no parameters.
+</p><p><b><code>:M ]Single: ( cfa -- )
+</code></b><br>Executes the definition of the specified cfa in the main task.
+Made for debugging while running in the MainThread.
+</p><p><b><code>:M Single: ( cfa -- )
+</code></b><br>Locks and execute the specified cfa and return after that job is submitted.
+To be used when a CFA needs no parameters.
+</p><h2>sTask class
+</h2><p><b><code>:Class sTask &nbsp;&nbsp;&nbsp;&lt;Super wTasks
+</code></b><br>To run a number of tasks sequentional. <br />
+Each task is converted to a job. All jobs are placed in ONE que for ONE thread.
+</p><h2>iTasks class
+</h2><p><b><code>:Class iTasks &nbsp;&nbsp;&nbsp;&lt;Super TaskPrimitives
+</code></b><br>To run ONE definition parallel that contains a do...loop. <br />
+The task is distributed over several jobs and then handeld in one go. &nbsp;<br />
+Each job can get the index for the do...loop by using GetRange:. <br />
+GetThreadIndex can be used to target a value in an array.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;2 cells bytes TotalRange
+</code></b><br>2 cells containing the total of all ranges in the object. |
+</p><p><b><code>:M GetRange: &nbsp;( -- High Low )
+</code></b><br>Returns the range to be used before a do...loop of the running job.
+</p><p><b><code>:M Putrange: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( High Low IDindex -- )
+</code></b><br>Saves the range of a job.
+</p><p><b><code>: .range &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( IDindex - )
+</code></b><br>Show the assigned range of a job using the entry index of the job.
+</p><p><b><code>:M .Ranges:
+</code></b><br>Show the ranges of the jobs used by the object.
+Note: Job entries can be overwritten when they are complete.
+</p><p><b><code>:M SubmitRange: &nbsp;{ High low cfa &nbsp;-- }
+</code></b><br>Submits the specified cfa in a new job and return after that job is submitted.
+Range and parameters from ToStack: are also passed to the job.
+</p><p><b><code>:M SubmitRanges: &nbsp;{ cfa High low _#threads -- } \ 3
+</code></b><br>Distributes and submits all the ranges to various jobs.
+</p><p><b><code>:M SetParallelItems: ( cfa limit IndexLow #threads - ) \ 2
+</code></b><br>Initilizes the ranges and submits them.
+</p><p><b><code>:M ]Parallel: \ { limit IndexLow cfa -- } &nbsp;&nbsp;\ 1
+</code></b><br>Submits the specified cfa in a number of jobs. <br />
+Use LockJobEntry[: to lock the entrypoint.
+The number of jobs depend on the number of hardware threads and
+the specified range in limit and IndexLow. <br />
+Parallel: returns when all the jobs in the object are complete. <br />
+Each job can get its range by using GetRange:.<br />
+Each range can be passed to a do..loop or #do <br />
+The debugger can not be used in a job. <br />
+See Single: for debugging.
+</p><p><b><code>:M Parallel: ( limit IndexLow cfa -- ) &nbsp;&nbsp;\ 1
+</code></b><br>Nearly the same as ]Parallel:. Parallel: also uses a lock to prevent nesting while still busy.
+To be used when no other parameters are passed other than limit IndexLow cfa
+</p><p><b><code>:M Single: ( limit IndexLow cfa -- )
+</code></b><br>Executes the definition of the specified cfa in the main thread.
+The executed definition can get its range by using GetRange:.
+Made for debugging while running in the MainThread.
+</p>\s
+</body></html>

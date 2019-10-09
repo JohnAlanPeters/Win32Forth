@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Getting started</h1>
+
+<p>&nbsp;</p>
+
+<h2 align=center style='text-align:center'><span style='color:red'>&quot;DON'T PANIC&quot;</span></h2>
+
+<p>This may seem a little
+encouraging subtitle for getting started. You have to know that theese words
+come from the first version of Win32Forth and in thoose remote times, believe
+us, it was a relevant subtitle. Since then, the documentation has been greatly
+improved but ... the system has become much, much bigger. (For the little story,
+this title was inspired from the movie "A hitchhiker guide to the Galaxy").</p>
+
+<h2>New to Forth ?</h2>
+
+<p>Ok, you love challenges... </p>
+
+<p>And this one is a very good
+choice. Learning Forth is like a game. Your intelligence and your determination
+are your weapons. The enemy is worthy too. It even has capabilities to
+disappear when it feels threathened... But when you win, Forth will no longer
+be an adversary but your best weapon. </p>
+
+<p>Indeed, Forth is not a
+black box like other langages. You have full access to everything, you can
+modify it to suit your needs. After having been a bit disapointed by reverse
+Polish stack notation, you will appreciate to be able to pass a &quot;
+word&quot; as many parameters as you want as input and as output too. You will
+spare a big number of variable thanks to the stack. Moreover, as Forth is an
+interpreted language, you will find easy and fast to test code. So you WILL succeed
+!</p>
+
+<p>Win32Forth is not a simple
+Forth system but there is no problem to begin with a small subset of it. We
+suggest that you proceed in the following order :</p>
+
+<ul>
+ <li >Read most of this documentation. Skip the
+     parts you find incomprehensible. This will give you an overall taste of
+     what is (Win32)Forth and its capabilities.</li>
+ <li>Then focus on the two guides included : Bezemer's &quot;And So Forth&quot; and
+     Noble's &quot;A Beginner's guide to Forth&quot; (you will find them next
+     in this help section).</li>
+ <li>Launch win32Forth by clicking the Console
+     shortcut icon<span style='mso-spacerun:yes'></span><img border=0
+     width=24 height=24 src=FORTHPRO.gif>and
+     type in the exemples you find in the guides.</li>
+ <li>From time to time get back to this
+     documentation, mainly the ANS standard part which, althought a bit obscure
+     sometimes, explains all the basic words of Forth. You can also find all
+     the ANS words gathered in a branch of the words-treeview part of this
+     help.</li>
+ <li>When you begin to get the taste, think
+     about a simple application you could create in Console mode (we mean not a
+     Windows application). At this stage you will need to create a source file,
+     hence to use an editor. You should try to use the IDE for this (see
+     further in this help chapter)</li>
+ <li>Go to the &quot;Who are we / How to Join
+     Us&quot; page to get help when needed.</li>
+ <li >Then you should be on the rails to step to
+     next paragraphes</li>
+</ul>
+
+<p>Getting started isn't that difficult and the rest, you can pickup along the way. </p>
+
+<h2>New to Windows programming ?</h2>
+
+<p>Bad luck ! You are probably
+the worst case, because if win32Forth is a big system, it is a a flea compared
+to Windows. You will have to get<span style='mso-spacerun:yes'>  </span>a good
+bunch of books about Windows programming. Moreover, win32Forth is far from
+being an integrated development tool like Microsoft Visual Basic or Borland
+Delphi. In Win32Forth, we are still talking about WindProc to handle messages
+or Subclassing of controls. </p>
+
+<p>This can be a better way to
+create Windows programs because you understand the internals but it is more
+demanding. Anyway don't be desperated : Win32Forth, fortunately, handles
+Windows with the help of Object Oriented Programming and the implemented
+classes make things much easier. With the demos and applications examples
+provided, you can even get first running result without having to understand
+every detail.</p>
+
+<h2>New to Win32Forth ?</h2>
+
+<p>For you, the master word is
+explore and explore again : browse help, view sources, try demos. With such a
+big system you cannot hope that there will be no pain. It would be the same,
+maybe more painful, if you had to discover the C world. But we pretend that
+this pain will be rewarding because we think that Win32Forth is a good tool.</p>
+
+<p>It is difficult to tell you
+where to start because, Win32Forth still being &quot;under development&quot;,
+the ways it runs, the demos, and the documentation are often changing. We
+cannot avoid, anyway, the Hello program...</p>
+
+<p>From the IDE, select File/Open and open \demos\hello.f or
+go to the demos directory and double click on Hello.f (this will launch the
+IDE - Integrated Development Environment). Use the "Compile" tool. This
+should <code>FLOAD HELLO.F</code> and start the demo. A window should appear with a Title of
+"Hello World" and in the body of the window you should see the program counting
+and displaying the number of times the window has been re-painted. Notice there is not a new item in the task
+bar corresponding to this window. Note
+also that the window is movable and sizable and has minimize, maximize and
+close buttons in the upper right hand corner. There is also a system menu in the title bar
+just to the left of "Hello World". Play with the various things that can be done
+to the window and when you’ve seen enough, close it. Feel free to switch back to the IDE editor
+and study the code, make changes and re-compile and try your changes.When you’ve tired of this,
+close IDE, and go to Win32Forth Console.</p>
+
+<p>From the File menu, select the "Edit Forth File" choice. It should
+open a "file open" dialog. Navigate to
+the Win32Forth\demos folder again, and this time, double click on the
+WINHELLO.F source file. This should open
+the SciEdit editor and display the winhello.f source code file.Take a look at this file and you’ll see
+Win32Forth’s Object Oriented coding approach to creating a Windows program.</p>
+
+<p>Close IDE and Console and
+return to the Windows Explorer window. Locate forthform.exe and double click it. This will
+open a graphical development window in which you can design your own application window with
+various graphical controls. This program will generate the Win32Forth source code required
+to create your own program, but without all the hassle of having to type it out yourself.</p>
+
+<p>Explore ForthForm’s menus. They will probably seem pretty
+familiar to most programmers who are accustomed to such tools, but should not
+be too difficult for any user to understand. There is a nice help file accessible from the
+help menu.</p>
+
+<p>From the Form menu, click "New". This should open a new window with Form1 in its title
+bar. You’ll notice that it has the same standard window functionality as our "Hello World"
+examples.</p>
+
+<p>From the Form menu, click "Test". This should open a new window just like the original
+with Form1 in its title bar. You’ll notice that it also has the same standard window
+functionality as our "Hello World" examples. If you had added other controls to you form,
+they would now act like they will when you compile the program.</p>
+
+<p>If you happen to have multiple monitors, you can drag these windows to any available
+screen - they are not stuck inside the parent form. Pretty neat!</p>
+
+<p>There are lots more things to explore in Win32Forth, we’ve just scratched the surface,
+but this was only "Getting Started with Win32Forth" after all.</p>
+
+<p>Don’t forget to join us in the Win32Forth Yahoo discussion group and share some of
+the cool things you make.</p>
+
+<hr>
+
+<p>Document : w32f-getstart.htm -- 2008/03/16 -- Camille Doiteau</p>
+
+</body>
+
+</html>

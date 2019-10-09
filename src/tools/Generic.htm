@@ -1,0 +1,643 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>Generic-Window -- Base class for all window objects.
+</h1><hr /><p>Generic-Window is the base class for all window objects. &nbsp;This class
+contains an ivar, hWnd, that is the (MS Windows) handle for the
+window. &nbsp;This class encapsulates all the Win32 API calls that specify a
+window handle. &nbsp;There will be the following subclasses of Generic-Window:
+</p><ul>
+<li><a href="class-Window.htm">Window</a> Adds a device context and the ablility to display text and graphics output.</li>
+<li><a href="class-Dialog.htm">Dialog</a> Support for dialog boxes</li>
+<li><a href="class-Control.htm">Control</a> Adds support for the standard Win32 controls with subclassing.</li>
+</ul>
+<p>Since Generic-Window is a generic class it should not be used to create
+any instances. <br />
+The Global Rectangle objects wRect and WndRect ( originally
+defined in Window.f ) are now synonyms of temprect ( defined in class.f )
+which has been made a User Object so that
+Windows in different threads don't interfere with each other's drawing
+operations. <br />
+</p><h2>Glossary
+</h2><pre><b><a name="0">: get-mouse-xy &nbsp;( hWnd -- x y) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F
+</a></b></pre><p>Return the co-ordinates of the mouse pointer in window, hWnd.
+</p><pre><b><a name="1">:CLASS &nbsp;Generic-Window &nbsp;&nbsp;&nbsp;&lt;Super Object
+</a></b></pre><p>Base class for all window objects.
+</p><h3>Instance Variables
+</h3><pre><b><a name="2">int hWnd
+</a></b></pre><p>handle to Win32 window object
+</p><pre><b><a name="3">: SendMessage:Self &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lParam wParam message -- result )
+</a></b></pre><p>Send a windows message to our self.
+</p><pre><b><a name="4">: SendMessage:SelfDrop &nbsp;( lParam wParam message -- )
+</a></b></pre><p>Send a windows message to our self and discard the result.
+</p><h3>Methods
+</h3><pre><b><a name="5">:M Classinit: &nbsp;&nbsp;( -- )
+</a></b></pre><p>Initialise the class.
+</p><pre><b><a name="6">:M GetHandle: &nbsp;&nbsp;( -- hWnd )
+</a></b></pre><p>Get the window handle.
+</p><pre><b><a name="7">:M PutHandle: &nbsp;&nbsp;( hWnd -- )
+</a></b></pre><p>Set the window handle. Normally handled by the system.
+</p><pre><b><a name="8">:M ZeroWindow: &nbsp;( -- )
+</a></b></pre><p>Clear the window handle. Normally handled by the system. All window
+handles are zeroed automatically in the image when saving.
+</p><pre><b><a name="9">:M DestroyWindow: ( -- )
+</a></b></pre><p>Destroy the window. The handle is always zero after executing this method. In a
+multi-tasking application this method causes an error if executed by a task that
+didn't create the window.
+</p><pre><b><a name="10">:M Close: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Close the window.
+</p><pre><b><a name="11">:M Paint: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Force window repaint. A WM_PAINT message is posted to the message queue.
+</p><pre><b><a name="12">:M IsVisible?: &nbsp;( -- f )
+</a></b></pre><p>Check if the window is visible or not.
+</p><pre><b><a name="13">:M SetRedraw: &nbsp;&nbsp;( f -- )
+</a></b></pre><p>Set the redraw state of the window.
+</p><p><i>&nbsp;f </i>&nbsp;Specifies the redraw state. If this parameter is TRUE, the
+content can be redrawn after a change. If this parameter is FALSE,
+the content cannot be redrawn after a change.
+</p><pre><b><a name="14">:M Show: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( state -- )
+</a></b></pre><p>Set the specified window's show state. <br />
+Possible values for state are:
+</p><table border="1"><tr><td>SW_FORCEMINIMIZE
+</td>
+<td>Windows 2000: Minimizes a window, even if the thread that owns the window is hung. This flag should only be used when minimizing windows from a different thread.
+</td>
+</tr>
+<tr><td>SW_HIDE
+</td>
+<td>Hides the window and activates another window.
+</td>
+</tr>
+<tr><td>SW_MAXIMIZE
+</td>
+<td>Maximizes the specified window.
+</td>
+</tr>
+<tr><td>SW_MINIMIZE
+</td>
+<td>Minimizes the specified window and activates the next top-level window in the Z order.
+</td>
+</tr>
+<tr><td>SW_RESTORE
+</td>
+<td>Activates and displays the window. If the window is minimized or maximized, the system restores it to its original size and position. An application should specify this flag when restoring a minimized window.
+</td>
+</tr>
+<tr><td>SW_SHOW
+</td>
+<td>Activates the window and displays it in its current size and position.
+</td>
+</tr>
+<tr><td>SW_SHOWDEFAULT
+</td>
+<td>Sets the show state based on the SW_ value specified in the STARTUPINFO structure passed to the CreateProcess function by the program that started the application.
+</td>
+</tr>
+<tr><td>SW_SHOWMAXIMIZED
+</td>
+<td>Activates the window and displays it as a maximized window.
+</td>
+</tr>
+<tr><td>SW_SHOWMINIMIZED
+</td>
+<td>Activates the window and displays it as a minimized window.
+</td>
+</tr>
+<tr><td>SW_SHOWMINNOACTIVE
+</td>
+<td>Displays the window as a minimized window. This value is similar to SW_SHOWMINIMIZED, except the window is not activated.
+</td>
+</tr>
+<tr><td>SW_SHOWNA
+</td>
+<td>Displays the window in its current size and position. This value is similar to SW_SHOW, except the window is not activated.
+</td>
+</tr>
+<tr><td>SW_SHOWNOACTIVATE
+</td>
+<td>Displays a window in its most recent size and position. This value is similar to SW_SHOWNORMAL, except the window is not actived.
+</td>
+</tr>
+<tr><td>SW_SHOWNORMAL
+</td>
+<td>Activates and displays a window. If the window is minimized or maximized, the system restores it to its original size and position. An application should specify this flag when displaying the window for the first time.
+</td>
+</tr>
+</table><p>If the window belongs to a different task or application the WM_SHOW is posted to the
+the message queue to prevent the current task hanging. If the window belongs to the
+current task the message is sent.
+</p><pre><b><a name="15">:M GDIFlush: &nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Flush the calling thread's current batch.
+</p><pre><b><a name="16">:M Update: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Update the client area of the window by sending
+a WM_PAINT message to the window if the window's update region is not empty. The
+function sends a WM_PAINT message directly to the window procedure of the window,
+bypassing the application queue. If the update region is empty, no message is sent.
+</p><pre><b><a name="17">:M Scroll: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ x y -- }
+</a></b></pre><p>Scroll the contents of the specified window's client area.
+</p><pre><b><a name="18">:M Move: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ x y w h -- }
+</a></b></pre><p>Change the position and dimensions of window.
+For a top-level window, the position and dimensions are relative to the upper-left corner
+of the screen. For a child window, they are relative to the upper-left corner of the parent
+window's client area.
+</p><pre><b><a name="19">:M SetWindowPos: { x y -- }
+</a></b></pre><p>The SetWindowPos function changes the position of a child, pop-up, or top-level window. <br />
+X Specifies the new position of the left side of the window, in client coordinates. <br />
+Y Specifies the new position of the top of the window, in client coordinates.
+</p><pre><b><a name="20">:M GetWindowRect: ( -- left top right bottom )
+</a></b></pre><p>The GetWindowRect method retrieves the dimensions of the bounding rectangle of the window.
+The dimensions are given in screen coordinates that are relative to the upper-left corner
+of the screen.
+</p><pre><b><a name="21">:M SetMenu: &nbsp;&nbsp;&nbsp;&nbsp;( MenuHandle -- )
+</a></b></pre><p>The SetMenu function assigns a new menu to the window.
+If MenuHandle is NULL, the window's current menu is removed.
+</p><pre><b><a name="22">:M SetText: &nbsp;&nbsp;&nbsp;&nbsp;{ addr len \ text$ -- }
+</a></b></pre><p>The SetWindowText function changes the text of the window's title bar (if it has one).
+If the window is a control, the text of the control is changed.
+</p><pre><b><a name="23">:M GetText: &nbsp;&nbsp;&nbsp;&nbsp;( -- addr len )
+</a></b></pre><p>The GetWindowText function copies the text of the window's title bar (if it has one)
+into a buffer. If the window is a control, the text of the control is copied.
+The text is stored in a dynamic buffer so should be copied if it needs to be
+persistant.
+</p><pre><b><a name="24">:M SetTextAlign: ( flag -- )
+</a></b></pre><p>Set the text-alignment for the window. <br />
+The current position is updated after each text output call.
+The current position is used as the reference point.
+Possible values for flag are:
+</p><table border="1"><tr><td>0
+</td>
+<td>The reference point will be on the left edge of the bounding rectangle.
+</td>
+</tr>
+<tr><td>1
+</td>
+<td>The reference point will be on the right edge of the bounding rectangle.
+</td>
+</tr>
+<tr><td>2
+</td>
+<td>The reference point will be aligned horizontally with the center of the bounding rectangle.
+</td>
+</tr>
+</table><pre><b><a name="25">:M GetDC: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- hdc )
+</a></b></pre><p>The GetDC function retrieves a handle to a display device context (DC)
+for the client area of the window. <br />
+You have to call ReleaseDC when the DC isn't needed any longer.
+</p><pre><b><a name="26">:M GetWindowDC: ( -- hdc )
+</a></b></pre><p>The GetWindowDC function retrieves the device context (DC) for the entire
+window, including title bar, menus, and scroll bars. A window device context
+permits painting anywhere in a window, because the origin of the device context
+is the upper-left corner of the window instead of the client area. <br />
+GetWindowDC assigns default attributes to the window device context each time it
+retrieves the device context. Previous attributes are lost. <br />
+You have to call ReleaseDC when the DC isn't needed any longer.
+</p><pre><b><a name="27">:M ReleaseDC: &nbsp;&nbsp;( hdc -- )
+</a></b></pre><p>The ReleaseDC function releases the device context (DC) of the window. <br />
+Call only after GetDC or GetWindowDC.
+</p><pre><b><a name="28">:M BeginPaint: &nbsp;( ps -- hdc )
+</a></b></pre><p>The BeginPaint function prepares the window for painting and fills a
+PAINTSTRUCT (ps) structure with information about the painting.
+</p><pre><b><a name="29">:M EndPaint: &nbsp;&nbsp;&nbsp;( ps -- )
+</a></b></pre><p>The EndPaint function marks the end of painting in the window. This function is
+required for each call to the BeginPaint function, but only after painting is complete.
+</p><pre><b><a name="30">:M GetClientRect: &nbsp;( rect -- )
+</a></b></pre><p>The GetClientRect function retrieves the coordinates of the window's client area. The
+client coordinates specify the upper-left and lower-right corners of the client area.
+Because client coordinates are relative to the upper-left corner of a window's client
+area, the coordinates of the upper-left corner are (0,0).
+</p><pre><b><a name="31">:M GetWindowLong: &nbsp;( index -- value )
+</a></b></pre><p>The GetWindowLong function retrieves information about the window. The function
+also retrieves the 32-bit (long) value at the specified offset into the extra
+window memory. <br />
+Index Specifies the zero-based offset to the value to be retrieved. Valid values are
+in the range zero through the number of bytes of extra window memory, minus four; for
+example, if you specified 12 or more bytes of extra memory, a value of 8 would be an
+index to the third 32-bit integer. To retrieve any other value, specify one of the
+following values.
+</p><table border="1"><tr><td>GWL_EXSTYLE
+</td>
+<td>Retrieves the extended window styles. For more information, see CreateWindowEx.
+</td>
+</tr>
+<tr><td>GWL_STYLE
+</td>
+<td>Retrieves the window styles.
+</td>
+</tr>
+<tr><td>GWL_WNDPROC
+</td>
+<td>Retrieves the address of the window procedure, or a handle representing the address of the window procedure. You must use the CallWindowProc function to call the window procedure.
+</td>
+</tr>
+<tr><td>GWL_HINSTANCE
+</td>
+<td>Retrieves a handle to the application instance.
+</td>
+</tr>
+<tr><td>GWL_HWNDPARENT
+</td>
+<td>Retrieves a handle to the parent window, if any.
+</td>
+</tr>
+<tr><td>GWL_ID
+</td>
+<td>Retrieves the identifier of the window.
+</td>
+</tr>
+<tr><td>GWL_USERDATA
+</td>
+<td>Retrieves the 32-bit value associated with the window. Each window has a corresponding 32-bit value intended for use by the application that created the window. This value is initially zero.
+</td>
+</tr>
+</table><pre><b><a name="32">:M SetWindowLong: &nbsp;( value index -- oldval )
+</a></b></pre><p>The SetWindowLong function changes an attribute of the window. The function also sets the
+32-bit (long) value at the specified offset into the extra window memory.
+</p><table border="1"><tr><td>GWL_EXSTYLE
+</td>
+<td>Sets a new extended window style. For more information, see CreateWindowEx.
+</td>
+</tr>
+<tr><td>GWL_STYLE
+</td>
+<td>Sets a new window style.
+</td>
+</tr>
+<tr><td>GWL_WNDPROC
+</td>
+<td>Sets a new address for the window procedure. Windows NT/2000: You cannot change this attribute if the window does not belong to the same process as the calling thread.
+</td>
+</tr>
+<tr><td>GWL_HINSTANCE
+</td>
+<td>Sets a new application instance handle.
+</td>
+</tr>
+<tr><td>GWL_ID
+</td>
+<td>Sets a new identifier of the window.
+</td>
+</tr>
+<tr><td>GWL_USERDATA
+</td>
+<td>Sets the 32-bit value associated with the window. Each window has a corresponding 32-bit value intended for use by the application that created the window. This value is initially zero.
+</td>
+</tr>
+</table><pre><b><a name="33">:M GetStyle: &nbsp;&nbsp;&nbsp;( -- style )
+</a></b></pre><p>Retrieves the window styles of a running window.
+</p><pre><b><a name="34">:M SetStyle: &nbsp;&nbsp;&nbsp;( style -- )
+</a></b></pre><p>Sets a new window style of a running window.
+</p><pre><b><a name="35">:M +Style: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( style -- )
+</a></b></pre><p>Add a window style to a running window.
+</p><pre><b><a name="36">:M -Style: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( style -- )
+</a></b></pre><p>Remove a window style from a running window.
+</p><pre><b><a name="37">:M SetFocus: &nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>The SetFocus function sets the keyboard focus to the window. The window must be
+attached to the calling thread's message queue.
+</p><pre><b><a name="38">:M SetForegroundWindow: ( -- )
+</a></b></pre><p>The SetForegroundWindow function puts the thread that created the specified window
+into the foreground and activates the window. Keyboard input is directed to the window,
+and various visual cues are changed for the user. The system assigns a slightly higher
+priority to the thread that created the foreground window than it does to other threads. <br />
+The foreground window is the window at the top of the Z order. It is the window that the
+user is working with. In a preemptive multitasking environment, you should generally let the
+user control which window is the foreground window. <br />
+Windows 98, Windows 2000: The system restricts which processes can set the foreground window.
+A process can set the foreground window only if one of the following conditions is true: <br />
+- The process is the foreground process. <br />
+- The process was started by the foreground process. <br />
+- The process received the last input event. <br />
+- There is no foreground process. <br />
+- The foreground process is being debugged. <br />
+- The foreground is not locked (see LockSetForegroundWindow). <br />
+- The foreground lock time-out has expired (see SPI_GETFOREGROUNDLOCKTIMEOUT in SystemParametersInfo). <br />
+- Windows 2000: No menus are active. <br />
+With this change, an application cannot force a window to the foreground while the user is
+working with another window. Instead, SetForegroundWindow will activate the window (see SetActiveWindow)
+and call the FlashWindowEx function to notify the user. For more information, see Foreground and
+Background Windows. <br />
+A process that can set the foreground window can enable another process to set the foreground window by
+calling the AllowSetForegroundWindow function. The process specified by dwProcessId loses the ability to
+set the foreground window the next time the user generates input, unless the input is directed at that
+process, or the next time a process calls AllowSetForegroundWindow, unless that process is specified. <br />
+The foreground process can disable calls to SetForegroundWindow by calling the LockSetForegroundWindow function.
+</p><pre><b><a name="39">:M SetActiveWindow: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>The SetActiveWindow function activates a window. The window must be attached to the calling thread's message queue. <br />
+The SetActiveWindow function activates a window, but not if the application is in the background. The window will be
+brought into the foreground (top of Z order) if its application is in the foreground when the system activates the window. <br />
+If the window identified by the hWnd parameter was created by the calling thread, the active window status of the calling
+thread is set to hWnd. Otherwise, the active window status of the calling thread is set to NULL. <br />
+By using the AttachThreadInput function, a thread can attach its input processing to another thread.
+This allows a thread to call SetActiveWindow to activate a window attached to another thread's message queue.
+</p><pre><b><a name="40">:M MessageBox: &nbsp;( szText szTitle style -- result )
+</a></b></pre><p>The MessageBox function creates, displays, and operates a message box. The message box contains an
+application-defined message and title, plus any combination of predefined icons and push buttons.
+</p><table border="1"><tr><td>szText
+</td>
+<td>Pointer to a null-terminated string that contains the message to be displayed.
+</td>
+</tr>
+<tr><td>szTitle
+</td>
+<td>Pointer to a null-terminated string that contains the dialog box title. If this parameter is NULL, the default title Error is used.
+</td>
+</tr>
+<tr><td>Type
+</td>
+<td>Specifies the contents and behavior of the dialog box. This parameter can be a combination of flags from the following groups of flags.
+</td>
+</tr>
+</table><p>To indicate the buttons displayed in the message box, specify one of the following values. |
+</p><table border="1"><tr><td>MB_ABORTRETRYIGNORE
+</td>
+<td>The message box contains three push buttons: Abort, Retry, and Ignore.
+</td>
+</tr>
+<tr><td>MB_CANCELTRYCONTINUE
+</td>
+<td>Windows 2000: The message box contains three push buttons: Cancel, Try Again, Continue. Use this message box type instead of MB_ABORTRETRYIGNORE.
+</td>
+</tr>
+<tr><td>MB_HELP
+</td>
+<td>Adds a Help button to the message box. When the user clicks the Help button or presses F1, the system sends a WM_HELP message to the owner.
+</td>
+</tr>
+<tr><td>MB_OK
+</td>
+<td>The message box contains one push button: OK. This is the default.
+</td>
+</tr>
+<tr><td>MB_OKCANCEL
+</td>
+<td>The message box contains two push buttons: OK and Cancel.
+</td>
+</tr>
+<tr><td>MB_RETRYCANCEL
+</td>
+<td>The message box contains two push buttons: Retry and Cancel.
+</td>
+</tr>
+<tr><td>MB_YESNO
+</td>
+<td>The message box contains two push buttons: Yes and No.
+</td>
+</tr>
+<tr><td>MB_YESNOCANCEL
+</td>
+<td>The message box contains three push buttons: Yes, No, and Cancel.
+</td>
+</tr>
+</table><p>To display an icon in the message box, specify one of the following values.
+</p><table border="1"><tr><td>MB_ICONEXCLAMATION, MB_ICONWARNING
+</td>
+<td>An exclamation-point icon appears in the message box.
+</td>
+</tr>
+<tr><td>MB_ICONINFORMATION, MB_ICONASTERISK
+</td>
+<td>An icon consisting of a lowercase letter i in a circle appears in the message box.
+</td>
+</tr>
+<tr><td>MB_ICONQUESTION
+</td>
+<td>A question-mark icon appears in the message box.
+</td>
+</tr>
+<tr><td>MB_ICONSTOP, MB_ICONERROR, MB_ICONHAND
+</td>
+<td>A stop-sign icon appears in the message box.
+</td>
+</tr>
+</table><p>To indicate the default button, specify one of the following values.
+</p><table border="1"><tr><td>MB_DEFBUTTON1
+</td>
+<td>The first button is the default button. MB_DEFBUTTON1 is the default unless MB_DEFBUTTON2, MB_DEFBUTTON3, or MB_DEFBUTTON4 is specified
+</td>
+</tr>
+<tr><td>MB_DEFBUTTON2
+</td>
+<td>The second button is the default button.
+</td>
+</tr>
+<tr><td>MB_DEFBUTTON3
+</td>
+<td>The third button is the default button.
+</td>
+</tr>
+<tr><td>MB_DEFBUTTON4
+</td>
+<td>The fourth button is the default button.
+</td>
+</tr>
+</table><p>To specify other options, use one or more of the following values.
+</p><table border="1"><tr><td>MB_RIGHT
+</td>
+<td>The text is right-justified.
+</td>
+</tr>
+<tr><td>MB_SETFOREGROUND
+</td>
+<td>The message box becomes the foreground window. Internally, the system calls the SetForegroundWindow function for the message box.
+</td>
+</tr>
+<tr><td>MB_TOPMOST
+</td>
+<td>The message box is created with the WS_EX_TOPMOST window style.
+</td>
+</tr>
+</table><p>If the function succeeds, the return value is one of the following menu-item values.
+</p><table border="1"><tr><td>IDABORT
+</td>
+<td>Abort button was selected.
+</td>
+</tr>
+<tr><td>IDCANCEL
+</td>
+<td>Cancel button was selected.
+</td>
+</tr>
+<tr><td>IDCONTINUE
+</td>
+<td>Continue button was selected.
+</td>
+</tr>
+<tr><td>IDIGNORE
+</td>
+<td>Ignore button was selected.
+</td>
+</tr>
+<tr><td>IDNO No
+</td>
+<td>button was selected.
+</td>
+</tr>
+<tr><td>IDOK OK
+</td>
+<td>button was selected.
+</td>
+</tr>
+<tr><td>IDRETRY
+</td>
+<td>Retry button was selected.
+</td>
+</tr>
+<tr><td>IDTRYAGAIN
+</td>
+<td>Try Again button was selected.
+</td>
+</tr>
+<tr><td>IDYES
+</td>
+<td>Yes button was selected.
+</td>
+</tr>
+</table><pre><b><a name="41">:M InvalidateRect: ( bgflag rectangle -- )
+</a></b></pre><p>The InvalidateRect function adds a rectangle to the window's update region.
+The update region represents the portion of the window's client area that must be redrawn.
+</p><table border="1"><tr><td>lpRect
+</td>
+<td>Pointer to a RECT structure that contains the client coordinates of the rectangle to be added to the update region. If this parameter is NULL, the entire client area is added to the update region.
+</td>
+</tr>
+<tr><td>bErase
+</td>
+<td>Specifies whether the background within the update region is to be erased when the update region is processed. If this parameter is TRUE, the background is erased when the BeginPaint function is called.
+</td>
+</tr>
+</table><pre><b><a name="42">:M GetDlgItem: &nbsp;( id -- handle )
+</a></b></pre><p>The GetDlgItem function retrieves a handle of the control (id) in the window.
+</p><pre><b><a name="43">:M GetDlgItemText: &nbsp;( addr len id -- len )
+</a></b></pre><p>The GetDlgItemText function retrieves the title or text associated with a control in the window.
+</p><pre><b><a name="44">:M SetDlgItemText: &nbsp;( addr len id -- )
+</a></b></pre><p>The SetDlgItemText function sets the title or text of a control in then window.
+</p><pre><b><a name="45">:M SetDlgItemFocus: ( id -- )
+</a></b></pre><p>Set the focus to the control (id) in the window.
+</p><pre><b><a name="46">:M SelectDlgItemAll: ( id -- )
+</a></b></pre><p>Selects all characters in the edit control (id). You can use this forn an edit control
+or a rich edit control.
+</p><pre><b><a name="47">:M IsDlgButtonChecked: ( id -- f1 )
+</a></b></pre><p>The IsDlgButtonChecked function determines whether a button control has a check mark next to
+it or whether a three-state button control is grayed, checked, or neither.
+</p><pre><b><a name="48">:M CheckDlgButton: ( uCheck id -- )
+</a></b></pre><p>The CheckDlgButton function changes the check state of a button control.
+Possible values for uCheck are:
+</p><table border="1"><tr><td>BST_CHECKED
+</td>
+<td>Sets the button state to checked.
+</td>
+</tr>
+<tr><td>BST_INDETERMINATE
+</td>
+<td>Sets the button state to grayed, indicating an indeterminate state. Use this value only if the button has the BS_3STATE or BS_AUTO3STATE style.
+</td>
+</tr>
+<tr><td>BST_UNCHECKED
+</td>
+<td>Sets the button state to cleared
+</td>
+</tr>
+</table><pre><b><a name="49">:M SetDlgItemAlign: ( flag id -- )
+</a></b></pre><p>Set the text-alignment for a control (id) in the window. <br />
+The current position is updated after each text output call.
+The current position is used as the reference point.
+Possible values for flag are:
+</p><table border="1"><tr><td>0
+</td>
+<td>The reference point will be on the left edge of the bounding rectangle.
+</td>
+</tr>
+<tr><td>1
+</td>
+<td>The reference point will be on the right edge of the bounding rectangle.
+</td>
+</tr>
+<tr><td>2
+</td>
+<td>The reference point will be aligned horizontally with the center of the bounding rectangle.
+</td>
+</tr>
+</table><pre><b><a name="50">:M SetAlign: &nbsp;&nbsp;&nbsp;( flag id -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ DEPRECATED
+</a></b></pre><p>Obsolescent Method use SetDlgItemAlign: instead.
+</p><pre><b><a name="51">:M EnableDlgItem: ( flag id -- )
+</a></b></pre><p>Enable or disable a control (id) in the window.
+Possible values for flag are:
+</p><table border="1"><tr><td>0
+</td>
+<td>disable
+</td>
+</tr>
+<tr><td>1
+</td>
+<td>enable
+</td>
+</tr>
+</table><pre><b><a name="52">:M ShowDlgItem: ( flag id -- )
+</a></b></pre><p>Hide or show a control (id) in the window.
+Possible values for flag are:
+</p><table border="1"><tr><td>0
+</td>
+<td>hide
+</td>
+</tr>
+<tr><td>1
+</td>
+<td>show
+</td>
+</tr>
+</table><pre><b><a name="53">:M CheckRadioButton: ( check_id first_id last_id -- )
+</a></b></pre><p>The CheckRadioButton function adds a check mark to (checks) a specified radio button
+in a group and removes a check mark from (clears) all other radio buttons in the group.
+</p><table border="1"><tr><td>check_id
+</td>
+<td>Specifies the identifier of the radio button to select.
+</td>
+</tr>
+<tr><td>first_id
+</td>
+<td>Specifies the identifier of the first radio button in the group.
+</td>
+</tr>
+<tr><td>last_id
+</td>
+<td>Specifies the identifier of the last radio button in the group.
+</td>
+</tr>
+</table><pre><b><a name="54">:M SendDlgItemMessage: ( lParam wParam message id -- long )
+</a></b></pre><p>Send a message to the control (id) in the window.
+</p><pre><b><a name="55">:M SetDlgItemFont: ( FontObject id -- )
+</a></b></pre><p>Specify the font that the control (id) is to use when drawing text. <br />
+FontObject must be the HANDLE of a font. If this parameter is NULL, the control uses the
+default system font to draw text.
+</p><pre><b><a name="56">: +DialogList &nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ link into dialog list in Start:
+</a></b></pre><p>Used so window responds to Dialog messages. Used by ModeLessDialog DialogWindow and
+MdiDialog classes but can be added to any descendants of class Window (including
+descendants of Child-Window) so they can respond to dialog messages. Can also be
+used programatically.
+</p><pre><b><a name="57">: -DialogList ( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ don't link from dialog list in Start:
+</a></b></pre><p>Disable responding to dialog messages. This was mainly used for the ~: destructor method
+though is no longer needed. Can also be used programatically.
+</p><pre><b><a name="58">:M On_Init: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Thing's to do during creation of the window.
+Default does ?DoAddDialogList.
+</p><pre><b><a name="59">:M On_Done: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Thing's to do when the window will be destroyed. Default does ?DoRemoveDialogList.
+</p><pre><b><a name="60">;CLASS
+</a></b></pre><p>End of generic-window class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

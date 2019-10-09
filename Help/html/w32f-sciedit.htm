@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>SciEdit Editor</h1>
+
+<p>SciEditMdi.exe is a Multiple Document Interface (MDI) text editor for Win32Forth. 
+It is written in Win32Forth utilizing the w32fScintilla.dll.</p>
+
+<p>SciEdit provides the ability to edit source files for Win32Forth. It can be used as
+stand-alone or througth the IDE, which it is the default editor</p>
+
+
+<p>The menus and toolbar provide the options that are available. The interface is similar
+to most typical Windows programs and should be mostly familiar to users who have used other
+editors.</p>
+
+
+<p>The tool bar buttons can be assigned to perform similar functions to those on the
+menus. The menus may list shortcut keys on the right hand side of the option description. 
+Shortcut keys can be used to quickly perform commands without clicking the corresponding
+toolbar button or navigating to the menu selection.</p>
+
+
+<ul>
+ <li>The file menu contains choices
+     that have to do with opening and saving files as well as the usual Exit
+     option :</li>
+</ul>
+
+
+<p>The first 3 choices have to do with opening and
+closing edit windows and loading and saving files to be edited.</p>
+
+<ul>
+ <ul type=circle>
+  <li>New File opens an empty       editing window where text can be entered and edited.</li>
+  <li>Open File allows opening an
+      existing file from the file system.</li>
+  <li>Close File closes the active
+      editing window.</li>
+ </ul>
+</ul>
+
+<p>The next 3 choices have to do with saving files to the file system.</p>
+
+<ul>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Save writes the currently
+      selected edit window to the file system in the file that was opened for
+      editing or asks for a file path and name if none currently is assigned.</li>
+  <li>Save As allows saving the
+      currently selected edit window to the file system in a user specified
+      file path and name.</li>
+  <li>Save All is a multiple application of the save command.</li>
+ </ul>
+</ul>
+
+<p class=MsoNormal style='margin-left:18.0pt'>
+<ul>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Open Highlighted File </li>
+ </ul>
+</ul>
+
+
+<ul>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Open HTML File prompts for the
+      file to open and then displays the HTML file as it would appear in a web
+      browser.</li>
+ </ul>
+</ul>
+
+<p>
+<ul>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Exit asks if any unsaved files
+      should be saved and then closes the program.</li>
+ </ul>
+</ul>
+
+<p>
+<p><p>The most recently edited files are listed just below
+the exit choice for easy access to re-open them for editing.</p>
+
+
+<ul>
+ <li>The Edit menu contains text
+     manipulation commands :</li>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Undo reverses the most recent
+      edit action.</li>
+  <li>Redo reverses the most recent
+      undo edit action.</li>
+  <li>Cut removes the selected text
+      and places it on the clipboard.</li>
+  <li>Copy copies the selected text
+      to the clipboard.</li>
+  <li>Paste copies the clipboard
+      contents to the current cursor position.</li>
+  <li>Delete removes the currently
+      selected text from the edited document.</li>
+  <li>Line Cut removes the selected
+      line of text and places it on the clipboard.</li>
+  <li>Line Copy copies the selected
+      line of text and places it on the clipboard.</li>
+  <li>Line Delete removes the
+      selected line of text from the edited document.</li>
+  <li>Line Transpose</li>
+  <li>Line Duplicate creates a copy
+      of the selected line of text.</li>
+  <li>Select All selects all the
+      text in the current edit window.</li>
+  <li>Remove Selection un-selects
+      any selections that have been made.</li>
+  <li>Search Text allows text to be
+      specified to be searched for and then finds any occurrence of the
+      specified text and positions the edit window so the text is visible and
+      highlights the matched text.</li>
+  <li>Search Next repeats the most
+      recently specified search action.</li>
+  <li>Find text in files allows
+      multiple files to be specified and searched for matching text.</li>
+  <li>Insert Date inserts the
+      current system date at the current cursor position.</li>
+  <li>Insert Date and Time inserts
+      the current system date and time at the current cursor position.</li>
+  <li>Block comment allows a group
+      of specified lines to be commented out.</li>
+  <li>Block uncomment removes a
+      previous block comment from a group of specified lines.</li>
+  <li>Lower Case converts the
+      highlighted text to lower case.</li>
+  <li>Upper Case converts the
+      highlighted text to upper case.</li>
+ </ul>
+</ul>
+
+
+<ul>
+ <li>The View menu contains:</li>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Display Line Endings shows the
+      line ending characters which are usually not visible.</li>
+  <li>Display White Space shows
+      spaces and tabs which are usually not visible.</li>
+  <li>Display Line Numbers shows
+      numbers in the left hand margin to indicate how far down in the file the
+      line is.</li>
+  <li>Colorize Source shows keywords
+      and various other items of text in distinctive colors to allow for easy
+      identification.  Makes editing
+      source code easier on the eyes and helps identify spelling errors.</li>
+  <li>Browse switches the display
+      mode from simple text editing to hyperlinking.<span
+      style='mso-spacerun:yes'>  Right clicking words in a source file
+      will jump to the definition of the word if it can be located.</li>
+ </ul>
+</ul>
+
+
+<ul>
+ <li>The Options menu contains:</li>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Line Endings allows specifying
+      the character or characters to be used to terminate lines based on the
+      target operating system custom.</li>
+  <li>Create Backup Files specifies
+      that the original files should be saved as backup files before changes
+      are made.</li>
+  <li>Save All Files Before Compile
+      writes any unsaved changes to the file system before performing the
+      compilation process.  This can
+      prevent loss of changes if the machine crashes or hangs before the file
+      could otherwise be saved.</li>
+  <li>Set Tab Options allows
+      specifying how the Tab key should be handled.</li>
+  <li>Show Status Bar toggles
+      display of the status bar at the bottom of the window.</li>
+  <li>Show Toolbar toggles display
+      of the toolbar just below the menu.</li>
+  <li>Customize Toolbar provides an
+      edit dialog for modifying the contents and order of the toolbar buttons.</li>
+ </ul>
+</ul>
+
+
+<ul>
+ <li>The Win32Forth menu contains:</li>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Compile invokes the Win32Forth
+      compilation process with the active window as input.</li>
+  <li>Debug </li>
+  <li>Class and Vocabulary Browser
+      displays a tree view containing class and vocabulary names that are
+      currently defined in the Win32Forth system.</li>
+ </ul>
+</ul>
+
+
+<ul>
+ <li>The Window menu contains the
+     customary window position adjustment options:</li>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Tile Horizontally displays the
+      windows the full width of the client area with each active window the
+      same size vertically.</li>
+  <li>Tile Vertically displays the
+      windows the full height of the client area with each active window the
+      same size horizontally.</li>
+  <li>Arrange allows positioning the
+      active windows.</li>
+  <li>Cascade overlaps the windows so
+      that their title bars are visible and stepped for easy location.</li>
+  <li>Close All closes all open edit
+      windows.</li>
+ </ul>
+</ul>
+
+
+<ul>
+ <li>The Help menu contains:</li>
+ <ul style='margin-top:0cm' type=circle>
+  <li>Help For Highlighted ANS word
+      will open the ANS documentation to the section describing the selected
+      ANS word.</li>
+  <li>Win32Forth Documentation opens
+      the Win32Forth help in the default web browser.</li>
+  <li>ANS Forth Standard opens the
+      ANS documentation in the default web browser.</li>
+  <li>Win32Forth Project Group opens
+      the Win32Forth.org home page in the default web browser.</li>
+  <li>Win32Forth Forum opens the
+      Win32Forth Yahoo discussion group home page in the default web browser.</li>
+  <li>About... shows the customary
+      credits and version numbers for the program.</li>
+ </ul>
+</ul>
+
+<hr>
+
+<p>Document : w32f-sciedit.htm -- dbu</p>
+
+
+</body>
+
+</html>

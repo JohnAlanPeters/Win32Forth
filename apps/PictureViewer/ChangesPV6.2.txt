@@ -1,0 +1,57 @@
+***********************************************************************
+Version 6.0
+
+Since version 5.2.2 from May 2005:
+
+Added accelerator Key to rotate 90/-90 - R/ShiftR
+Doubleclick to toggle fullscreen
+Changed hand cursor - some cursors not needed
+Check file exists when opening in openfile
+Changed DoMenu, SetMenu to DoCommand, SetCommand
+Start maximised, save maximised state
+Use Toolbar, Statusbar in src\lib
+ToolbarBitmap as resource 102
+Dialogs as resource
+0 background brush for child
+StatusBarHeight in registry rather than statusbar?
+Toolbar window style as in Sudoku
+checktoolbarandmenu - earlier
+Script to add resources to win32for.exe
+Uninstall - save settings first in RemoveRegKeys
+Check Toolbar on reset/change
+Files open: on statusbar
+Grey some toolbar buttons - print, rotate etc, +, -, B, N.
+Starting size of picture - combo size, picture adjust etc
+Single instance, add to options - so that doubleclicking a file does not open a second PictureVeiwer
+Need null background in child mdi window - SetRedraw: frame, RedrawWindow
+
+
+***********************************************************************
+Version 6.1
+
+Replace 90 s>f fs>ds and -90 s>f fs>ds with constants
+DefineSysgen for turnkeying
+Put registry entries in current Win32Forth directory
+Use SendMessage:Self in PVStatusBar
+Use WndClassStyle: method - SetClassLong still needed for earler Win32Forth
+Use COLOR_BTNFACE background
+Use DefaultIcon: method 
+Start word - Main
+EnableAccelerators only for Sysgen
+Compile to Win32Forth directory
+Fixed bug in FileFound: - set hChildWindow to 0 initially in case no child windows
+Allow multiple instances
+File to add FileAssociations - needs 32 allot in PreviousKey for App.bak
+ToolbarBitmap as resource 102 - use ID from PV.h
+Sort combo, add spaces to sort numbers properly - 3 figs
+Save ScaleCombo values
+Close app closes marked files - added StopExit check during WM_CLOSE
+X mouse buttons for XP and Win2k
+ToolbarLayoutKey for saving toolbar in registry
+
+
+***********************************************************************
+Version 6.2
+Redraw picture before maximising/restoring using WM_WINDOWPOSCHANGING
+DestroyMenu - ToolbarPopup and ChildPopup
+Larger buffer for filenames (nMaxFile = 1024) to open more files at once

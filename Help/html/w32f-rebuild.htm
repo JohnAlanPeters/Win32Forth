@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Rebuild Win32Forth</h2>
+
+<p>Note : <i>rebuilding Win32Forth is not the same as installing it. The .exe programs
+to either install or rebuild Win32Forth are different.</i></p>
+
+<p>You can rebuid Win32Forth with the Setup.exe program. The rebuild is done from the
+kernel and the file extend.f which includes a number of extensions and tools.</p>
+
+<p>You can use several options when doing this (mainly to rebuild parts of Win32Forth).
+One of theese options is used to adjust the dictionary size :</p>
+
+
+<h2>Adjusting the Win32Forth dictionary sizes</h2>
+
+
+<p>To increase the amount of
+dictionary space available for our application, follow these steps:</p>
+
+<ol>
+  <li>Quit Win32Forth before proceeding.<br><br>
+      Win32Forth must be terminated, so the modified dictionary version can be
+      written to disk with the same name.<br><br>
+      You can leave this window open for reference if you have at least 8 megabytes
+      of ram, though it may cause the following steps to take somewhat longer to complete.<br><br></li>
+
+<li>Double click &quot;Setup.exe&quot;. This will start the Win32Forth Setup<br><br></li>
+
+<li>Choose &quot;M&quot; (Meta compile a new Kernel)<br><br>
+    This will begin the process of rebuilding the complete Win32Forth system with the
+    adjusted dictionary sizes.<br><br></li>
+
+<li>Type in the new dictionary sizes and click 'OK'.<br><br>
+    The dictionary sizes you enter into the &quot; Win32Forth Meta Compiler&quot; dialog,
+    need to include the size of Win32Forth's base dictionaries. Add 200,000 to the
+    desired number of available dictionary bytes for both Application and System dictionaries.<br><br>
+    When you have completed these operations, you will have created a modified version of
+    Win32Forth with the new dictionary sizes.<br><br></li>
+
+<li>Double click &quot;Win32Forth&quot; to run with the new dictionary sizes.<br><br>
+    You can type <code>.FREE</code> into the Win32Forth console window to see the new
+    sizes of the dictionaries.</li>
+</ol>
+
+<hr>
+
+<p>Document : w32f-rebuild.htm -- date -- author</p>
+
+</body>
+
+</html>

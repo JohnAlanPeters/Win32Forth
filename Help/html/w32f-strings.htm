@@ -1,0 +1,100 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Character & strings operators</span></h1>
+
+
+
+
+<h2>Strings operators</h2>
+
+<p>String counts convert a counted string address into the addr of its first char
+and the number of characters.</p>
+<pre>
+COUNT      ( str -- addr len ) \ byte counted strings
+WCOUNT     ( str -- addr len ) \ word (2 bytes) counted strings
+LCOUNT     ( str -- addr len ) \ long (4 bytes) counted strings
+MAXCOUNTED ( -- 256 ) \ max length of a byte counted string (255 chars+1 byte)
+</pre>
+<p>Zcount operates on an uncounted and null terminated string.</p>
+<pre>
+ZCOUNT     ( str -- addr len ) \ null terminated string, whose 1rst char is at addr
+</pre>
+
+<p>Strings conversions :</p>
+
+<p><code>ascii-z     ( addr len buff -- buff-z )</code> Make a null-terminated copy of string addr
+len in buff and return the address of the first character.</p>
+
+<p>Theese are string manipulations :</p>
+
+<p><code>COMPARE     ( adr1 len1 adr2 len2 -- n )</code> \ compares two strings. The
+return value is: 0 = string1 = string2 ; -1 = string1 < string2 ; 1 = string1 > string2</p>
+<p><code>STR=        ( adr1 len1 adr2 len2 -- flag )</code> \ compares two strings,
+case sensitive, same as COMPARE 0=</p>
+<p><code>ISTR=       ( adr1 len1 adr2 len2 -- flag )</code> \ compares two strings,
+case insensitive, true if equal</p>
+<p><code>SEARCH      ( c-addr1 u1 c-addr2 u2 -- c-addr3 u3 flag )</code> Search the string
+specified by c-addr1 u1 for the (sub)string specified by c-addr2 u2. If flag is true, a
+match was found at c-addr3 with u3 characters remaining. If flag is false there was no
+match and c-addr3 is c-addr1 and u3 is u1.</p>
+<p><code>SKIP        ( adr len char -- adr' len' )</code> skip leading chars "char" in string</p>
+<p><code>SCAN        ( adr len char -- adr' len' )</code> search first occurence of char "char" in string</p>
+<p><code>WSKIP       ( adr len word -- adr' len' )</code> skip leading words "word" in string</p>
+<p><code>WSCAN       ( adr len word -- adr' len' )</code> search first occurence of word "word" in string</p>
+<p><code>LSKIP       ( adr len long -- adr' len' )</code> skip leading cells "long" in string</p>
+<p><code>LSCAN       ( adr len long -- adr' len' )</code> search first occurence of cell
+"long" in string</p>
+<p><code>-SCAN       ( addr len char -- addr' len' )</code> Scan for char BACKWARDS starting
+at addr, the end of the string, back through len bytes before addr, returning addr' and
+len' of char.</p>
+<p><code>-SKIP       ( addr len char -- addr' len' )</code> Skip occurances of char BACKWARDS
+ starting at addr, the end of the string, back through len bytes before addr, returning
+addr' and len' of char.</p>
+<p><code>PLACE       ( c-addr1 len1 c-addr2 -- )</code> Place string c-addr1,len1 at
+c-addr2 as a counted string.</p>
+<p><code>+PLACE      ( c-addr1 len1 c-addr2 -- )</code> Append string addr1,len1 to
+the counted string at addr2.</p>
+<p><code>+NULL       ( c-addr -- )</code> Append a NULL to the counted string.</p>
+<p><code>-TRAILCHARS ( c-addr u1 char -- c-addr u2 )</code> If u1 is greater than zero,
+u2 is equal to u1 less the number of chars at the end of the character string specified
+by c-addr u1. If u1 is zero or the entire string consists of chars, u2 is zero.</p>
+<p><code>-TRAILING   ( c-addr u1 -- c-addr u2 )</code> If u1 is greater than zero, u2
+is equal to u1 less the number of spaces at the end of the character string specified
+by c-addr u1. If u1 is zero or the entire string consists of spaces, u2 is zero.</p>
+<p><code>-NULLS      ( c-addr u1 -- c-addr u2 )</code> If u1 is greater than zero, u2
+is equal to u1 less the number of nulls at the end of the character string specified
+by c-addr u1. If u1 is zero or the entire string consists of nulls, u2 is zero.</p>
+<p><code>/STRING     ( c-addr1 u1 n -- c-addr2 u2 )</code> Adjust the character string
+at c-addr1 by n characters. The resulting character string, specified by c-addr2 u2,
+begins at c-addr1 plus n characters and is u1 minus n characters long.<br>
+If n1 greater than len1, then returned len2 will be zero. <br>
+/STRING is used to remove or add characters relative to the left end of the
+character string. Positive values of n will exclude characters from the string
+while negative values of n will include characters to the left of the string.</p>
+
+<p>Uppercase / lowercase</p>
+
+<p><code>UPPER     ( addr len -- )</code> translate string to uppercase</p>
+<p><code>LOWER     ( addr len -- )</code> translate string to lowercase</p>
+<p><code>UPPERCASE ( str -- str )</code> translate to uppercase, but not '.' or '.</p>
+
+<p>Some strings constants</p>
+
+<p><code>CRLF$       ( -- str )</code> \ counted CR+LF string</p>
+
+
+
+<h2>Characters operators</h2>
+
+<p><code>UPC       ( char -- char )</code> convert char to uppercase</p>
+<p><code>BL        ( -- bl )</code> \ give space (blank) ascii code (32 decimal, 20h)</p>
+
+<p><hr>Document : w32f-strings -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

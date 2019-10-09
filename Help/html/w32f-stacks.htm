@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Data and return stack operators</h1>
+
+
+
+
+<h2>Data and return stack operators</h2>
+
+<p><br>Double data stack operators : they are often used for pairs of single too.</p>
+
+<p><code>2DROP      ( d -- )</code> delete 2 topmost cells from stack</p>
+<p><code>2DUP       ( d -- d d )</code> duplicate double top of stack</p>
+<p><code>2SWAP      ( d1 d2 -- d2 d1 )</code> exchange 2 topmost doubles</p>
+<p><code>2OVER      ( d1 d2 -- d1 d2 d1 )</code> copy second double on top of stack</p>
+<p><code>2ROT       ( d1 d2 d3 -- d2 d3 d1 )</code> moves third double on top of stack</p>
+<p><code>2NIP       ( d1 d2 -- d2 )</code> delete second double item from stack</p>
+
+<p><br>Single data stack operators.</p>
+<p><code>DROP       ( n -- )</code> delete top of stack</p>
+<p><code>3DROP      ( n1 n2 n3 -- )</code> delete 3 singles from top of stack</p>
+<p><code>4DROP      ( n1 n2 n3 n4-- )</code> delete 4 singles from top of stack</p>
+<p><code>DUP        ( n -- n n )</code> duplicate single on top of stack</p>
+<p><code>3DUP       ( n1 n2 n3 -- n1 n2 n3 n1 n2 n3 ) </code> \ duplicate 3 topmost cells</p>
+<p><code>4DUP       ( n1 n2 n3 n4 -- n1 n2 n3 n4 n1 n2 n3 n4 ) </code> \ duplicate 3 topmost cells</p>
+<p><code>?DUP       ( n -- 0 | n n )</code> duplicate top of stack, only if not null</p>
+<p><code>SWAP       ( n1 n2 -- n2 n1 )</code> exchange the two topmost singles on stack</p>
+<p><code>OVER       ( n1 n2 -- n1 n2 n1 )</code> copy second single onto top of stack</p>
+<p><code>ROT        ( n1 n2 n3 -- n2 n3 n1 )</code> move third single onto top of stack</p>
+<p><code>-ROT       ( n2 n3 n1 -- n1 n2 n3 ) </code> equivalent to ROT ROT</p>
+<p><code>NIP        ( n1 n2 -- n2 )</code> equivalent to SWAP DROP, "underDROP"</p>
+<p><code>TUCK       ( n1 n2 -- n2 n1 n2 )</code> equivalent to SWAP OVER</p>
+<p><code>PICK       ( n1 -- n2 )</code> copy nth single onto top of stack (n is 0 based : 0 PICK =DUP)</p>
+<p><code>ROLL       ( n1 -- n2 )</code> moves nth single onto top of stack (n is 0 based : 1 ROLL = SWAP)</p>
+<p><code>SP@        ( -- adr )</code> get pointer to top of data stack</p>
+<p><code>SP!        ( adr -- )</code> set pointer to top of data stack</p>
+<p><code>DEPTH      ( -- n )</code> gives number of singles currently on data stack (n excluded)</p>
+
+<p><br>Interaction between data and return stack.</p>
+<p><code>>R         ( n -- ) ( R: -- n )</code> move top of data stack onto top of return stack</p>
+<p><code>R>         ( -- n ) ( R: n -- )</code> brings top of return stack back to top of data stack</p>
+<p><code>R@         ( -- n )</code> copy top of return stack onto top of data stack</p>
+<p><code>RP@        ( -- adr )</code> get pointer to top of return stack</p>
+<p><code>RP!        ( adr -- )</code> set pointer to top of return stack</p>
+<p><code>2>R        ( n1 n2 -- ) ( R: -- n1 n2 )</code> \ push two items onto the returnstack
+<p><code>2R>        ( -- n1 n2 ) ( R: n1 n2 -- )</code> \ pop two items off the return stack
+<p><code>2R@        ( -- n1 n2 )</code> \ get a copy of the top two items on the return stack
+<p><code>DUP>R      ( n1 -- n1 ) ( R: -- n1 )</code>  \ push a copy of n1 onto the return stack
+<p><code>R>DROP     ( -- ) ( R: n1 -- )</code>  \ discard one item off of the return stack
+<p><code>RDROP      ( -- ) ( R: n1 -- )</code>  \ synonym of r>drop
+
+
+<p><hr>Document : w32f-stacks -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

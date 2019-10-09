@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+Classdbg.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Class Debugging Words
+</h1><p>Win32Forth contains some miscellaneous words to help with developing Classes and Objects.
+</p><h2>Glossary
+</h2><p><b><code>: cmethods &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( 'class' -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</code></b><br>Print out all the methods of a class.
+</p><p><b><code>: methods &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( object-address -- ) &nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</code></b><br>Print out all the methods of an object.
+</p><p><b><code>: ivars &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( object-address -- ) &nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</code></b><br>Print out all the object IVARs of an object.
+</p><p><b><code>: matches &nbsp;&nbsp;( -&quot;name&quot;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</code></b><br>Print out all the method selectors and IVAR names that have the same hash value as
+-&quot;name&quot;- will be assigned. If -&quot;name&quot;- is already in use as a selector or an IVAR name
+then it will appear in the list.
+</p><p><b><code>: objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( 'class' -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</code></b><br>Display all of the instances of 'class'.
+</p><p><b><code>: msee &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;method object&gt;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</code></b><br>Display the source code of the method. Either a Class or Object can be supplied.
+</p><p><b><code>: mdebug &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;method object&gt;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</code></b><br>Set debugging of the method. An Object must be supplied (Classes aren't allowed).
+NOTE the method will be debugged for all objects that respond to it.
+</p><p><b><code>: mdbg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;method object&gt;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</code></b><br>Set debugging of the method and then execute it.
+An Object must be supplied (Classes aren't allowed).
+NOTE the method will be debugged for all objects that respond to it.
+</p></body></html>

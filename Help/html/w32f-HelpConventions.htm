@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Notations conventions</h1>
+
+<h2>Typographic conventions</h2>
+
+<p>There are some typographic conventions used for Forth code. Firstly, <code>this font </code>
+is used for forth words : <code>DUP SWAP ROT</code> . And because Forth words are
+delimited by white space (blank, tab, and carriage return + line feed) words like
+<code>COMPILE,</code> and <code>COMPILE</code> can be difficult to distinguish
+when there is punctuation immediately following. So all Forth words have a
+space before any punctuation, as in the word <code>DUP</code> . The full-stop has been moved away
+from the word. Win32Forth is, in the main, case insensitive; but it's
+traditional to show words in UPPERCASE rather than lowercase</p>
+
+
+<h2>Notations conventions</h2>
+
+<p>Globally, we try to follow
+the ANS stack notation (if you have got a bit of time, you can browse the ANS part
+of this help to get a deep understanding of this notation) but we take some liberties with the standard
+in order to get more compact and/or more meaningful notations.</p>
+
+<h3>Stacks notations</h3>
+
+<p>You will encounter the following stack notations :</p>
+
+<ul>
+ <li>Data stack : ( inputparameters -- outputparameters )</li>
+ <li>Data stack : { inputparameters \ localparameters -- outputparameters }</li>
+ <li>Data stack : LOCAL| inputparametersAsLocals -- outputparameters | </li>
+ <li>Return stack : ( R: inputparameters -- outputparameters )</li>
+ <li>Floating point stack : ( F: inputparameters -- outputparameters )</li>
+</ul>
+
+<p>The first line shows the
+usual stack effect notation : in comments (between parenthesis) are enumerated
+all input and output parameters, separated by &quot;--&quot;. The second and
+third lines combine stack effect information and local values declaration. The
+second line style (between brackets) is prefered in Win32Forth. The third line
+notation fits the ANS standard, but is seldom used in Win32Forth. See LOCALS
+chapter for more information. For return stack and floating point stack, the
+notations are the same, but input parameters are preceeded by R: of F:</p>
+
+<p>Stack effect can be
+different at compile time and runtime. In this case, both states stack effects
+are described as follows (there can be variations like Exec: and others) :</p>
+
+<ul>
+ <li>Data stack : Comp: ( inputparams -- outputparams ) Run: ( inputparams' -- outputparams' ) </li>
+</ul>
+
+<p>The character | is used to separate two possible stack effects, example: </p>
+
+<p><code>?DUP   ( n -- 0 | n n )</code></p>
+
+<p></p>
+
+<h3>Stack parameters</h3>
+
+<p>Each input parameter and
+each output parameter are separated by one space. The rightmost parameter is on
+the top of the stack. Some conventions for representing parameters on stack are
+:</p>
+
+<table>
+  <thead>
+    <tr>
+    <th>Parameter</th>
+    <th>What it represents</th>
+    <th>Example</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+    <td>&lt;name&gt</td>
+    <td>name to be parsed from input stream</td>
+    <td><code>VARIABLE \ Comp: ( &lt;name&gt; -- ) Run time: ( -- addr )</code></td>
+    </tr>
+    <tr>
+    <td>&quot;name&quot</td>
+    <td>name to be parsed from input stream</td>
+    <td><code>VALUE \ Comp: ( &quot;name&quot; -- ) Run time: ( -- addr )</code></td>
+    </tr>
+    <tr>
+    <td>c</td>
+    <td>character</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>ccc&quot;</td>
+    <td>array of characters to be parsed from input stream, ending with a quote</td>
+    <td><code>S&quot;  \ Comp: ( ccc&quot; -- )  Run: ( -- addr len )</code></td>
+    </tr>
+    <tr>
+    <td>c-addr</td>
+    <td>address of an array of characters</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>addr cnt</td>
+    <td>addr and length of a string</td>
+    <td><code>TYPE ( addr cnt -- )</code></td>
+    </tr>
+    <tr>
+    <td>addr len</td>
+    <td>addr and length of a string</td>
+    <td><code>TYPE ( addr len -- )</code></td>
+    </tr>
+    <tr>
+    <td>addr u</td>
+    <td>addr and length of a string</td>
+    <td><code>TYPE ( addr u -- )</code></td>
+    </tr>
+    </tr>
+    <tr>
+    <td>c-addr cnt</td>
+    <td>addr and length of a string</td>
+    <td><code>TYPE ( c-addr cnt -- )</code></td>
+    </tr>
+    <tr>
+    <td>c-addr len</td>
+    <td>c-addr and length of a string</td>
+    <td><code>TYPE ( c-addr len -- )</code></td>
+    </tr>
+    <tr>
+    <td>c-addr u</td>
+    <td>c-addr and length of a string</td>
+    <td><code>TYPE ( c-addr u -- )</code></td>
+    </tr>
+    <tr>
+    <td>n</td>
+    <td>single precison integer</td>
+    <td</td>
+    </tr>
+    <tr>
+    <td>u</td>
+    <td>unsigned single precision integer</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>d</td>
+    <td>double precision integer</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>ud</td>
+    <td>unsigned double precision integer</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>r or f</td>
+    <td>real or floating point number</td>
+    <td><code>F+         ( fs: r1 r2 -- r3 )</code></td>
+    </tr>
+    <tr>
+    <td>f or flg</td>
+    <td>flag (true = -1, false = 0)</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>wid</td>
+    <td>wordlist (vocabulary) identifier</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>fileid</td>
+    <td>file identifier<</td>
+    <td></td>
+    </tr>
+    <tr>
+    <td>???-sys</td>
+    <td>parameters used by Forth system</td>
+    <td><code>LEAVE ( -- ) ( R: loop-sys -- )</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Sometimes, more meaningfull names can be used such as in :</p>
+
+<p><code>TIME&amp;DATE ( -- nsec nmn nhour nday nmonth n4digityear )</code></p>
+
+<p>Often, the &quot;n&quot; prefix is omitted (when prefix is omitted, it is
+assumed to be &quot;n&quot;) such as in :</p>
+
+<p><code>TIME&amp;DATE ( -- sec mn hour day month 4digityear )</code></p>
+
+
+<hr>
+
+<p>Document : w32f-HelpConventions.htm -- 2008/05/06 -- Camille Doiteau<p>
+
+</body>
+
+</html>

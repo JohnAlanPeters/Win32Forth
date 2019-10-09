@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>Timer-Window -- Timer-Window class.
+</h1><hr /><h2>Glossary
+</h2><pre><b><a name="0">:class timer-window &nbsp;&lt;super window
+</a></b></pre><p>Timer-Window class.
+This class can be used for windows that should handle timer events.
+Only one timer per window can be used with this class.
+</p><pre><b><a name="1">:m ClassInit: &nbsp;&nbsp;( -- )
+</a></b></pre><p>Init the class
+</p><pre><b><a name="2">:m KillTimer: &nbsp;&nbsp;( -- )
+</a></b></pre><p>Destroy the timer for this window.
+</p><pre><b><a name="3">:M CreateTimer: ( ms -- )
+</a></b></pre><p>Create the timer for this window.
+</p><pre><b><a name="4">:M On_Done: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Things to do before program termination
+</p><pre><b><a name="5">:M On_Timer: &nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Thing's to do when the window recives a timer event. Default does nothing.
+</p><pre><b><a name="6">;class
+</a></b></pre><p>End of timer-window class.
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

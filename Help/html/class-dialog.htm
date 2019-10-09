@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+dialog.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Dialog -- Class for dialog boxes.
+</h1><h2>Load Dialog Resource File
+</h2><p>The .RES file structure is a series of records. &nbsp;Each record contains
+a header and a data field. &nbsp;The structure of a header is as follows:
+</p><table><tr><th>offset
+</th>
+<th>length
+</th>
+</tr>
+<tr><td>0
+</td>
+<td>4
+</td>
+<td>length of data field
+</td>
+</tr>
+<tr><td>4
+</td>
+<td>4
+</td>
+<td>length of header
+</td>
+</tr>
+<tr><td>10
+</td>
+<td>2
+</td>
+<td>record type
+</td>
+</tr>
+<tr><td>14
+</td>
+<td>2
+</td>
+<td>dialog ID number (for dialogs)
+</td>
+</tr>
+</table><p><b><code>: dialogID? &nbsp;&nbsp;&nbsp;&nbsp;( hdr ID -- f )
+</code></b><br>Given the address of a header in a resource file, return true if this
+is the header for a dialog resource. &nbsp;I'm only guessing here.
+</p><p><b><code>: find-dialog-ID ( id addr -- address-of-template-header )
+</code></b><br>Find dialog template given address and length of resource file in memory.
+</p><p><b><code>: load-dialog &nbsp;&nbsp;( -&lt;filename-without-an-extension&gt;- )
+</code></b><br>Load template from dialog resource (*.res) to here and allot memory. <br />
+Usage: &nbsp;load-dialog dialog
+</p><a name="Dialog"></a>
+<h2>Dialog Class
+</h2><p><b><code>:CLASS Dialog &nbsp;&nbsp;&lt;SUPER Generic-Window
+</code></b><br>Dialog class. <br />
+To use this class you have to create a ressource file (*.res) which must contain
+the dialog resource. Since Win32Forth doesn't provide any tool's to create a dialog
+resource you should use the Win32ForthIDE Forth Designer to create your dialog windows instead.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( parent -- flag )
+</code></b><br>Open the dialog
+</p><p><b><code>:M EndDialog: &nbsp;&nbsp;( return-value -- )
+</code></b><br>Close the dialog
+</p><p><b><code>:M On_Init: &nbsp;( hwndfocus -- f )
+</code></b><br>Init the dialog
+</p><p><b><code>:M On_Command: &nbsp;( hCtrl code ID -- f )
+</code></b><br>Process Commands from Controls
+</p><p><b><code>;Class
+</code></b><br>End of Dialog class
+</p><a name="ModelessDialog"></a>
+<h2>Modless Dialog class
+</h2><p><b><code>:Class ModelessDialog &nbsp;&nbsp;&lt;SUPER Dialog
+</code></b><br>Modless Dialog class <br />
+To use this class you have to create a ressource file (*.res) which must contain
+the dialog resource. Since Win32Forth doesn't provide any tool's to create a dialog
+resource you should use Win32ForthIDE Forth Designer to create your dialog windows instead.
+</p><p><b><code>:M WindowStyle: ( -- n1 )
+</code></b><br>Get the window style of the dialog.
+</p><p><b><code>:M ExWindowStyle: ( -- n1 )
+</code></b><br>Get the extended window style of the dialog.
+</p><p><b><code>:M Origin: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- x y )
+</code></b><br>Get the origin (upper left corner) of the dialog.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( parent -- )
+</code></b><br>Open the dialog
+</p><p><b><code>:M EndDialog: &nbsp;&nbsp;( n1 -- )
+</code></b><br>Close the dialog
+</p><p><b><code>;Class
+</code></b><br>End of ModlessDialog class
+</p></body></html>

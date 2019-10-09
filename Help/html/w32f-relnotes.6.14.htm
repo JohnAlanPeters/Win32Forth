@@ -1,0 +1,72 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+<h1>Release Notes for version 6.14.00 </h2>
+
+<h2>Contributors (in alphabetical order) </h2>
+<dir>
+  <li>Robert Dudley Ackerman</li>
+  <li>Ezra Boyce</li>
+  <li>Dirk Busch</li>
+  <li>Thomas Dixon</li>
+  <li>Camille Doiteau</li>
+  <li>Brad Eckert</li>
+  <li>Bruno Gauthier</li>
+  <li>George Hubert</li>
+  <li>Alex McDonald</li>
+  <li>Rod Oakford</li>
+  <li>Andrew Stephenson</li>
+  <li>Jos van de Ven</li>
+  <li>and others...</li>
+</dir>
+
+
+<h2>Overview </h2>
+<h3>System Changes</h3>
+<ul>
+ <li>A new console written in Forth. w32fConsole.dll is not needed anymore.</li>
+  <li>ForthForm has been integrated into the Win32ForthIDE.</li>
+  <li>Help has been totally rewritten and runs in a separate application.</li>
+  <li>Inter-process launching and communication via messages has been rewritten.</li>
+  <li><code>FSAVE</code> and <code>APPLICATION</code> have been replaced by
+      <code>SAVE</code> , and <code>TURNKEY</code> modified, to give easier to use
+      saving words (see <a href='w32f-MoveTo.6.14.htm'>"How to convert from
+      version 6.12.00"</a>).</li>
+  <li> A lot of code has been moved.</li>
+  <li> An improved IDE.</li>
+  <li> see ~\src\Compat\Evolve.f for specific to the changes between the releases 6.12.00 and 6.14.00.</li>
+</ul>
+
+<h3>Bug fixes</h3>
+<p>A large number of bugs have been fixed. Changes can be found at the
+<a href="http://sourceforge.net/mailarchive/forum.php?forum_name=win32forth-cvs">CVS Commit List</a>.</p>
+
+
+<h2>New Tools</h2>
+<ul>
+ <li><b>ShowDLLSymbols.f</b> - Enumerates all the symbols in a DLL file. </li>
+</ul>
+
+<h2>New classes</h2>
+<ul>
+  <li><a href="./classes/TimerWindow.htm">Timer-Window</a> Class for windows that can handle timer events.</li>
+  <li><a href="./classes/ExtDC.htm">Ext-WinDC</a> Extended version of the WinDC class.</li>
+  <li><a href="./classes/BitmapDC.htm">Bitmap-DC</a> Bitmap device context class.</li>
+</ul>
+
+<h2>New Libraries</h2>
+<ul> <li><b>EscapedStrings.f</b> Initially written by Stephen Pelc modified for Win32Forth by Dirk Busch.</li>
+</ul>
+
+<hr>
+<p>Document : w32f-relnotes.6.14.htm -- 2010/02/14 -- </p>
+
+</body>
+
+</html>

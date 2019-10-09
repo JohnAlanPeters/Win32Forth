@@ -1,0 +1,358 @@
+! ANS Core "store"
+# ANS Core "number-sign"
+#> ANS Core "number-sign-greater"
+#S ANS Core "number-sign-s"
+' ANS Core "tick"
+( ANS Core "paren"
+* ANS Core "star"
+*/ ANS Core "star-slash"
+*/MOD ANS Core "star-slash-mod"
++ ANS Core "plus"
++! ANS Core "plus-store"
++LOOP ANS Core "plus-loop"
+, ANS Core "comma"
+- ANS Core "minus"
+. ANS Core "dot"
+." ANS Core "dot-quote"
+/ ANS Core "slash"
+/MOD ANS Core "slash-mod"
+0< ANS Core "zero-less"
+0= ANS Core "zero-equals"
+1+ ANS Core "one-plus"
+1- ANS Core "one-minus"
+2! ANS Core "two-store"
+2* ANS Core "two-star"
+2/ ANS Core "two-slash"
+2@ ANS Core "two-fetch"
+2DROP ANS Core "two-drop"
+2DUP ANS Core "two-dupe"
+2OVER ANS Core "two-over"
+2SWAP ANS Core "two-swap"
+: ANS Core "colon"
+; ANS Core "semicolon"
+< ANS Core "less-than"
+<# ANS Core "less-number-sign"
+= ANS Core "equals"
+> ANS Core "greater-than"
+>BODY ANS Core "to-body"
+>IN ANS Core "to-in"
+>NUMBER ANS Core "to-number"
+>R ANS Core "to-r"
+?DUP ANS Core "question-dupe"
+@ ANS Core "fetch"
+ABORT ANS Core
+ABORT" ANS Core "abort-quote"
+ABS ANS Core
+ACCEPT ANS Core
+ALIGN ANS Core
+ALIGNED ANS Core
+ALLOT ANS Core
+AND ANS Core
+BASE ANS Core
+BEGIN ANS Core
+BL ANS Core "b-l"
+C! ANS Core "c-store"
+C, ANS Core "c-comma"
+C@ ANS Core "c-fetch"
+CELL+ ANS Core "cell-plus"
+CELLS ANS Core "cells"
+CHAR ANS Core "char"
+CHAR+ ANS Core "char-plus"
+CHARS ANS Core "chars"
+CONSTANT ANS Core
+COUNT ANS Core
+CR ANS Core "c-r"
+CREATE ANS Core
+DECIMAL ANS Core
+DEPTH ANS Core
+DO ANS Core 
+DOES> ANS Core "does"
+DROP ANS Core
+DUP ANS Core
+ELSE ANS Core
+EMIT ANS Core
+ENVIRONMENT? ANS Core
+EVALUATE ANS Core
+EXECUTE ANS Core
+EXIT ANS Core
+FILL ANS Core
+FIND ANS Core
+FM/MOD ANS Core "f-m-slash-mod"
+HERE ANS Core
+HOLD ANS Core
+I ANS Core
+IF ANS Core
+IMMEDIATE ANS Core
+INVERT ANS Core
+J ANS Core
+KEY ANS Core
+LEAVE ANS Core
+LITERAL ANS Core
+LOOP ANS Core
+LSHIFT ANS Core "l-shift"
+M* ANS Core "m-star"
+MAX ANS Core
+MIN ANS Core
+MOD ANS Core
+MOVE ANS Core
+NEGATE ANS Core
+OR ANS Core
+OVER ANS Core
+POSTPONE ANS Core
+QUIT ANS Core
+R> ANS Core "r-from"
+R@ ANS Core "r-fetch"
+RECURSE ANS Core
+REPEAT ANS Core
+ROT ANS Core "rote"
+RSHIFT ANS Core "r-shift"
+S" ANS Core "s-quote"
+S>D ANS Core "s-to-d"
+SIGN ANS Core
+SM/REM ANS Core "s-m-slash-rem"
+SOURCE ANS Core
+SPACE ANS Core
+STATE ANS Core
+SWAP ANS Core
+THEN ANS Core
+TYPE ANS Core
+U. ANS Core "u-dot"
+U< ANS Core "u-less-than"
+UM* ANS Core "u-m-star"
+UM/MOD ANS Core "u-m-slash-mod"
+UNLOOP ANS Core
+UNTIL ANS Core
+VARIABLE ANS Core
+WHILE ANS Core
+WORD ANS Core
+XOR ANS Core "x-or"
+[ ANS Core "left-bracket"
+['] ANS Core "bracket-tick"
+[CHAR] ANS Core "bracket-char"
+] ANS Core "right-bracket"
+#TIB ANS Core Ext Obsolete
+.( ANS Core Ext "dot-paren"
+.R ANS Core Ext "dot-r"
+0<> ANS Core Ext "zero-not-equals"
+0> ANS Core Ext "zero-greater"
+2>R ANS Core Ext "two-to-r"
+2R> ANS Core Ext "two-r-from"
+2R@ ANS Core Ext "two-r-fetch"
+:NONAME ANS Core Ext "colon-no-name"
+<> ANS Core Ext "not-equals"
+?DO ANS Core Ext "question-do"
+AGAIN ANS Core Ext
+C" ANS Core Ext "c-quote"
+CASE ANS Core Ext
+COMPILE, ANS Core Ext "compile-comma"
+CONVERT ANS Core Ext Obsolete
+ENDCASE ANS Core Ext "end-case"
+ENDOF ANS Core Ext "end-of"
+ERASE ANS Core Ext
+EXPECT ANS Core Ext Obsolete
+FALSE ANS Core Ext
+HEX ANS Core Ext
+MARKER ANS Core Ext
+NIP ANS Core Ext
+OF ANS Core Ext
+PAD ANS Core Ext
+PARSE ANS Core Ext
+PICK ANS Core Ext
+QUERY ANS Core Ext Obsolete
+REFILL ANS Core Ext
+RESTORE-INPUT ANS Core Ext
+ROLL ANS Core Ext
+SAVE-INPUT ANS Core Ext
+SOURCE-ID ANS Core Ext "source-i-d"
+SPAN ANS Core Ext Obsolete
+TIB ANS Core Ext Obsolete
+TO ANS Core Ext
+TRUE ANS Core Ext
+TUCK ANS Core Ext
+U.R ANS Core Ext "u-dot-r"
+U> ANS Core Ext "u-greater-than"
+UNUSED ANS Core Ext
+VALUE ANS Core Ext
+WITHIN ANS Core Ext
+[COMPILE] ANS Core Ext "bracket-compile"
+\ ANS Core Ext "backslash"
+BLK ANS Block Ext "b-l-k"
+BLOCK ANS Block Ext
+BUFFER ANS Block Ext
+FLUSH ANS Block Ext
+LOAD ANS Block Ext
+SAVE-BUFFERS ANS Block Ext
+UPDATE ANS Block Ext
+EMPTY-BUFFERS ANS Block Ext
+LIST ANS Block Ext
+SCR ANS Block Ext "s-c-r"
+THRU ANS Block Ext
+2CONSTANT ANS Double Ext "two-constant"
+2LITERAL ANS Double Ext "two-literal"
+2VARIABLE ANS Double Ext "two-variable"
+D+ ANS Double Ext "d-plus"
+D- ANS Double Ext "d-minus"
+D. ANS Double Ext "d-dot"
+D.R ANS Double Ext "d-dot-r"
+D0< ANS Double Ext "d-zero-less"
+D0= ANS Double Ext "d-zero-equals"
+D2* ANS Double Ext "d-two-star"
+D2/ ANS Double Ext "d-two-slash"
+D< ANS Double Ext "d-less-than"
+D= ANS Double Ext "d-equals"
+D>S ANS Double Ext "d-to-s"
+DABS ANS Double Ext "d-abs"
+DMAX ANS Double Ext "d-max"
+DMIN ANS Double Ext "d-min"
+DNEGATE ANS Double Ext "d-negate"
+M*/ ANS Double Ext "m-star-slash"
+M+ ANS Double Ext "m-plus"
+2ROT ANS Double Ext "two-rote"
+DU< ANS Double Ext "d-u-less"
+CATCH ANS Exception Ext
+THROW ANS Exception Ext
+AT-XY ANS Facility Ext
+KEY? ANS Facility Ext "key-question"
+PAGE ANS Facility Ext
+EKEY ANS Facility Ext "e-key"
+EKEY>CHAR ANS Facility Ext "e-key-to-char"
+EKEY? ANS Facility Ext "e-key-question"
+EMIT? ANS Facility Ext "emit-question"
+MS ANS Facility Ext "m-s"
+TIME&DATE ANS Facility Ext "time-and-date"
+BIN ANS File Ext
+CLOSE-FILE ANS File Ext
+CREATE-FILE ANS File Ext
+DELETE-FILE ANS File Ext
+FILE-POSITION ANS File Ext
+FILE-SIZE ANS File Ext
+INCLUDE-FILE ANS File Ext
+INCLUDED ANS File Ext
+OPEN-FILE ANS File Ext
+R/O ANS File Ext "r-o"
+R/W ANS File Ext "r-w"
+READ-FILE ANS File Ext
+READ-LINE ANS File Ext
+REPOSITION-FILE ANS File Ext
+RESIZE-FILE ANS File Ext
+W/O ANS File Ext "w-o"
+WRITE-FILE ANS File Ext
+WRITE-LINE ANS File Ext
+FILE-STATUS ANS File Ext
+FLUSH-FILE ANS File Ext
+RENAME-FILE ANS File Ext
+>FLOAT ANS Floating Ext "to-float"
+D>F ANS Floating Ext "d-to-f"
+F! ANS Floating Ext "f-store"
+F* ANS Floating Ext "f-star"
+F+ ANS Floating Ext "f-plus"
+F- ANS Floating Ext "f-minus"
+F/ ANS Floating Ext "f-slash"
+F0< ANS Floating Ext "f-zero-less-than"
+F0= ANS Floating Ext "f-zero-equals"
+F< ANS Floating Ext "f-less-than"
+F>D ANS Floating Ext "f-to-d"
+F@ ANS Floating Ext "f-fetch"
+FALIGN ANS Floating Ext "f-align"
+FALIGNED ANS Floating Ext "f-aligned"
+FCONSTANT ANS Floating Ext "f-constant"
+FDEPTH ANS Floating Ext "f-depth"
+FDROP ANS Floating Ext "f-drop"
+FDUP ANS Floating Ext "f-dupe"
+FLITERAL ANS Floating Ext "f-literal"
+FLOAT+ ANS Floating Ext "float-plus"
+FLOATS ANS Floating Ext
+FLOOR ANS Floating Ext
+FMAX ANS Floating Ext "f-max"
+FMIN ANS Floating Ext "f-min"
+FNEGATE ANS Floating Ext "f-negate"
+FOVER ANS Floating Ext "f-over"
+FROT ANS Floating Ext "f-rote"
+FROUND ANS Floating Ext "f-round"
+FSWAP ANS Floating Ext "f-swap"
+FVARIABLE ANS Floating Ext "f-variable"
+REPRESENT ANS Floating Ext
+DF! ANS Floating Ext "d-f-store" 
+DF@ ANS Floating Ext "d-f-fetch"
+DFALIGN ANS Floating Ext "d-f-align"
+DFALIGNED ANS Floating Ext "d-f-aligned"
+DFLOAT+ ANS Floating Ext "d-float-plus"
+DFLOATS ANS Floating Ext "d-floats"
+F** ANS Floating Ext "f-star-star"
+F. ANS Floating Ext "f-dot"
+FABS ANS Floating Ext "f-abs"
+FACOS ANS Floating Ext "f-a-cos"
+FACOSH ANS Floating Ext "f-a-cosh"
+FALOG ANS Floating Ext "f-a-log"
+FASIN ANS Floating Ext "f-a-sine"
+FASINH ANS Floating Ext "f-a-cinch"
+FATAN ANS Floating Ext "f-a-tan"
+FATAN2 ANS Floating Ext "f-a-tan-two"
+FATANH ANS Floating Ext "f-a-tan-h"
+FCOS ANS Floating Ext "f-cos"
+FCOSH ANS Floating Ext "f-cosh"
+FE. ANS Floating Ext "f-e-dot"
+FEXP ANS Floating Ext "f-exp"
+FEXPM1 ANS Floating Ext "f-exp-m-one"
+FLN ANS Floating Ext "f-l-n"
+FLNP1 ANS Floating Ext "f-l-n-p-one"
+FLOG ANS Floating Ext "f-log"
+FS. ANS Floating Ext "f-s-dot"
+FSIN ANS Floating Ext "f-sine"
+FSINCOS ANS Floating Ext "f-sine-cos"
+FSINH ANS Floating Ext "f-cinch"
+FSQRT ANS Floating Ext "f-square-root"
+FTAN ANS Floating Ext "f-tan"
+FTANH ANS Floating Ext "f-tan-h"
+F~ ANS Floating Ext "f-proximate"
+PRECISION ANS Floating Ext
+SET-PRECISION ANS Floating Ext
+SF! ANS Floating Ext "s-f-store"
+SF@ ANS Floating Ext "s-f-fetch"
+SFALIGN ANS Floating Ext "s-f-align"
+SFALIGNED ANS Floating Ext "s-f-aligned"
+SFLOAT+ ANS Floating Ext "s-float-plus"
+SFLOATS ANS Floating Ext "s-floats"
+(LOCAL) ANS Local Ext "paren-local-paren"
+LOCALS| ANS Local Ext "locals-bar"
+ALLOCATE ANS Memory Ext
+FREE ANS Memory Ext
+RESIZE ANS Memory Ext
+.S ANS Tools Ext "dot-s"
+? ANS Tools Ext "question"
+DUMP ANS Tools Ext
+SEE ANS Tools Ext
+WORDS ANS Tools Ext
+;CODE ANS Tools Ext "semicolon-code"
+AHEAD ANS Tools Ext
+ASSEMBLER ANS Tools Ext
+BYE ANS Tools Ext
+CODE ANS Tools Ext
+CS-PICK ANS Tools Ext "c-s-pick"
+CS-ROLL ANS Tools Ext "c-s-roll"
+EDITOR ANS Tools Ext
+FORGET ANS Tools Ext Obsolete
+[ELSE] ANS Tools Ext "bracket-else"
+[IF] ANS Tools Ext "bracket-if"
+[THEN] ANS Tools Ext "bracket-then"
+DEFINITIONS ANS Search Ext
+FORTH-WORDLIST ANS Search Ext
+GET-CURRENT ANS Search Ext
+GET-ORDER ANS Search Ext
+SEARCH-WORDLIST ANS Search Ext
+SET-CURRENT ANS Search Ext
+SET-ORDER ANS Search Ext
+WORDLIST ANS Search Ext
+ALSO ANS Search Ext
+FORTH ANS Search Ext
+ONLY ANS Search Ext
+ORDER ANS Search Ext
+PREVIOUS ANS Search Ext
+-TRAILING ANS String Ext "dash-trailing"
+/STRING ANS String Ext "slash-string"
+BLANK ANS String Ext
+CMOVE ANS String Ext "c-move"
+CMOVE> ANS String Ext "c-move-up"
+COMPARE ANS String Ext
+SEARCH ANS String Ext
+SLITERAL ANS String Ext

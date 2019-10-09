@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>ForthForm - Rebuilding the system</title>
+</head>
+
+<body>
+<h1 align="center">Rebuilding ForthForm</h1>
+Full source code is available with the distribution of ForthForm. This means that
+it can be easily extended and regenerated. To build a turnkey system a dummy word
+"sysgen" must be defined. This word is already part of the code (somewhere
+around line 7 in file ForthForm.f, the main load file) so that the system comes
+ready for regeneration. For test purposes this word can be commented out and the
+file floaded into the Win32Forth system. When ready to turnkey simply uncomment the
+same line and rebuild. It is advisable to do this from a fresh Win32Forth instance.
+Use the "Setup.exe" file included with the Win32Forth distribution.
+
+<p>The word "ff" is the word to type at the console if testing the system (note that
+the design window will be dispayed automatically if not turnkeying the system). This
+will start ForthForm and make the full system available. On exit it will return
+to the console.</p>
+
+<p>Another dummy word that may be of interest is "withbgnd" (without quotes).
+This word allows a compilation with background image support. For this to be effective
+the FreeImage.dll (included with Win32Forth distribution) must be available, either in the same directory as the executable
+or in the Windows system directory. This DLL can also be obtained from
+<a href="http://freeimage.sourceforge.net/">here</a>.</p>
+
+All files necessary for a successful rebuild are included with the distribution. Run the "setup.exe" program
+in the installed directory and select "Rebuild ForthForm" from the options available.<br><br>
+
+<p>Anyone is free to modify or enhance ForthForm. It is hoped that if they do they would share
+any such enhancements so that all may benefit.
+<hr>
+<p><A HREF="ForthForm.htm#Index"><img src="ff-back.gif" align="absmiddle" border=0>Back to main page</A></P>
+</body>
+</html>

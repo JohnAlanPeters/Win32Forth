@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Introduction to Win32Forth Architecture</h1>
+
+<h2>Introduction</h2>
+
+<p>Since Tom Zimmer left Win32Forth in the public domain, there have been an number
+of internal changes to Win32Forth from his last version (version 4.2); these articles
+outline the architecture as of version 6.10 and above. As with most things in life, there's
+no warranty. In layman's terms, if using Win32Forth or information in these
+articles results in anything near you breaking into bits, all the pieces are
+yours.</p>
+
+<p>There are, of course,
+certain prerequisites when designing any Forth system. Tom Zimmer and Andrew
+McKewan developed Win32Forth to meet a particular need that they had for a
+projec (see the History of Win32Forth). What is certainly true is that
+Win32Forth was never conceived as anything other than a full 32bit forth for
+the Windows operating system on an Intel platform; that forced certain design
+decisions that can still sometimes be seen in the code today. Of particular interest
+are some of the difficulties faced in designing a Forth system for a C-centric
+environment like Windows. Some of these have been overcome; some remain</p>
+
+<h2>Adressing mode</h2>
+
+<p>From version 6.10.00,
+Win32Forth is a linear 32bit addressing Forth that uses absolute addressing
+within the Forth dictionary. That is, Win32Forth is always loaded at physical
+address 0x400000. (This was not always so; earlier versions used a relative
+addressing mode, the hangover of which can be seen in the use of the register
+EDI as a base address to turn relative addresses to absolutes. Now Win32Forth
+builds true executable files; previously &quot;image&quot; files were loaded by
+a C wrapper.) </p>
+
+<p>A drawback of absolute adressing mode is that building .DLL executables is no longer
+possible.</p>
+
+<h2>CELL size</h2>
+
+<p>The word size used by Forth
+is not necessarily the same as that of the CPU. The smallest practical Forth is
+a 16-bit model; i.e., one which uses 16-bit integers and 16-bit addresses. The
+Forth community calls this the &quot;cell&quot; size, since &quot;word&quot;
+refers to a Forth definition.. </p>
+
+<p>32-bit CPUs normally run
+32-bit Forths; which is the cell size of Win32Forth. Based on Windows,
+Win32Forth will run on whatever Intel processor Windows runs on; for practical
+purposes nowadays, that means Pentium or better (although Win32Forth originally
+ran under WIndows3.1 using the WIN32S interface, 3.1 was a 16bit operating
+system on a 32bit processor, an uncomfortable fit (and incredibly unstable to
+boot). We haven't supported 3.1 in a long time)</p>
+
+
+<hr>
+
+<p>Document : w32f-arch-intro.htm 12/2004 alex_mcdonald</p>
+
+</body>
+
+</html>

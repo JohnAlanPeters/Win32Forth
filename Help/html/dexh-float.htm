@@ -1,0 +1,495 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+float.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Floating point words in Win32Forth
+</h1><p>Win32Forth implements the full ANSI floating-point and floating-point extension
+wordsets as well as a number of useful extra words. It uses a separate floating-point
+stack (implemented in the USER area for task safety).
+</p><p>The floating-point words can be compiled as 8 byte (for speed) or 10 byte (for accuracy).
+The default when the system is built is 8 byte, but can be set to 10 byte (in src\extend.f) by
+altering the CONSTANT B/FLOAT and re-extending the system (using setup.exe).
+If the CONSTANT is not defined then the file automatically creates it and compiles
+the code for 10 byte floats.
+</p><p>The only error that is thrown is for FP stack Underflow (error code -45);
+arithmetic operations which produce values too large to be represented use infinity,
+&nbsp;while indeterminate results produce NANs.
+</p><h2>Glossary
+</h2><ul><li><a href="#Sec#1">Loading and saving FPU registers</a></li>
+<li><a href="#Sec#2">Memory Access</a></li>
+<li><a href="#Sec#3">FP Stack operations</a></li>
+<li><a href="#Sec#4">FP Stack operations on pairs of entries</a></li>
+<li><a href="#Sec#5">FP Constants</a></li>
+<li><a href="#Sec#6">FP Variables</a></li>
+<li><a href="#Sec#7">Rounding functions</a></li>
+<li><a href="#Sec#8">Integer to float conversion</a></li>
+<li><a href="#Sec#9">FP Comparison operators</a></li>
+<li><a href="#Sec#10">Arithmetic operators</a></li>
+<li><a href="#Sec#11">Trigonometric functions</a></li>
+<li><a href="#Sec#12">Inverse Trigonometric functions</a></li>
+<li><a href="#Sec#13">Logarithmic functions</a></li>
+<li><a href="#Sec#14">Exponential functions</a></li>
+<li><a href="#Sec#15">Hyperbolic functions</a></li>
+<li><a href="#Sec#16">Inverse hyperbolic functions</a></li>
+<li><a href="#Sec#17">Input of Floating Point numbers</a></li>
+<li><a href="#Sec#18">Output conversion</a></li>
+<li><a href="#Sec#19">Format FP number to a buffer</a></li>
+<li><a href="#Sec#20">Display FP numbers</a></li>
+<li><a href="#Sec#21">Debugging tools</a></li></ul>
+<a name="Sec#1"></a>
+<h3>Loading and saving FPU registers
+</h3><p>The following words are for examining, saving, restoring and changing the state of the
+x87 FPU. They are not normally needed by applications although they can be useful for
+dealing with legacy code, which requires different rounding modes, precision, or
+exception handling. <br />
+Since the default error handler resets the control word then applications that use
+other settings will need to CATCH all exceptions or modify the error handler. <br />
+NOTE if programs unmask exceptions then they need to handle their own errors.
+For information on the settings and writng exception handlers refer to the INTEL
+processor documentation.
+</p><p><b>&nbsp;WARNING! </b>&nbsp;do not alter the settings unless you know what you're doing.
+</p><p><b><code>code &gt;fregs &nbsp;&nbsp;&nbsp;&nbsp;( addr -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Restore x87 FPU State.
+</p><p><b><code>code &gt;fregs&gt; &nbsp;&nbsp;&nbsp;( addr -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Save and Restore x87 FPU State.
+</p><p><b><code>code fpcw&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Get x87 FPU Control Word.
+</p><p><b><code>code &gt;fpcw &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Set x87 FPU Control Word.
+</p><p><b><code>code fpsw&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Get x87 FPU Status Word.
+</p><p><b><code>&nbsp;10 constant B/FLOAT &nbsp;( -- n ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Number of bytes in a floating-point number. Note the default is 8 bytes.
+</p><p><b><code>value cells/float
+</code></b><br>Number of cells in a floating-point number. If the number of bytes is not a multiple
+of 4 this is rounded up.
+</p><p><b><code>cell NEWUSER FLOATSP ( -- addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Address of floating point stack pointer in the user area.
+</p><p><b><code>code finit &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Clears the floating-point stack &amp;&nbsp;sets the appropriate byte mode.
+It is executed by the system on start-up and by the default exception handler.
+Users generally don't need to call this word in a single-task program.
+Tasks in a multi-task program should execute this word before executing any
+other floating-point words.
+</p><a name="Sec#2"></a>
+<h3>Memory Access
+</h3><p><b><code>code F@ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: -- r ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Fetch a float.
+</p><p><b><code>code SF@ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: -- r ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Fetch a 32 bit (short) float.
+</p><p><b><code>code DF@ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: -- r ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Fetch a 64 bit (double) float.
+</p><p><b><code>code F! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: r -- ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Store a float.
+</p><p><b><code>code SF! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: r -- ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Store a 32 bit (short) float.
+</p><p><b><code>code DF! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: r -- ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Store a 64 bit (double) float.
+</p><p><b><code>code F+! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: r -- ) &nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Add the value to a float.
+</p><p><b><code>: F, &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Compile a float into the dictionary.
+</p><p><b><code>: FVARIABLE &nbsp;&nbsp;&nbsp;&nbsp;( compiling &quot;name&quot; &nbsp;-- ; run-time -- addr) \ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Define a floating-point variable in the dictionary. The contents are undefined.
+</p><p><b><code>: FVALUE &nbsp;( compiling &quot;name&quot; -- ; fs: r -- ; run-time FS: -- r &nbsp;) \ W32F &nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Define a floating point value initialised from the FP stack.
+</p><p><b><code>synonym fto to &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br><b>&nbsp;Interpretation: ( -&lt;fvalue&gt;- -- fs: r -- ) <br />
+Compilation: &nbsp;&nbsp;&nbsp;( -&lt;fvalue&gt;- -- &nbsp;Run-time: FS: r -- ) </b>
+</p><p>Store r into -&lt;fvalue&gt;-.
+</p><p><b><code>synonym +fto +to &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br><b>&nbsp;Interpretation: ( -&lt;fvalue&gt;- -- fs: r -- ) <br />
+Compilation: &nbsp;&nbsp;&nbsp;( -&lt;fvalue&gt;- -- &nbsp;Run-time: FS: r -- ) </b>
+</p><p>Add r into -&lt;fvalue&gt;-.
+</p><p><b><code>: FCONSTANT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( &quot;name&quot; -- ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&nbsp;Interpretation: ( &quot;name&quot; ; fs: r -- ) </b>&nbsp;<br />
+Define an FP constant. <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&nbsp;Compilation: </b>&nbsp;<br />
+Append the run-time semantics given below to the current definition. <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&nbsp;Run-time: &nbsp;( fs: -- r ) </b>&nbsp;<br />
+Place r on the floating-point stack.
+</p><p><b><code>: FLITERAL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Compilation fs: r -- ; Runtime fs: -- r ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&nbsp;Interpretation: </b>&nbsp;<br />
+Interpretation semantics for this word are undefined. <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&nbsp;Compilation: ( fs: r -- ) </b>&nbsp;<br />
+Append the run-time semantics given below to the current definition. <br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>&nbsp;Run-time: ( fs: -- r ) </b>&nbsp;<br />
+Place r on the floating-point stack.
+</p><p><b><code>: DFIELD: &nbsp;&nbsp;&nbsp;( n1 &quot;name&quot; -- n2 ) ( addr -- 'addr )
+</code></b><br>Skip leading space delimiters. Parse name delimited by a space. Offset is the first
+double-float aligned value greater than or equal to n1. n2 = offset + 1 double-float.
+Create a definition for name with the execution semantics given below.
+name Execution: ( addr1 -- addr2 )
+Add the offset calculated during the compile time action to addr1 giving the
+double-float aligned address addr2.
+</p><p><b><code>: FFIELD: &nbsp;&nbsp;&nbsp;( n1 &quot;name&quot; -- n2 ) ( addr -- 'addr )
+</code></b><br>Skip leading space delimiters. Parse name delimited by a space. Offset is the first
+float aligned value greater than or equal to n1. n2 = offset + 1 float.
+Create a definition for name with the execution semantics given below.
+name Execution: ( addr1 -- addr2 )
+Add the offset calculated during the compile time action to addr1 giving the float
+aligned address addr2.
+</p><p><b><code>: SFIELD: &nbsp;&nbsp;&nbsp;( n1 &quot;name&quot; -- n2 ) ( addr -- 'addr )
+</code></b><br>Skip leading space delimiters. Parse name delimited by a space. Offset is the first
+singe-float aligned value greater than or equal to n1. n2 = offset + 1 single-float.
+Create a definition for name with the execution semantics given below.
+name Execution: ( addr1 -- addr2 )
+Add the offset calculated during the compile time action to addr1 giving the
+single-float aligned address addr2.
+</p><a name="Sec#3"></a>
+<h3>FP Stack operations
+</h3><p><b><code>code FDROP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Remove r from the floating-point stack.
+</p><p><b><code>code FDUP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r -- r r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Duplicate the top entry on the floating-point stack.
+</p><p><b><code>code FSWAP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r2 r1 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Exchange the top 2 FP numbers.
+</p><p><b><code>code FOVER &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r1 r2 r1 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Copy the 2nd FP stack number to the top of the FP stack.
+</p><p><b><code>code FROT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 r3 -- r2 r3 r1 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Rotate the top 3 FP stack numbers.
+</p><p><b><code>code FPICK &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- ; fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Copy the n'th number from the FP stack.
+</p><p><b><code>: FNIP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Remove the 2nd FP stack entry.
+</p><a name="Sec#4"></a>
+<h3>FP Stack operations on pairs of entries
+</h3><p>The following words can be used for pairs of FP numbers and are useful for dealing
+with complex numbers or 2-dimensional vectors on the FP stack.
+</p><p><b><code>code F2DROP &nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Remove the top 2 FP stack entries.
+</p><p><b><code>: F2DUP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r1 r2 r1 r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Duplicate the top 2 FP stack entries.
+</p><p><b><code>: F2SWAP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 r3 r4 -- r3 r4 r1 r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Swap the top pair of floating-point numbers with the second pair.
+</p><p><b><code>: F2NIP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 r3 r4 -- r3 r4 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Remove the 2nd pair of FP stack entries.
+</p><a name="Sec#5"></a>
+<h3>FP Constants
+</h3><p><b><code>code fpi &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the value 3.141596... on to the FP stack.
+</p><p><b><code>code f0.0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push plus zero on to the FP stack.
+</p><p><b><code>code f1.0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the value 1.0 on to the FP stack.
+</p><p><b><code>code fL2t &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the value of log base 2 of 10.
+</p><p><b><code>code fL2e &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the value of log base 2 of e.
+</p><p><b><code>code fLog2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the value of log base 10 of 2.
+</p><p><b><code>code fLn2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the value of ln 2 (the natural logarithm).
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fconstant finf &nbsp;( fs: -- r ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push plus infinity.
+</p><p><b><code>2e0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fconstant f2.0 &nbsp;( fs: -- r ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push floating-point 2.0.
+</p><p><b><code>10e0 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fconstant f10.0 ( fs: -- r ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push floating-point 10.0.
+</p><p><b><code>5e-1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fconstant f0.5 &nbsp;( fs: -- r ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push floating-point 0.5.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f0.0 fconstant fbig &nbsp;&nbsp;( fs: -- r ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the largest non-infinite floating-point number.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f0.0 fconstant feps &nbsp;&nbsp;( fs: -- r ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the smallest non-zero floating-point number.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f1.0 fconstant fsmall ( fs: -- r ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the smallest non-denormalised floating-point number.
+</p><a name="Sec#6"></a>
+<h3>FP Variables
+</h3><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fvariable a2**63 &nbsp;&nbsp;&nbsp;&nbsp;( -- addr ) &nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Return the address of a float containing 2**63.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fvariable sq2m1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- addr ) &nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Return the address of a float containing sqrt(2) - 1.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fvariable sq2/2m1 &nbsp;&nbsp;&nbsp;( -- addr ) &nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Return the address of a float containing sqrt(2)/2 - 1.
+</p><a name="Sec#7"></a>
+<h3>Rounding functions
+</h3><p><b><code>code FLOOR &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- &nbsp;r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Round r1 to an integral value using the round toward negative infinity rule,
+giving r2.
+</p><p><b><code>code FCEIL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Round r1 to an integral value using the round toward positive infinity rule,
+giving r2.
+</p><p><b><code>code FTRUNC &nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Round r1 to an integral value using the round toward zero rule, giving r2.
+</p><p><b><code>code FROUND &nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Round r1 to an integral value using the round to nearest rule, giving r2.
+</p><a name="Sec#8"></a>
+<h3>Integer to float conversion
+</h3><p><b><code>code D&gt;F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( d -- ; Fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Convert double number to floating-point number.
+</p><p><b><code>code F&gt;D &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- d ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Convert floating-point number to double number, by rounding towards zero. If the
+&nbsp;result would be too large to fit in a double number then <br />&nbsp;-9223372036854775808
+is returned.
+</p><p><b><code>code ZF&gt;D &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- d ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Convert floating-point number to double number, using the current rounding mode
+(rounding towards nearest unless changed by the user). If the result would be too
+large to fit in a double number then <br />&nbsp;-9223372036854775808 is returned.
+</p><p><b><code>: s&gt;f &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- ; fs: -- r ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Convert the single number n to floating point number r.
+</p><p><b><code>: f&gt;s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Convert the floating point number r to single number n.
+</p><p><b><code>code FS&gt;DS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- dfloat fs: r -- ) &nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Move floating point number bits to the data stack as a 64-bit float.
+This function is for passing floats to DLLs.
+</p><p><b><code>code SFS&gt;DS &nbsp;&nbsp;&nbsp;&nbsp;( -- float ; fs: r -- ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Push the top of the float stack onto the data stack as a 32-bit float.
+This function is for passing floats to DLLs.
+</p><a name="Sec#9"></a>
+<h3>FP Comparison operators
+</h3><p><b><code>: F0= &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Return true if r equals ±0e0. Returns false for NAN.
+</p><p><b><code>: F0&lt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Return true if r is less than ±0e0. Returns false for NAN.
+</p><p><b><code>: f0&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Return true if r is greater than ±0e0. Returns false for NAN.
+</p><p><b><code>: f= &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f ; fs: r1 r2 -- ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Return true if r1 equals r2. Returns false if either number is a NAN.
+</p><p><b><code>: F&lt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f ; fs: r1 r2 -- ) &nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Return true if r1 is less than r2. Returns false if either number is a NAN.
+</p><p><b><code>: f&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f ; fs: r1 r2 -- ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Return true if r1 is greater than r2. Returns false if either number is a NAN.
+</p><p><b><code>: f&lt;= &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f ; fs: r1 r2 -- ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Return true if r1 is less than or equal to r2. Returns true if either number
+is a NAN.
+</p><p><b><code>: f&gt;= &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f ; fs: r1 r2 -- ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Return true if r1 is greater than or equal to r2. Returns true if either number
+is a NAN.
+</p><p><b><code>: FMAX &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Return r3 the maximum of r1 and r2. If r1 is a NAN then so is r3. If r2 is a NAN
+then r3=r1.
+</p><p><b><code>: FMIN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Return r3 the minimum of r1 and r2. If r1 is a NAN then so is r3. If r2 is a NAN
+then r3=r1.
+</p><a name="Sec#10"></a>
+<h3>Arithmetic operators
+</h3><p><b><code>code F+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Add r1 to r2.
+</p><p><b><code>code F- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Subtract r2 from r1.
+</p><p><b><code>code F* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Multiply r1 by r2.
+</p><p><b><code>code F/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Divide r1 by r2.
+</p><p><b><code>code FNEGATE &nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>Reverse the sign of r1.
+</p><p><b><code>: 1/f &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>r2 is the reciprocal of r1.
+</p><p><b><code>code f2* &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Multiply by 2.
+</p><p><b><code>code f2/ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Divide by 2.
+</p><p><b><code>code FABS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the absolute value of r1.
+</p><p><b><code>code FSQRT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the positive square root of r1. r2 is NAN for negative r1.
+</p><p><b><code>: F~ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- flag ; fs: r1 r2 r3 -- ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>If r3 is positive, flag is true if the absolute value of (r1 minus r2) is less than
+r3. If r3 is zero, flag is true if the implementation-dependent encoding of r1 and
+r2 are exactly identical (positive and negative zero are unequal).
+If r3 is negative, flag is true if the absolute value of (r1 minus r2) is less than the
+absolute value of r3 times the sum of the absolute values of r1 and r2.
+</p><p>This provides the three types of floating point equality in common use -- close in
+absolute terms, exact equality as represented, and relatively close.
+</p><a name="Sec#11"></a>
+<h3>Trigonometric functions
+</h3><p><b><code>: FSIN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the sine of r1 in radians.
+</p><p><b><code>: FCOS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the cosine of r1 in radians.
+</p><p><b><code>: FSINCOS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the sine and r3 the cosine of r1 in radians. This function is more efficient
+than calling FSIN and FCOS separately.
+</p><p><b><code>: FTAN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the tangent of r1 in radians.
+</p><a name="Sec#12"></a>
+<h3>Inverse Trigonometric functions
+</h3><p><b><code>code FASIN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the radian angle whose sine is r1. The result for |x| =&lt; 1 is between ±pi/2.
+The result for |x| &gt;&nbsp;1 is NAN.
+</p><p><b><code>code FACOS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the radian angle whose cosine is r1. The result for |x| =&lt; 1 is between 0 and pi.
+The result for |x| &gt;&nbsp;1 is NAN
+</p><p><b><code>code FATAN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the radian angle whose tangent is r1. The result is between ±pi/2.
+</p><p><b><code>code FATAN2 &nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r3 is the radian angle whose tangent is r1/r2. The result is between ±pi
+with the same sign as r2. If r1 and r2 are both zero then r3 is ±zero.
+This function can be used to convert cartesian coordinates into the angle of the
+polar coordinates.
+</p><a name="Sec#13"></a>
+<h3>Logarithmic functions
+</h3><p><b><code>code FLN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the natural logarithm of r1. If r1 is ±0 then r2 is -infinity. If r1
+is infinity then r2 is infinity. If r1 is less than zero then r2 is a NAN.
+</p><p><b><code>code FLNP1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the natural logarithm of the quantity r1 plus one. If r1 is -1.0 then
+r2 is -infinity. If r1 is infinity then r2 is infinity. If r1 is less than
+-1.0 then r2 is a NAN.
+</p><p><b><code>code FLOG &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the logarithm to base 10 of r1. If r1 is ±0 then r2 is -infinity. If r1
+is infinity then r2 is infinity. If r1 is less than zero then r2 is a NAN.
+</p><a name="Sec#14"></a>
+<h3>Exponential functions
+</h3><p><b><code>code FEXP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Raise e to the power r1, giving r2.
+</p><p><b><code>code FEXPM1 &nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Raise e to the power r1 and subtract one, giving r2.
+</p><p>This function allows accurate computation when its arguments are close to zero, and
+&nbsp;provides a useful base for the standard exponential functions. Hyperbolic functions
+&nbsp;such as cosh(x) can be efficiently and accurately implemented by using FEXPM1;
+&nbsp;accuracy is lost in this function for small values of x if the word FEXP is used.
+</p><p><b><code>: f** &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 r2 -- r3 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Raise r1 to the power r2, giving the product r3.
+</p><p><b><code>: FALOG &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Raise ten to the power r1, giving r2.
+</p><a name="Sec#15"></a>
+<h3>Hyperbolic functions
+</h3><p><b><code>: FSINH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the hyperbolic sine of r1.
+</p><p><b><code>: FCOSH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the hyperbolic cosine of r1.
+</p><p><b><code>: FTANH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the hyperbolic tangent of r1, |r2| &lt;= 1.
+</p><a name="Sec#16"></a>
+<h3>Inverse hyperbolic functions
+</h3><p><b><code>code FASINH &nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the number whose hyperbolic sine is r1.
+</p><p><b><code>code FACOSH &nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the number whose hyperbolic cosine is r1. If r1 &lt;&nbsp;1.0 then r2 is a NAN.
+</p><p><b><code>: FATANH &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r1 -- r2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>r2 is the number whose hyperbolic tangent is r1. IF |r1| &gt;&nbsp;1.0 then r2 is a NAN.
+</p><a name="Sec#17"></a>
+<h3>Input of Floating Point numbers
+</h3><p><b><code>: &gt;FLOAT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f ; fs: -- r | &lt;nothing&gt; ) \ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>An attempt is made to convert the string specified by c-addr and u to internal
+floating-point representation. If the string represents a valid floating-point
+number in the syntax below, its value r and true are returned. If the string does not
+represent a valid floating-point number only false is returned. <br />
+
+A string of blanks is treated as a special case representing zero.
+</p><pre>The syntax of a convertible string := &lt;significand&gt;[&lt;exponent&gt;]
+
+&lt;significand&gt; := [&lt;sign&gt;]{&lt;digits&gt;[.&lt;digits0&gt;] |
+.&lt;digits&gt; }
+&lt;exponent&gt; &nbsp;&nbsp;&nbsp;:= &lt;marker&gt;&lt;digits0&gt;
+&lt;marker&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= {&lt;e-form&gt; | &lt;sign-form&gt;}
+&lt;e-form&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= &lt;e-char&gt;[&lt;sign-form&gt;]
+&lt;sign-form&gt; &nbsp;&nbsp;:= { + | - }
+&lt;e-char&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:= { D | d | E | e }
+</pre><p><b><code>: f# &nbsp;&nbsp;&nbsp;( Interpretation: &quot;fp no.&quot; -- ; fs: -- r ) &nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br><b>&nbsp;( Compilation: &quot;fp no.&quot; -- ; run-time: fs: -- r ) </b>
+</p><p>An attempt is made to convert the space delimited string following F# to internal
+floating-point representation. If the string represents a valid floating-point
+number in the syntax below, its value r is returned. If the string does not
+represent a valid floating-point number an error is thrown. <br />
+F# used at the end of a line is treated as a special case representing zero. <br />
+If interpreting the FP number is placed on the FP stack, while it is compiled as
+an Fliteral if compiling. <br />
+The syntax of a convertible string is the same as <b>&nbsp;&gt;FLOAT </b>.
+</p><a name="Sec#18"></a>
+<h3>Output conversion
+</h3><p><b><code>: REPRESENT &nbsp;&nbsp;&nbsp;&nbsp;( addr u -- n flag1 flag2 ; fs: r -- ) &nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating
+</code></b><br>At c-addr, place the character-string external representation of the significand of
+the floating-point number r. Return the decimal-base exponent as n, the sign as flag1
+and valid result as flag2. The character string shall consist of the u most significant
+digits of the significand represented as a decimal fraction with the implied decimal
+point to the left of the first digit, and the first digit zero only if all digits
+are zero. The significand is rounded to u digits following the round to nearest
+rule; n is adjusted, if necessary, to correspond to the rounded magnitude of the
+significand. If flag2 is true then r was in the implementation-defined range of
+floating-point numbers. If flag1 is true then r is negative. <br />
+An ambiguous condition exists if the value of BASE is not decimal ten. <br />
+When flag2 is false, n &nbsp;is 7FFFFFFF and flag1 is the sign. The contents of c-addr are
+the first u characters of either NAN or Infinity, padded with spaces if necessary.
+</p><p><b><code>: PRECISION &nbsp;&nbsp;&nbsp;&nbsp;( -- u ) &nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Return the number of significant digits currently used by (F.), (FE.), (FS.), F.,
+FE., or FS. as u.
+</p><p><b><code>: SET-PRECISION ( u -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Set the number of significant digits currently used by (F.), (FE.), (FS.), F.,
+FE., or FS. to u.
+</p><p><b><code>: min-precision ( u -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Set the number of significant digits currently used by (F.), (FE.), (FS.), F.,
+FE., or FS. to u if it is greater than the present setting.
+</p><a name="Sec#19"></a>
+<h3>Format FP number to a buffer
+</h3><p>The following words are for formatting floating point numbers as counted strings in
+the buffer whose address is supplied so they can be used for purposes other than printing
+the numbers to the console. The string is not null terminated.
+</p><p><b><code>: (F.) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Format the top number on the floating-point stack using fixed-point notation:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[-] &lt;digits&gt;.&lt;digits0&gt;
+</pre><p><b><code>: (FE.) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Format r as a string in engineering notation.
+</p><p><b><code>: (FS.) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Format r as a string in scientific notation:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;significand&gt;&lt;exponent&gt;
+</pre><p>where:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;significand&gt; &nbsp;:= &nbsp;[-]&lt;digit&gt;.&lt;digits0&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;exponent&gt; &nbsp;&nbsp;&nbsp;&nbsp;:= &nbsp;E[-]&lt;digits&gt;
+</pre><p><b><code>: (E.) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ synonym of (FS.)
+</code></b><br>See above.
+</p><p><b><code>: (G.) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- ; fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Format r as a string using scientific notation or ordinary representation according
+to the size of r.
+</p><a name="Sec#20"></a>
+<h3>Display FP numbers
+</h3><p><b><code>: F. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Display, with a trailing space, the top number on the floating-point stack using
+fixed-point notation:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[-] &lt;digits&gt;.&lt;digits0&gt;
+</pre><p><b><code>: FE. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Display, with a trailing space, the top number on the floating-point stack using
+engineering notation, where the significand is greater than or equal to 1.0 and less
+than 1000.0 and the decimal exponent is a multiple of three.
+</p><p><b><code>: FS. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating ext
+</code></b><br>Display, with a trailing space, the top number on the floating-point stack in
+scientific notation:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;significand&gt;&lt;exponent&gt;
+</pre><p>where:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;significand&gt; &nbsp;:= &nbsp;[-]&lt;digit&gt;.&lt;digits0&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;exponent&gt; &nbsp;&nbsp;&nbsp;&nbsp;:= &nbsp;E[-]&lt;digits&gt;
+</pre><p><b><code>: E. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ Synonym of FS.
+</code></b><br>See above.
+</p><p><b><code>: G. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( fs: r -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating extra
+</code></b><br>Display the top number on the floating-point stack using scientific notation or
+ordinary representation according to the size of r.
+</p><a name="Sec#21"></a>
+<h3>Debugging tools
+</h3><p><b><code>: f.s &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating debug
+</code></b><br>Display floating point stack.
+</p><p><b><code>: .fdepth &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating debug
+</code></b><br>Display depth of floating point stack.
+</p><p><b><code>: fdump &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Floating debug
+</code></b><br>Dump of the real Floating Point Unit.
+</p><h2>Handling Errors
+</h2><p>If you reset the FPU control word to use other than the default rounding or precision
+values then you may need to modify the default error handling. In version V6.10 or
+higher this can be done by defining your own handler, MY-RESET-STACKS then adding it in
+thus;
+</p><pre>reset-stacks-chain chain-add my-reset-stacks
+
+Ealier versions need to add
+
+: new-reset-stacks [ defer@ reset-stacks compile, ] my-reset-stacks ;
+new-reset-stacks is reset-stacks
+</pre><pre>You can test for the presence of NANs with;
+
+&nbsp;&nbsp;.... fdup f= 0= ....
+
+which returns true only for NANs. You can test for both NANs and infinities with;
+
+&nbsp;&nbsp;.... fdup f- f0= 0=
+
+and for infinities with;
+
+&nbsp;&nbsp;.... fabs finf f=
+
+</pre></body></html>

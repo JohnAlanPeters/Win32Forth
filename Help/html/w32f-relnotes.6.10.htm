@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Release Notes for version 6.10.05</h1>
+
+<h2>Contributors (in alphabetical order) </h2>
+
+<ul>
+  <li>Ezra Boyce</li>
+  <li>Dirk Busch</li>
+  <li>Bruno Gauthier</li>
+  <li>George Hubert</li>
+  <li>Alex McDonald</li>
+  <li>Rod Oakford</li>
+  <li>Andrew Stephenson</li>
+  <li>Jos van de Ven</li>
+  <li>and some others...</li>
+</ul>
+
+<h2>Overview</h2>
+
+<p><b>Back to SourceForge! </b>We're grateful to Ron Aaron, who
+provided us with a bug tracking system and a full CVS for a considerable
+period. Unfortunately, due to several successful hacking attempts on the
+CVSTrak bug tracker, and because of the risk to the CVS source, a decision was
+made to return to SF for CVS use for the forseeable future. We're grateful to
+Ron for his efforts to keep the show on the road. We're disappointed that a
+single lone script-kiddy could cause so much damage to our project. The hacking
+attempts and the move to SF caused us to loose several months worth of change
+log, so the code committed to the SF CVS is missing detailed change information
+from October 16, 2003 (version 6.08.00) to December 21, 2004 (base commit to
+SF). As a result, the changes documented here are considerably less detailed
+than we would wish. Our little experiment in truly open open-source has ended;
+SF is more secure, but more difficult to use, and not as open as we would like.</p>
+
+<h2>System Changes</h2>
+
+<p>6.10 is a significant
+update from 6.08, but the basic philosophy of ANS Forth compliance and trying
+to support as much legacy version 4.2 code as possible is still our primary
+goal. </p>
+
+<h3>Documentation</h3>
+
+<p>The documentation has been
+beefed up considerably, and is now almost all HTML based. </p>
+
+<p>Professor <a href="http://galileo.phys.virginia.edu/~jvn/">Julian V. Noble</a>
+<img border=0 width=16 height=16 src=ONWEB.gif> has kindly allowed us to distribute his
+<a href="Guides/primer_Noble.htm">&quot;A Beginner's Guide to Forth&quot;</a> and
+some of his formula translation source code.
+<a href="http://www.complang.tuwien.ac.at/anton/home.html">Anton Ertl</a>
+<img border=0 width=16 height=16 src=ONWEB.gif> has given his permission to modify the
+<a href="http://www.complang.tuwien.ac.at/forth/gforth/Docs-html">documentation for gforth</a>
+<img border=0 width=16 height=16 src=ONWEB.gif> under
+the GNU Free Documentation License; work is currently underway on it. We are
+grateful to them and other contributors.</p>
+
+<p>Help messages now more closely conform to ANS standard; the help system can be loaded
+with the word <code>help-system</code>.</p>
+
+
+
+<h3>Native executables</h3>
+
+<p>Win32Forth now produces
+native executables (.EXEs) for Windows. The original system of using a wrapper
+that provided console facilities and loaded a relocatable image has been
+changed in favour of a native executable and a set of supporting DLLs (still
+written in C) that provide the console. The effect of this change is to make
+Win32Forth a class 1 Forth (a definition of Forth addressing mechanisms
+developed by <a href="http://www.forth.org.ru/~mlg/">Michael L Gassanenko </a>
+<img border=0 width=16 height=16 src=ONWEB.gif>); effectively, <b>all</b> addresses in
+Win32forth are absolute, and the return stack and other address based variables
+and values are real addresses, not relative addresses. </p>
+
+<p>This means that <code>rel&gt;abs</code> and <code>abs&gt;rel</code> are no longer
+required. The advantages are significant;</p>
+
+<ul type=disc>
+ <li >Win32Forth is up to 30% faster</li>
+ <li >Words that uses addresses (such as calls to Windows) no longer need to be aware
+      of them and deal with them differently.</li>
+</ul>
+
+<p>Other than that, there are no end-user changes required; <code>FSAVE</code> ,
+<code>TURNKEY</code> and <code>APPLICATION</code> work without change.</p>
+
+
+
+<h3>True Windows multi-tasking support</h3>
+
+<p>Support is provided for
+multiple threads of execution in Win32Forth. Many changes have been made to the
+internals to make end-user words thread safe without requiring end user code
+changes to support it. Currently, how to invoke words as threads is poorly
+documented.</p>
+
+<h3>Assembler changes</h3>
+
+<p>Specifically, <b>for
+Win32Forth only</b>, the assembler is now issued under the LGPL, not the GPL.
+Several small changes have been made; </p>
+
+<ul type=disc>
+ <li>correction for &lt;0 [ebp] [reg]&gt; compiling incorrectly</li>
+ <li>addition of [word] and [dword] to support indirect jumps through absolute addresses</li>
+ <li>support for CMOVcc and SETcc opcodes</li>
+</ul>
+
+
+<h3>Bug fixes</h3>
+
+<p>A large number of bugs have been fixed.</p>
+
+<p>The bug in <b>\</b> which
+was causing the stack check warnings to try to print 4,000,000 spaces if the
+line has a comment has been fixed..</p>
+
+<p><code>REPRESENT</code>has been modified so zero is output
+as 0.0e0 by <code>FS.</code> </p>
+
+<p><code>SYNONYM</code> now leaves the new name as hidden if
+the old name isn't found. Also it correctly finds an earlier version of old
+name (if it's in the search order) where the two names are the same and the
+current and context vocabularies are also the same. </p>
+
+<p><code>LOCALS-INIT</code> has been modified not to throw an
+error when used in control structures, since this was causing problems when
+values where placed on the stack by the program, while compiling. </p>
+
+<h2>New Applications</h2>
+
+<ul type=disc>
+ <li>SciEdit (Win32Forth Source-Editor)</li>
+ <li>ForthProject (Win32Forth Project Manager)</li>
+</ul>
+
+<h2>New Demos</h2>
+
+<ul type=disc>
+ <li>HtmlDisplay.f - Display HTML pages in a Window</li>
+ <li>MDIExample.f - Example of an MDI application</li>
+ <li>MDIDialogExample.f - Example of an MDI application using the MDIDialogWindow Class</li>
+ <li>MultiHello.f - Example of using Dialog windows in different threads</li>
+</ul>
+
+<hr>
+
+<p>Document : p-relnotes.6.10.htm -- 2006/10/30 -- georgeahubert </p>
+
+</body>
+
+</html>

@@ -1,0 +1,172 @@
+\ $Id: HelpSummary.tv,v 1.12 2011/11/18 21:42:14 georgeahubert Exp $
+
+\                          HELP SUMMARY DESCRIPTION
+
+\ How to describe the html help treeview :
+\ ----------------------------------------
+\
+\ Each line describes an entry in the treeview.
+\ This file is interpreted by Forth so empty lines and Forth comments may be used.
+
+\ A treeview line entry has the following format :
+\
+\           n     tvn| name|     tvd| link|
+\
+\ - n           is the depth of the treeview item (beginning with 0 for root)
+\ - tvn| name|  is the name of the treeview item (leading blanks allowed for indentation)
+\ - tvd| link|  is the data associated with the treeview item, actually an url.
+
+\               name and link may include a char "|" provided that this "|" is immediately
+\               followed by a non blank char.
+\
+\               In fact, this type of file can be used to define any kind of TreeView :
+\               - link can be a number too
+\               - if n>0 items are inserted TVI_LAST, if n<0, items are inserted TVI_SORT
+
+\ Treeview icons are automatically inserted, using the following rules:
+\
+\ If a line holds an empty link information, the treeview entry is considered as a
+\ summary line and will receive "closed book" and "open book" icons.
+\ If a line holds a file .htm link (with sub-path), it will recieve a "help sheet" icon.
+\ If the local html link is "help\html\w32f-todo.htm", the "help sheet" will be grayed.
+\ If the html link is for an acrobat file, the icon will be "acrobat".
+\ If the link begins with "http://" or "mailto:" or "news:", the icon will be "world".
+
+
+
+0 tvn| Help|                                      tvd| |
+1 tvn|    Help on help|                           tvd| |
+2 tvn|       Help system presentation|            tvd| help\html\w32f-helppresent.htm|     \ <-- OK
+2 tvn|       Notation conventions in help|        tvd| help\html\w32f-helpconventions.htm| \ <-- OK
+2 tvn|       Other Win32Forth help systems|       tvd| help\html\w32f-helpothers.htm|      \ <-- OK
+1 tvn|    Overview|                               tvd| |
+2 tvn|       Overview|                            tvd| help\html\w32f-overview.htm|        \ <-- OK
+2 tvn|       OS Versions supported|               tvd| help\html\w32f-osvers.htm|          \ <-- OK
+2 tvn|       Licence / No Warranty|               tvd| help\html\w32f-nowarranty.htm|      \ <-- OK
+2 tvn|       Who are we / How to join us|         tvd| help\html\w32f-joinus.htm|          \ <-- OK
+2 tvn|       Download & Install|                  tvd| help\html\w32f-instal.htm|          \ <-- OK
+2 tvn|       Bug report / support|                tvd| help\html\w32f-reports.htm|         \ <-- OK
+2 tvn|       History of Win32Forth|               tvd| help\html\w32f-history.htm|         \ <-- OK
+2 tvn|       FAQ|                                 tvd| help\html\w32f-faq.htm|             \ <-- OK
+1 tvn|    Release notes - Upgrading|              tvd| |
+2 tvn|       How to convert from version 6.12.00| tvd| help\html\w32f-MoveTo.6.14.htm|     \ <-- OK for now
+2 tvn|       Future version 6.16.00|              tvd| help\html\w32f-relnotes.6.16.htm|   \ <-- OK
+2 tvn|       What's new in version 6.14.00|       tvd| help\html\w32f-relnotes.6.14.htm|   \ <-- OK
+2 tvn|       Version 6.12.00|                     tvd| help\html\w32f-relnotes.6.12.htm|   \ <-- OK
+2 tvn|       Version 6.10.00|                     tvd| help\html\w32f-relnotes.6.10.htm|   \ <-- OK
+2 tvn|       Versions 2.9G to 6.08.00|            tvd| help\html\w32f-relnotes.htm|        \ <-- OK
+1 tvn|    Getting started ?|                      tvd| |
+2 tvn|       Getting started ?|                   tvd| help\html\w32f-getstart.htm|        \ <-- OK
+2 tvn|       Quick win32forth tour|               tvd| help\html\w32f-quicktour.htm|       \ <-- OK
+2 tvn|       Runit: Console, IDE|                 tvd| help\html\w32f-runit.htm|           \ <-- OK + w32f-runit-console.jpg
+2 tvn|       Forth tutorials & ebooks|            tvd| help\html\w32f-books.htm|           \ <-- OK
+2 tvn|       Forth Web resources|                 tvd| help\html\w32f-webresources.htm|    \ <-- OK
+1 tvn|    Win32Forth reference|                   tvd| |
+2 tvn|       Generalities|                        tvd| help\html\w32f-generalities.htm|    \ <-- OK
+2 tvn|       Win32Forth reference|                tvd| |
+3 tvn|          Forth engine|                     tvd| |
+4 tvn|             Forth engine|                  tvd| help\html\w32f-forthengine.htm|     \ ???
+3 tvn|          Data types & structures|          tvd| |
+4 tvn|             Forth data types|              tvd| help\html\w32f-forthtypes.htm|      \ <-- OK
+4 tvn|             Local variables|               tvd| help\html\w32f-locals.htm|          \ <-- OK  + w32f-locals-stack.gif
+4 tvn|             Memory management|             tvd| help\html\w32f-memory.htm|          \ ??? add new$
+4 tvn|             Data structures|               tvd| help\html\w32f-structures.htm|      \ <-- OK
+3 tvn|          Data and return stack operators|  tvd| help\html\w32f-stacks.htm|          \ <-- OK
+3 tvn|          Numbers|                          tvd| |
+4 tvn|             ASCII to number conversion|    tvd| help\html\w32f-numconv.htm|         \ <-- OK
+4 tvn|             Number to ASCII conversion|    tvd| help\html\w32f-dspnumber.htm|       \ <-- OK
+4 tvn|             Integer arithmetic|            tvd| help\html\w32f-arithm.htm|          \ <-- OK
+4 tvn|             Floating point package|        tvd| help\html\dexh-float.htm|           \ <-- OK
+3 tvn|          Boolean & comparisons operators|  tvd| |
+4 tvn|             Boolean & comparisons|         tvd| help\html\w32f-boolean.htm|         \ <-- OK
+3 tvn|          Strings|                          tvd| |
+4 tvn|             Strings handling|              tvd| help\html\w32f-strings.htm|         \ <-- OK
+4 tvn|             Unicode Strings|               tvd| help\html\dexh-unicode.htm|         \ <-- OK
+3 tvn|          Flow control|                     tvd| |
+4 tvn|             Basic flow control|            tvd| help\html\w32f-flowcontrol.htm|     \
+4 tvn|             Using -IF|                     tvd| help\html\w32f-using-if.htm|        \ <-- OK ??? with flow control ?
+4 tvn|             Switches|                      tvd| Help\html\dexh-switch.htm|          \ <-- OK ??? with flow control ?
+4 tvn|             Chains|                        tvd| help\html\w32f-chains.htm|          \ <-- OK
+3 tvn|          The Search Order|                 tvd| |                                   \ <-- OK
+4 tvn|             Wordlists & Vocabularies|      tvd| help\html\w32f-vocabulary.htm|      \ <-- OK
+4 tvn|             Using the Module Wordset|      tvd| help\html\dexh-module.htm|          \ <-- OK
+3 tvn|          Source compiling tools|           tvd| |
+4 tvn|             Interpretive conditionals|     tvd| help\html\dexh-interpif.htm|        \ <-- OK
+3 tvn|          Task Wordset|                     tvd| help\html\dexh-task.htm|            \ <-- OK
+3 tvn|          Files handling|                   tvd| help\html\w32f-files.htm|           \ <-- OK
+3 tvn|          OS environment|                   tvd| |
+4 tvn|             File & Directory searching words| tvd| help\html\dexh-ansfile.htm|         \ <-- OK
+4 tvn|             Multiple search path support|     tvd| help\html\dexh-paths.htm|           \ <-- OK
+4 tvn|             FLoadCmdLine shell integration|   tvd| help\html\dexh-floadcmdline.htm|    \ <-- OK
+3 tvn|          Miscellaneous utilities|          tvd| |
+4 tvn|             Miscellaneous utilities|       tvd| help\html\w32f-utils.htm|           \ <-- ??? to clean a bit
+4 tvn|             The Block Wordset|             tvd| help\html\dexh-block.htm|           \ <-- OK
+4 tvn|             Random Number Generator|       tvd| help\html\w32f-random.htm|          \ <-- OK
+2 tvn|       OOP reference|                       tvd| |
+3 tvn|          OOP reference|                    tvd| help\html\w32f-objects.htm|         \ <-- OK + weblink
+3 tvn|          Debugging words for classes|      tvd| help\html\dexh-classdbg.htm|        \ <-- OK
+2 tvn|       Windows interface|                   tvd| |
+3 tvn|          Windows programming basics|       tvd| help\html\w32f-todo.htm|            \ ???
+3 tvn|          tricks : sendmessage, WM_COMMAND to self or parent, etc.|  tvd| help\html\w32f-todo.htm|
+3 tvn|          Calling Windows procedures|       tvd| help\html\w32f-windlls.htm|         \ <-- OK
+3 tvn|          Using callback functions|         tvd| help\html\dexh-callback.htm|        \ <-- OK
+3 tvn|          Win32Forth messages|              tvd| help\html\dexh-w32fmsg.htm|         \ <-- OK
+3 tvn|          Accelerator tables|               tvd| help\html\dexh-acceleratortables.htm|  \ <-- OK
+2 tvn|       Win32Forth classes reference|        tvd| |
+3 tvn|          Win32Forth classes reference|     tvd| help\html\w32f-classes.htm|         \ <-- OK
+2 tvn|       Errors / Warnings|                   tvd| help\html\w32f-errors.htm|          \ <-- OK
+2 tvn|       Save, Turnkey, rebuild Forth, DLLs|  tvd| |
+3 tvn|          Save / Turnkey|                   tvd| help\html\w32f-imageman.htm|        \ <-- OK
+3 tvn|          Rebuild Win32Forth|               tvd| help\html\w32f-rebuild.htm|         \ <-- OK
+3 tvn|          "Not" creating DLLs|              tvd| help\html\w32f-nodlls.htm|
+2 tvn|       In-depth Win32Forth architecture|    tvd| |
+3 tvn|          Introduction|                     tvd| help\html\w32f-arch-intro.htm|      \ <-- OK
+3 tvn|          The threading technique : ITC|    tvd| help\html\w32f-arch-itc.htm|        \ <-- OK + w32f-arch-itc.gif
+3 tvn|          Register allocation|              tvd| help\html\w32f-arch-regs.htm|       \ <-- OK
+3 tvn|          The dictionaries|                 tvd| help\html\w32f-arch-dict.htm|       \ <-- OK
+3 tvn|          Meta-compilation & FSAVE image|   tvd| help\html\w32f-arch-meta.htm|       \ <-- OK
+1 tvn|    Win32ForthIDE|                          tvd| |
+2 tvn|          Overview|                         tvd| help\html\IDE\win32ForthIDE.htm|    \ <-- OK
+2 tvn|          IDE menus|                        tvd| help\html\IDE\IDEmenus.htm|         \ <-- OK
+2 tvn|          IDE toolbars|                     tvd| help\html\IDE\IDEToolBar.htm|              \ <-- OK
+2 tvn|          IDE goodies|                      tvd| help\html\IDE\IDE.htm|              \ <-- OK
+2 tvn|       Editor|                              tvd| |
+3 tvn|          Editor|                           tvd| help\html\IDE\editor.htm|           \ <-- OK
+2 tvn|       Project manager|                     tvd| |
+3 tvn|          Project manager|                  tvd| help\html\IDE\projectmanager.htm|   \ <-- OK
+3 tvn|          Project navigator|                tvd| help\html\IDE\project navigator.htm|   \ <-- OK
+\ 3 tvn|          Step by step demo|                tvd| help\html\w32f-todo.htm|    \ <-- OK
+2 tvn|       Form designer|                       tvd| |
+3 tvn|          Overview|                         tvd| help\html\IDE\Form designer.htm|    \ <-- OK
+3 tvn|          Creating a form|                  tvd| help\html\IDE\Creating a form.htm|    \ <-- OK
+3 tvn|          Adding code to a form at design time| tvd| help\html\IDE\Code Window.htm|    \ <-- OK
+3 tvn|          Using forms in your programm|     tvd| help\html\IDE\Using Forms.htm|    \ <-- OK
+3 tvn|          Creating a menu|                  tvd| help\html\IDE\Define a menu.htm|    \ <-- OK
+3 tvn|          Creating a toolbar|               tvd| help\html\IDE\Creating a toolbar.htm|    \ <-- OK
+3 tvn|          Creating splitter windows|        tvd| help\html\IDE\Splitter windows.htm|    \ <-- OK
+3 tvn|          Creating property sheets|         tvd| help\html\IDE\PropertyForm.htm|    \ <-- OK
+\ 3 tvn|          Step by step demo|                tvd| help\html\w32f-todo.htm|    \ <-- OK
+2 tvn|       Source level debugger|               tvd| |
+3 tvn|          Source level debugger|            tvd| help\html\w32f-todo.htm|    \ <-- OK
+1 tvn|          WinEdit|                          tvd| help\html\w32f-winedit.htm|         \ <-- OK + w32f-winedit.jpg
+1 tvn|    Other development tools|                tvd| |
+2 tvn|       This help & Dexh|                    tvd| |
+3 tvn|          This help|                        tvd| help\html\dexh-helpmain.htm|        \ <-- OK
+3 tvn|          Dexh|                             tvd| help\html\dexh-helpdexh.htm|        \ <-- OK
+2 tvn|       Debugger|                            tvd| |
+3 tvn|          Forth debugger|                   tvd| help\html\w32F-debugging.htm|       \ <-- OK
+2 tvn|       Assembler & Disassembler|            tvd| |
+3 tvn|          Assembler|                        tvd| help\html\w32f-486asm.htm|          \ <-- OK + w32f-486asm-copyasm486.gpl & .lgpl
+3 tvn|          Disassembler|                     tvd| help\html\w32f-todo.htm|            \ ???
+2 tvn|       Windows Resources utilities|         tvd| |
+3 tvn|          Append resources to an exe|       tvd| help\html\w32f-resources.txt|       \ <-- text file
+3 tvn|          Compile resources in source|      tvd| help\html\w32f-dialogrc.txt|        \ <-- text file
+2 tvn|       Miscellaneous|                       tvd| |
+3 tvn|          Cross reference|                  tvd| help\html\w32f-todo.htm|            \ ???
+3 tvn|          Differential file comparison|     tvd| help\html\w32f-todo.htm|            \ ???
+1 tvn|    ANS Forth standard|                     tvd| |
+2 tvn|       ANS Forth standard|                  tvd| help\html\dpans\dpans.htm|          \ <-- OK + help\html\dpans\*.*
+2 tvn|       ANS Forth words index|               tvd| help\html\dpans\dpansf.htm|         \ <-- OK + help\html\dpans\*.*
+2 tvn|       Win32Forth ANS compliance|           tvd| help\html\w32f-ansi.htm|            \ <-- OK
+1 tvn|    Windows API documentation|              tvd| help\html\w32f-WindowsSDK.htm|      \ <-- OK
+

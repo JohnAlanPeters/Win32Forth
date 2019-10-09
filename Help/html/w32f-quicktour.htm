@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Win32Forth quick tour</h1>
+
+<p> Win32Forth is a huge
+source. Althought it is likely that the following information will be obsolete
+even before it is finished, it may be useful to get a general view of the beast : </p>
+
+<p> You have to know
+that Win32Forth is delivered with full source. Most of the source is
+interesting from the user point of view but some parts that are needed by the
+system may not be of great interest for him. Here is a quick description of all
+directories in Win32Forth, showing what is worth to explore. </p>
+
+<h3>Directory Apps</h3>
+
+<p> Contains a collection of
+Win32Forth full applications : </p>
+
+<p> Some are part of the system
+(Win32ForthIDE : the integrated development
+environment, incorparating the form designer( formally ForthForm), the Project Manager and Editor (formally SciMDIEdit and SciEdit), some are true applications or games (PictureViewer, Solipion,
+etc.) </p>
+
+<p> You can also find here the
+source for the old Win32Forth editor : WinEd. </p>
+
+<p> Once you are developping
+complex applications, these files will provide many examples of
+&quot;complicated&quot; use of Win32Forth, but this is not the best place to
+start. </p>
+
+<h3>Directory Proj </h3>
+
+<p> Here are stored the project
+files for the above applications. You shouldn't use much this directory (unless
+for storing your own projects) </p>
+
+<h3> Directory Demos </h3>
+
+<p> This is the best place to
+start playing with Win32Forth. This directory contains simple, although fully
+functional examples of use. </p>
+
+<h3> Directory ExtSrc </h3>
+
+<p> This directory may be
+absent, depending on the setup options you used. It mainly contains C source
+for the last dll files that are not yet written in Forth and some other tools.
+You can forget it. </p>
+
+<h3> Directory Help and/or Doc </h3>
+
+<p> This directory contains all
+the help stuff, including html pages and the help program itself. Its internals
+are not of great interest (unless you want to provide a similar help system for
+your own application) </p>
+
+<h3> Directory Templates </h3>
+
+<p> Seems to be shorter as possible templates for your own code... </p>
+
+<h3> Directory Scr </h3>
+
+<p> This is the heart of
+Win32Forth. Console, Gdi, Kernel and the Src files thelselves are used to build
+the Win32Forth executable. </p>
+
+<p> Of special interest are the Lib and Tools subdirs. The first one is a library
+containing a number of optionally loadable classes and options. You have to use
+the directive <code>NEEDS afile.f</code> to load the parts your application needs in.
+The Tools subdir is a bit the same but for transiently used tools. </p>
+
+<p> When we say &quot;explore
+Win32Forth&quot;, we essentially mean &quot;explore Src&quot;. There you can
+understand in depth every feature of Win32Forth (and we promise you will learn
+a lot !) </p>
+
+<h3> Directory Win32Forth </h3>
+
+<p> This is the
+&quot;installation directory&quot;. Besides all previous subdirs, it contains
+mainly executables, config files and dlls.  </p>
+
+<p> Most of the dlls are required to run Win32Forth (in Console and / or IDE mode) </p>
+
+<ul>
+ <li>w32FConsole.dll   was used by Console in older versions, but has been replaced by a new console written in forth. </li>
+ <li>w32fScintilla.dll   is used by the SciEdit editor (and then by the IDE)</li>
+ <li>Zip32.dll   is used by the IDE and Project Manager </li>
+ <li>WinCon.dll   contains all the Windows constants </li>
+</ul>
+
+<p> If you want to use
+Win32Forth in another directory than where it was installed, you will have to
+bring these dlls and the config files with it. </p>
+
+<p> They are ways to get rid of
+these dlls once you have made an application <code>TURNKEY</code> (a TUNRNKEYed application
+is an application running on its own, with no longer available Forth
+interpreter) </p>
+
+<p> (Each time you get bored of
+exploring, just click on an exe of any application. They are also stored in
+this directory) </p>
+
+<hr>
+
+<p>Document : w32f-quicktour.htm -- 2008/03/16 -- Camille Doiteau</p>
+
+</body>
+
+</html>

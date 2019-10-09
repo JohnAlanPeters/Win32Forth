@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Help system presentation</h1>
+<h2>This help</h2>
+
+<p>This help contains two parts:</p>
+
+<p>The first, classical one,
+is a help summary treeview where you can browse help pages. There is not much
+to say about this part except that :</p>
+
+<ul>
+ <li>There are sometimes navigation buttons
+     inside some of these pages but it general, you can go to the next or
+     previous page in the documentation with the <img border=0 width=16 height=18
+     src="../Res/HLeftHtml.bmp"> and <img border=0 width=16 height=18
+      src="../Res/HRightHtml.bmp"> tools and go back to the previously
+     displayed page with the <img border=0 width=16 height=18
+     src="../Res/HPrevHtml.bmp"> tool (use this one to come back from a page itself
+     containing sub-links)</li>
+ <li>a <img border=0 width=16 height=18
+       src="../Res/HHelpGreyed.bmp"> greyed
+     help page icon means that the help topic is not yet available. A dummy
+     help page will be displayed. </li>
+ <li><img border=0 width=16 height=18
+      src="../Res/Hwww.bmp"> icon
+     means an external link that will take you to the wordlwide web (needs an
+     internet connection) </li>
+</ul>
+
+<p>The second part is a
+glossary for thousands of Win32Forth words. The glossary is presented in two
+ways : </p>
+
+<ul>
+ <li>In a treeview where you can find words
+     sorted in different ways. Selecting a word displays a quick info in the
+     upper right pane</li>
+ <li>In an edit box plus a list box. You can
+     select the edit box and enter keystrokes, the list will scroll to the
+     first match. Then you can select in the list the word you are looking for.
+     A quick info will be displayed in the upper right pane too.</li>
+ <li>In both cases, when a word is selected (ie
+     its quick info displayed), you can view its source by clicking the <img
+     border=0 width=16 height=18 src="../Res/HSource.bmp"> tool</li>
+</ul>
+
+<p>The words treeview
+presentation is particularly suitable for searching classes and methods
+information and organization. The Classes branch offers a top down view of the
+hierarchy of all the classes (in the order they were created). For each class,
+a list of its methods is given. Remember that for a given class, all the parent
+class methods are valid too so you may want to explore the parent's methods
+too. The Methods branch displays, for each method, all the classes where this
+method is defined.</p>
+
+<p>Searching the treeview for
+a given word can be lengthy anyway. The simplest and fastest way to obtain help
+about a given word is to use the Edit and List boxes. When the same word
+appears several times, you will have extra info (such as the vocabulary in
+which it was defined or the class to which a method belongs) in the quick info
+window to quickly select in this list the exact word you are looking for.</p>
+
+<p></p>
+
+<h2>Tips</h2>
+
+<p>With the <img border=0 width=16 height=18
+ src="../Res/HCopy.bmp"> tool you can copy text from the view-source
+window. Then you can paste it in your application or directly in the console to
+run it.</p>
+
+<p>If you get an
+&quot;undefined&quot; message when using a word that you found in the help, it
+is likely that it was defined in a library source. The library sources are not
+resident in the Win32Forth system, they must be explicitly loaded before use. Check
+the quick info to know in what source file this word was defined (say
+&quot;afile.f&quot;) and add at the beginning of your source the directive
+:<code> REQUIRE afile.f</code></p>
+
+<p>You can look at the <code>DEFER</code>ed words contents by typing, in the
+Console, <code>SEE adefer</code> .
+
+<hr>
+
+<p>Document : w32f-HelpPresent.htm -- 2008/05/06 -- Camille Doiteau<p>
+
+</body>
+
+</html>

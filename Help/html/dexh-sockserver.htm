@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+sockserv.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Socket Library Extension for Servers
+</h1><h3><i>Tom Dixon
+</i></h3><p></p><p>This library is built off of the socket library and provides some
+generic support for socket servers. &nbsp;The current implementation is
+asycronous, single-threaded and is select-based and does not use
+the poll() function.
+</p><h2>Socket Event Vectors
+</h2>These words are used to define the behavior of the sockets on the
+server.<br />
+Each event is defined as a word with no stack effects ( -- ).<br />
+Defining these vectors applies to the currently active client
+connection. &nbsp;If you want to set the default behavior for incoming
+client connections, please see 'serv-vecselect'.
+<p><b><code>: OnClose! ( xt -- ) 
+</code></b><br>This word stores a new closure behavior for the socket connection.
+</p><p><b><code>: OnRead! ( xt -- ) 
+</code></b><br>This word stores a new read behavior for the socket connection.
+</p><p><b><code>: OnWrite! ( xt -- ) 
+</code></b><br>This word stores a new write behavior for the socket connection.
+</p><p><b><code>: OnConnect! ( xt -- ) 
+</code></b><br>This word stores a new connection behavior for the socket.
+</p><h2>Global Socket Data
+</h2>When a socket event is being processed, these words contain are to
+be used in obtaining specific information about the request.
+<p><b><code>: servdata ( -- addr ) 
+</code></b><br>Returns a pointer to the user-defined data area associated with
+every request. &nbsp;The size of this user area is specified by the
+server.
+</p><p><b><code>: servsock ( -- sock ) 
+</code></b><br>Returns the socket that the event has been triggered on.
+</p><p><b><code>: close-client ( -- ) 
+</code></b><br>Closes the current socket at frees up the memory from the server.
+</p><h2>Socket Server Words
+</h2>A socket server is the listening server that takes requests,
+processes them, and closes them.
+<p><b><code>: serv-vecselect ( server -- ) 
+</code></b><br>Selects the server for vector behavior. &nbsp;Directly after this word
+is called, default behaviors for the entire server can be specified.
+</p><p><b><code>: sockserver ( datasize p &lt;name&gt; -- )
+</code></b><br>This word defines a socket server on port &quot;p&quot; and the size of the
+user-defined data area per client.
+</p><p><b><code>: serv-init ( server -- ) 
+</code></b><br>Initializes the server and starts listening for requests.
+</p><p><b><code>: serv-close ( server -- ) 
+</code></b><br>Closes the server - open requests are still able to execute, though.
+</p><h3>FromIp
+</h3>&nbsp;A user variable to save the IP-adres of the sender
+<p><b><code>: serv-poll ( server -- ) 
+</code></b><br>The meat-and-potatoes function of the socket server. &nbsp;This
+word will deal with all incoming socket requests, poll through
+and process existing socket requests, and cleanup after closed
+requests.
+</p><h2>Example Code
+</h2>This is a simple test of the socket server code. &nbsp;Typing in the
+word 'demo' will start the test. &nbsp;Any incoming request will simply
+be printed to the console. &nbsp;(Yes, it's not very useful, but it is
+a minmal example of use. &nbsp;Please see other examples that should
+be with this file).
+<pre>256 8000 sockserver test
+test serv-vecselect
+:noname servdata 256 servsock sock-read servdata swap type ;
+onread!
+
+test serv-init
+: demo begin test serv-poll 10 ms key? until ;
+</pre></body></html>

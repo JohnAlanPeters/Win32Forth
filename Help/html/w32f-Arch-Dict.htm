@@ -1,0 +1,361 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Dictionaries</h1>
+
+<h2 >Dictionaries</h2>
+
+<p>In January 1996, Win32Forth had
+grown to over 5000 words and 550k bytes of dictionary, which seemed like a lot
+of overhead to add to a small application program. The solution Andrew came up
+with was to split the forth dictionary architecture into two parts, application
+and system. The Application dictionary holds &quot;bodies&quot; of all the
+words that an application might need to use at program run-time. The System dictionary
+holds all the non-application words, like those used only during program
+compile time. These include vocabularies, windows constants (they are compiled
+as literals), assembler, disassembler and the headers for all the words in both
+dictionaries. Using this split or dual dictionary architecture reduces a <code>TURNKEY</code>ed
+applications overhead by over 200k bytes. </p>
+
+<p>This was (and still is) a solution
+to reduce application size, but maybe not a very good one. It introduces some
+complexity in words handling. If you want to build a <code>TURNKEY</code> application you
+cannot use SYSTEM primitives that could be of interest (for example <code>DUMP</code> ).
+Even if you don't want to build a TURNKEYed , you have to handle warnings and
+use obscure words like \in-system-ok directives.</p>
+
+<p>For running multiple instances of
+Win32Forth, all the code must reside in a code segment. That' is the reason why
+there is a third dictionary part : the code space.</p>
+
+<p>So the dictionary space is divided in 3 parts :</p>
+
+<ul>
+ <li>Application space</li>
+ <li>System space</li>
+ <li>Code space</li>
+</ul>
+
+<p>Origin and current dictionary pointer in each of theese spaces can be retrevied with :</p>
+<ul>
+  <li><code>CODE-ORIGIN (0x401000) CDP </code>  current code dictionary pointer </li>
+  <li><code>APP-ORIGIN  (0x40B000) ADP </code>  current application dictionary pointer</li>
+  <li><code>SYS-ORIGIN  (0x505000) SDP </code>  current system dictionary pointer</li>
+</ul>
+
+
+<h2 >Headers</h2>
+
+<p>Words dictionary headers contain the following fields :</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Offset</th>
+      <th>What is it ?</th>
+    </tr>
+  </thead>
+  <tbody>
+     <tr>
+       <td>LFA</td>
+       <td>-4</td>
+       <td>Link field</td>
+     </tr>
+     <tr>
+       <td>CFA-PTR</td>
+       <td>0</td>
+       <td>pointer to cfa</td>
+     </tr>
+     <tr>
+       <td>BFA</td>
+       <td>4</td>
+       <td>Byte flag         (*)</td>
+     </tr>
+     <tr>
+       <td>NFA</td>
+       <td>5</td>
+       <td>Count byte</td>
+     </tr>
+     <tr>
+       <td>ccc</td>
+       <td>6 to x</td>
+       <td>the name letters</td>
+     </tr>
+     <tr>
+       <td>Alignment</td>
+       <td>0 to 3 bytes</td>
+       <td>0 to 3 bytes for alignement</td>
+     </tr>
+     <tr>
+       <td>VFA</td>
+       <td>n+0</td>
+       <td>View field (optional)</td>
+     </tr>
+     <tr>
+       <td>FFA</td>
+       <td>n+4</td>
+       <td>File field (optional) </td>
+     </tr>
+     <tr>
+       <td>OFA</td>
+       <td>n+8</td>
+       <td>Optimize field (optional)</td>
+     </tr>
+  </tbody>
+</table>
+
+<p>Then the pointer to the cfa points here :</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field</th>
+      <th>Offset</th>
+      <th>What is it ?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CFA</td>
+      <td>0<</td>
+      <td>Code field address</td>
+    </tr>
+    <tr>
+      <td>PFA</td>
+      <td>4</td>
+      <td>Parameter field address</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>(*) The byte flag contains the following bit flags :</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bit</th>
+      <th>Bit</th>
+      <th>And</th>
+      <th>What is it ?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr >
+      <td>MSB</td>
+      <td>8</td>
+      <td>128</td>
+      <td>IMMEDIATE flag</td>
+    </tr>
+    <tr>
+      <td>.</td>
+      <td>7<</td>
+      <td>64<</td>
+      <td>DEPRECATED flag</td>
+    </tr>
+    <tr>
+      <td>.</td>
+      <td>6</td>
+      <td>32</td>
+      <td>not used</td>
+    </tr>
+    <tr>
+      <td>.</td>
+      <td>5</td>
+      <td>16</td>
+      <td>not used</td>
+    </tr>
+    <tr>
+      <td>.</td>
+      <td>4</td>
+      <td>8</td>
+      <td>not used</td>
+    </tr>
+    <tr>
+      <td>.</td>
+      <td>3</td>
+      <td>4<</td>
+      <td>true if optimize field OFA is present</td>
+    </tr>
+    <tr>
+      <td>.</td>
+      <td>2</td>
+      <td>2</td>
+      <td>true if file field FFA is present</td>
+    </tr>
+    <tr>
+      <td>LSB</td>
+      <td>1</td>
+      <td>1</td>
+      <td>true if view field VFA is present</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The following words handle headers fields :</p>
+
+<pre>    &gt;BODY       ( cfa -- pfa )
+    BODY&gt;       ( pfa -- cfa )
+    L&gt;NAME      ( lfa -- nfa ) \ Convert link address to name address.
+    N&gt;LINK      ( nfa -- lfa ) \ Convert name address to link address.
+    N&gt;CFAPTR    ( nfa -- cfa-ptr ) \ Convert name address to the address of the CFA pointer address.
+    N&gt;BFA       ( nfa -- bfa )  \ Convert name address to the address of the bit fields.
+    LINK&gt;       ( link -- cfa )  \ Convert the link address to the CFA (xt).
+    NAME&gt;       ( nfa -- cfa )  \ Convert the name address to the CFA (xt).</pre>
+
+<p>A vocabulary header is made of a word header, plus a cfa containing the executing part
+of DOES&gt; and a pfa containing the following fields. </p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field name</th>
+      <th>Offset</th>
+      <th>What is it ?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>VCFA</td>
+      <td>0</td>
+      <td>Vocabulary cfa (contains DOES&gt; code)</td>
+    </tr>
+    <tr>
+      <td>VTHRD</td>
+      <td>4</td>
+      <td>Number of threads (is also the pfa of the vocabulary)</td>
+    </tr>
+    <tr>
+      <td>VHEAD</td>
+      <td>8</td>
+      <td>Vocabulary header ???</td>
+    </tr>
+    <tr>
+      <td>VSRCH</td>
+      <td>12</td>
+      <td>Vocabulary search ???</td>
+    </tr>
+    <tr>
+      <td>VITER</td>
+      <td>16</td>
+      <td>Vocabulary iterations ???</td>
+    </tr>
+    <tr>
+      <td>VLINK</td>
+      <td>20</td>
+      <td>Vocabularies link</td>
+    </tr>
+    <tr>
+      <td>VOC#0</td>
+      <td>24</td>
+      <td>Voc thread 0 (is also &quot;voc-address&quot;)</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>28</td>
+      <td>Voc thread 1</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td>n*4 + 24</td>
+      <td>Voc thread n</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Each vocabulary, when it is defined,
+is granted some number of threads. When a vocabulary has n threads, the words that
+are defined in the vocabulary are linked in one of its threads. Each thread is
+filled in a round robin manner.</p>
+
+<p>The following words are used with vocabularies headers :</p>
+
+<pre>
+    VARIABLE LAST       \ NFA of last header created
+    VARIABLE LAST-LINK  \ address of last link for last header created
+    VARIABLE VOC-LINK   \ linked list of vocabularies
+    VLINK&gt;VOC           ( voc-link-field -- voc-address )
+    VOC&gt;VLINK           ( voc-address -- voc-link-field )
+    VOC#THREADS         ( voc-address -- #threads )
+    VCFA&gt;VOC            ( vocabulary-cfa -- voc-address )
+    VOC&gt;VCFA            ( voc-address -- vocabulary-cfa )
+    CODE &gt;NAME          ( CFA -- NFA  )  \ search vocabs for cfa, return nfa. Follows
+                       the VOC-LINK pointer to all of the vocabularies, searches threads
+                       for CFA. If entry is not found, returns NFA of [UNKNOWN]</pre>
+
+
+
+<h2>Some tips about OOP and classes</h2>
+
+<p>Classes are actually vocabularies.
+As such they encapsulate words defined inside a class. They also inherit all
+the words that were defined in the parent class (ie vocabulary) : all the
+threads of the parent class/vocabulary are copied in the child
+class/vocabulary. The body of a class is exactly the same as the one of a
+vocabulary, plus a few extra fields at the end. They are :</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Field name</th>
+      <th>Size</th>
+      <th>What is it ?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>MFA</td>
+      <td>2 cells</td>
+      <td>the class's methods dictionary (*)</td>
+    </tr>
+    <tr>
+      <td>IFA</td>
+      <td>1 cell</td>
+      <td>the class's instance variables dictionary</td>
+    </tr>
+    <tr>
+      <td>DFA</td>
+      <td>1 cell</td>
+      <td>the data area size, in bytes, used by the ivars</td>
+    </tr>
+    <tr>
+      <td>XFA</td>
+      <td>1 cell</td>
+      <td>extra info for indexed ivars (dimension) </td>
+    </tr>
+    <tr>
+      <td>SFA</td>
+      <td>1 cell</td>
+      <td>pointer to the superclass (or parent) (**)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>(*) The list of selectors used by
+the class are stored in several threads. The constant <code>#MLISTS</code> contains the
+number of threads, which is currently 2, hence the 2 cells size for this field.
+The selectors are actually CONSTANTs which are stored in the HASHED vocabulary.
+When a selector is invoked for a class, it is searched in the MFA lists and,
+if found, the method defined in the class is executed.</p>
+
+<p>(**) The content of SFA is the pfa of the superclass.</p>
+
+<hr>
+
+</div>
+
+<p>Document : w32f-arch-dict.htm -- Mar 15 2008 -- Camille Doiteau</p>
+
+</body>
+
+</html>

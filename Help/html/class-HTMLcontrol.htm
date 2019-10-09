@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+HTMLcontrol.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>HTMLcontrol -- HTML control
+</h1><p>This class is using the MSHTML ActiveX control
+so you must install the MS Internet Explorer to use it.
+</p><h2>Glossary
+</h2><p><b><code>:CLASS HTMLControl &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SUPER AXControl
+</code></b><br>HTML control class.
+</p><p><b><code>:M Start: ( Parent -- )
+</code></b><br>Start the control
+</p><p><b><code>:M GetLocationURL: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- str len )
+</code></b><br>Retrieves the URL of the resource that the browser is currently displaying.
+</p><p><b><code>:M GetLocationName: &nbsp;&nbsp;&nbsp;&nbsp;( -- str len )
+</code></b><br>Retrieves the name of the resource that the browser is currently displaying.
+</p><p><b><code>:M GetType: &nbsp;&nbsp;&nbsp;&nbsp;( -- str len )
+</code></b><br>Retrieves the type name of the contained document object.
+</p><p><b><code>:M Busy?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- flag )
+</code></b><br>Retrieves a boolean value that indicates whether the browser is engaged in a
+downloading operation or other activity.
+</p><p><b><code>:M Offline?: &nbsp;&nbsp;&nbsp;( -- flag )
+</code></b><br>Retrieves a Boolean value indicating whether the browser is currently operating
+in offline mode.
+</p><p><b><code>:M GoURL: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( str len -- )
+</code></b><br>Navigates to a resource identified by a Uniform Resource
+Locator (URL) or to the file identified by a full path.
+</p><p><b><code>:M SetURL: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( zUrl -- )
+</code></b><br>Navigates to a resource identified by a Uniform Resource
+Locator (URL) or to the file identified by a full path.
+</p><p><b><code>:M GoHome: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Navigates to the current home or start page.
+</p><p><b><code>:M GoSearch: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Navigates to the current search page.
+</p><p><b><code>:M GoForward: &nbsp;&nbsp;( -- )
+</code></b><br>Navigates forward one item in the history list.
+</p><p><b><code>:M GoBack: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Navigates backward one item in the history list.
+</p><p><b><code>:M Refresh: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Reloads the file that the browser is currently displaying.
+</p><p><b><code>:M Stop: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Cancels any pending navigation or download operation and
+stops any dynamic page elements, such as background sounds
+and animations.
+</p><p><b><code>;CLASS
+</code></b><br>End of HTML control class
+</p><h2>Example (demos\HtmlControlDemo.f)
+</h2><pre>
+needs HtmlControl.f
+
+\&nbsp;Create a simple browser window
+:class Browserwin &lt;super window
+
+HTMLcontrol html
+
+:M On_Init: ( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Init: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self Start: html ;M
+
+:M On_Size: ( h m w -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2drop drop autosize: html ;M
+
+:M GoURL: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( str len -- ) GoURL: html ;M
+:M GetLocationURL: &nbsp;&nbsp;&nbsp;( -- str len ) GetLocationURL: html ;M
+:M GetLocationName: &nbsp;&nbsp;( -- str len ) GetLocationName: html ;M
+:M Busy?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- flag ) &nbsp;&nbsp;&nbsp;Busy?: html ;M
+:M Offline?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- flag ) &nbsp;&nbsp;&nbsp;Offline?: html ;M
+:M GetType: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- str len ) GetType: html ;M
+
+:M Wait: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+\&nbsp;Wait until the browser has finished all
+\&nbsp;downloading operation or other activity.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;begin winpause
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Busy?: self 0=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;until ;M
+
+;class
+
+BrowserWin bwin
+
+: test
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;start the window
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;start: bwin
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;let the browser load a document
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Offline?: bwin
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if &nbsp;&nbsp;s&quot; doc\p-index.htm&quot; Prepend&lt;home&gt;\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else s&quot; www.win32forth.org\doc\p-index.htm&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;then GoURL: bwin
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;wait until browser is ready
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wait: bwin
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;display some information about the document
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cr GetLocationURL: bwin type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cr GetLocationName: bwin type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cr GetType: bwin type
+; test
+
+</pre></body></html>

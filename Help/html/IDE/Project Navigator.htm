@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Project Navigator</title>
+    <link rel="stylesheet" type="text/css" href="IDEstyle.css">
+</head>
+<body>
+
+<h1>Project Navigator</h1>
+
+<br>
+
+
+<p>While Project Manager keeps track of files in  a project, Navigator complements
+it by keeping track of the code in the project. This allows quickly finding where
+code is defined in a large multi-file project.</p>
+
+<p>In the IDE Preferences Dialog an option is available to allow or prevent
+the inclusion of library files when tracking code in a project. Usually you
+will not put this option ON as you are not to edit these sources and as
+Help is able to provide any needed information about the win32Forth and
+Libraries words.</p>
+
+
+<p><center><img src="Navigator.gif" alt="" ></center></p>
+
+
+<p>The root item is the name of the current project. Tracking a project (click the
+<b>track</b> button) scans all the files in a project and builds the Navigator tree
+from the code. If no project is opened any source files opened in the IDE will
+be indexed. Pressing the control key while clicking the track button will
+build the tree from opened source files even if a project is opened.</p>
+
+<p>Code is separated into objects and classes, global (i.e not private to a class
+or object) definitions, private definitions, methods and data (consisting of
+values, variables, ints etc.) Clicking a tree item will expand the list. When
+a code item is clicked some useful information, including the source file where it can be found
+and the line number is displayed in the status bar.</p>
+
+<p>Navigator also builds a list of references for code words that are found. If an item
+is referenced in a project it will have a '+' symbol next to it. Clicking the symbol expands the
+item to show what words reference it.</p>
+
+<p>The <b>Goto</b> button will open the source file and position the cursor at the
+line number where the code is located. If the control key is pressed while the Goto button
+ is clicked it will enable auto mode. This allows single-clicking of an item
+ in the Navigator to open its source file.</p>
+
+<p>Note that in the methods/private definitions/private data tree the item in
+brackets is the parent class/object of the method/definition/data.</p>
+
+<br>
+<hr>
+
+<p>Document : project navigator.htm -- 2008/08/26 -- Ezra Boyce</p>
+
+</body>
+
+</html>

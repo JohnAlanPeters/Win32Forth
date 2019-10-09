@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+task.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Using the Task Wordset
+</h1><p>The multi-tasker is not loaded in the system by default so the file TASK.F in the lib
+folder should be included in any program that multi-tasks, unless using the file
+MultiTaskingClass.f (also in the lib folder) which includes it automatically.
+</p><p>Multi-tasking in Win32Forth is accomplished by using the Windows<sub>® </sub>&nbsp;multi-tasker.
+This is a pre-emptive multi-tasker.
+</p><h2>The Task Control Block
+</h2><p>The task control block (also known as task-block or TCB) is a small structure either
+alloted in the dictionary or allocated on the heap containing information about a task.
+</p><ul><li>The xt and parameter variables are set when the task-block is created.
+</li><li>The stop flag can be set by other tasks and is used to signal the task that it has
+been asked to finish.
+</li><li>The ID is set when the task is created and is valid only until the task terminates.
+</li><li>The handle is set when the task is created and is valid until it is closed by the
+API CloseHandle function, even after the task has terminated. The operating system
+does not free the OS resources allocated to a task until all handles (except for
+the pseudohandle returned by the API GetCurrentThread) are closed and
+the task has terminated. Programs should close the handle as soon as it's no longer
+needed (if it's never used close it at the start of the task word).
+</li></ul><h2>The User Area
+</h2><p>When a task is created the operating system allocates a stack for the task.
+Win32Forth splits this stack into three regions, a return stack, a User area
+and a data stack. The address of this User area is stored in thread local
+storage so that callbacks have access to the correct User area for the task
+(Versions prior to V6.05 always used the main task's User area for callbacks).
+When a task starts the contents of the User area are undefined except
+</p><ul><li>Base is set to decimal.
+</li><li>The exception handler is set so the task exits if an exception is thrown, returning
+the error code to the operating system.
+</li><li>TCB is set to the task control block of the task.
+</li><li>RP0 is set to the base of the return stack.
+</li><li>SP0 is set to the base of the data stack.
+</li></ul><p>All other User variables used by a task should be explicitly set before use.
+If the task uses floating-point words then FINIT should be called first.
+</p><h2>Glossary
+</h2><p><b><code>cell field+ task&gt;parm &nbsp;&nbsp;&nbsp;&nbsp;( task-block -- addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Convert the task-block address into the address of the thread parameter
+</p><p><b><code>cell field+ task&gt;id &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( task-block -- addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Convert the task-block address into the address of the thread id
+</p><p><b><code>cell field+ task&gt;handle &nbsp;&nbsp;( task-block -- addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Convert the task-block address into the address of the thread handle
+</p><p><b><code>cell field+ task&gt;stop &nbsp;&nbsp;&nbsp;&nbsp;( task-block -- addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Convert the task-block address into the address of the the stop flag
+</p><p><b><code>: task&gt;parm@ &nbsp;&nbsp;&nbsp;( task-block -- parm ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Fetch the parameter from the task-block.
+</p><p><b><code>: exit-task &nbsp;&nbsp;&nbsp;&nbsp;( n -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Exit the current task returning the value n to the operating system, which can be retrieved
+by calling GetExitCodeThread. The stacks and user area for the thread are freed and
+DLLs are detatched. If the thread is the last active thread of the process then the
+process is terminated.
+</p><p><b><code>: create-task &nbsp;&nbsp;( task-block -- flag ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Create a new task which is suspended. Flag is true if successful.
+</p><p><b><code>: run-task &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( task-block -- flag ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Create a new task and run it. Flag is true if successful.
+</p><p><b><code>: suspend-task &nbsp;( task-block -- flag ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Suspend a task. Flag is true if successful.
+</p><p><b><code>: resume-task &nbsp;&nbsp;( task-block -- flag ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Resume a task. Flag is true if successful.
+</p><p><b><code>: stop-task &nbsp;&nbsp;&nbsp;&nbsp;( task-block -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Set the stop flag of the task block to true.
+</p><p><b><code>: (task-block) &nbsp;( parm cfa-task addr -- len ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Build a task block at the supplied address, initialise the parameter and xt and
+return the size of the task block.
+</p><p><b><code>: task-block &nbsp;&nbsp;&nbsp;( parm cfa-task -- addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Build a task block in the dictionary, initialise the parameter and xt and return
+the address of the block.
+</p><p><b><code>: task-stop? &nbsp;&nbsp;&nbsp;( task-block -- flag ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Task
+</code></b><br>Flag is true if stop-task has been set by another task. In this case the task should
+do any necessary clean-up and exit.
+</p><h2>Locking Resources
+</h2><p>Since the multi-tasker is pre-emptive it is sometimes necessary to restrict access
+to resources to a single task to prevent inteference between different tasks.
+Win32Forth provides a set of words for efficiently locking sections of code.
+The system also contains some locks used internally that are transparent to the user.
+</p><h2>Glossary
+</h2><p><b><code>: lock &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lock -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;Lock
+</code></b><br>If another thread owns the lock wait until it's free,
+then if the lock is free claim it for this thread,
+then increment the lock count.
+</p><p><b><code>: unlock &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lock -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;Lock
+</code></b><br>Decrement the lock count and free the lock if the resultant count is zero.
+</p><p><b><code>: trylock &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lock -- fl ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Lock
+</code></b><br><b>&nbsp;For NT4, w2k and XP; </b>
+If the lock is owned by another thread return false. <br />
+If the lock is free claim it for this thread,
+then increment the lock count and return true. <br />
+<b>&nbsp;For Win9x, and NT&lt;4; </b>
+Perform the action of LOCK and return true.
+</p><p><b><code>: (make-lock) &nbsp;&nbsp;( -- lock ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;Lock
+</code></b><br>Make a new lock, and return it's identifier.
+</p><p><b><code>: make-lock &nbsp;&nbsp;&nbsp;&nbsp;( compiling: &quot;name&quot; &nbsp;-- &nbsp;runtime: -- lock ) \ W32F &nbsp;&nbsp;&nbsp;Lock
+</code></b><br>Create a new lock. When executed the lock returns it's identifier.
+</p><h2>WARNING
+</h2><p>Before using FORGET or executing MARKER words unlock any locks which are
+about to be forgotten to avoid memory leaks AND exit any threads which will be
+forgotten to avoid <b>&nbsp;CRASHING !! YOU HAVE BEEN WARNED </b>
+</p></body></html>

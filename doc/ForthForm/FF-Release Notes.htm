@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>ForthForm Release Notes</title>
+</head>
+
+<body>
+
+<center><b><h1>Important Release Notes for ForthForm Ver 2.02.08</h1></b></center>
+<center><b>Some things to keep in mind</b></center><br><br>
+
+ <b>1.</b> The toolbar design tool has been significantly enhanced.  Any previous toolbar definition
+    files (.tdf) are not compatible with this version. Any attempts to open such will fail.<br><br>
+
+ <b>2.</b> The controls contained in file ExControls.f have been separated into their respective files.
+   In addition some not normally used by ForthForm are now not loaded by default. This allows
+   the editing of forms to load only those controls needed by an application. Following is the breakdown
+   of the files loaded by ExControls.f -
+   <pre>
+   StatusBar.f	    \ statusbar class
+   Textbox.f        \ textbox, passwordbox, multilinetextbox etc.
+   Listbox.f        \ listbox, combobox etc.
+   UpDownControl.f  \ updowncontrol, spinnercontrol
+   Buttons.f        \ checkbox, radiobutton, pushbutton,groupbox
+   Label.f          \ label, image labels etc.
+   ProgressBar.f    \ not loaded by default
+   TrackBar.f       \ ditto
+   ScrollBar.f      \ horizontal and vertical scrollbars
+   Calendar.f       \ calendar, date/time picker, not loaded by default
+   TabControl.f     \ tabcontrol
+   ButtonBar.f      \ not loaded by default</pre>
+
+ <b>3.</b> For modal forms an ivar named "parent" was used for the parent handle of the form. This ivar's name has been
+ changed to hwndParent. In addition the methods SetParent: and ParentWindow: has been deprecated. Use instead
+ SetParentWindow: and GetParentWindow: respectively. Any code or forms that used these names will have to be modified
+ or recompiled to continue working.<br><br>
+
+  <A HREF="ForthForm.htm">More help</A>
+
+</body>
+</html>

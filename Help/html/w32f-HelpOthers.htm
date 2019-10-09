@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+<h1>Other Win32Forth help systems</h1>
+
+<p></p>
+
+<h2>Some Useful Exploring Words</h2>
+
+<p>The first word you need to know in Forth is : </p>
+
+<pre>WORDS [substring] [substring]</pre>
+
+<p>Used without substring, <code>WORDS</code> displays all the words currently
+present in Win32Forth dictionary, which is not a great help. When specifying one
+or two substrings, only the subset of words containing the substring(s) will be
+displayed and this can help a lot if you have a clue on the name you are
+looking for. For instance, to find a word supposed to store something, type :</p>
+
+<pre>  WORDS !</pre>
+
+<p>Forth will display a list
+of all the words in all vocabularies that contain the substring &quot;!&quot;. You
+can then switch to the help to get information about any of the words you got.</p>
+
+<p></p>
+
+<p>The word <code>CONSTANTS</code> is very similar to <code>WORDS </code>, except it
+displays Windows
+constants that contain one or both of the following substrings. For example, if
+you type: </p>
+
+<pre>  CONSTANTS CR ALPHA </pre>
+
+<p>Then <code>CONSTANTS</code> will display the Windows constants shown here; </p>
+
+<pre>----------- Windows Constants -------------------------------------------<br>
+IMAGE_REL_ALPHA_SECREL IMAGE_REL_ALPHA_SECRELHI  IMAGE_REL_ALPHA_SECRELLO<br>
+-------------------------------------------------------------------------<br>
+<br>
+Displayed 3 of the 9462 Windows Constants in the system.
+ok</pre>
+
+<p>This will prove very
+valuable when you find yourself trying to remember how to spell the name of a
+needed windows constant. </p>
+
+<p></p>
+
+<h2>Some other Win32Forth help systems</h2>
+
+<p>The word <code> SEE</code>
+can be used to decompile a word (or disassemble it if it is a code definition).
+Although not exactly designed for help this word is sometimes useful for this
+purpose. Example: <code>SEE !</code> will
+show the code definition of ! .</p>
+
+<p>Reading the source code is
+often the best documentation about Forth words. The word <code>VIEW</code> opens
+the source where a word was defined. Example: <code>VIEW DUP</code> will make the editor
+to load the
+source (actually kernel.f in this case) and display it from the line where <code>DUP</code> was
+defined. </p>
+
+<p>When using <code>SEE</code> or <code>VIEW</code> a
+dictionary search is made to find the word that you want help about. <code>VIEW</code> searches
+all vocabularies for the requested word, so the vocabulary search order is not
+important unless you have defined a particular word more than once. Also you
+cannot get help about words that cannot be found in dictionary searches, such
+as &quot;hidden&quot; words or methods in classes. One advantage of these
+tools, however, is that they can find information about any word that is
+currently loaded (conversely, the present help system knows only the words that
+have been included in its database, for instance applications words are not
+there). A last difference is that viewing the source for a selected word in the
+help is a readonly process, <code>VIEW</code> opens the file in the editor, ready
+for editing, if needed.</p>
+
+<p></p>
+
+<p>You can also load the <code>HELP-SYSTEM</code> (by typing this command in Forth
+Console window) then use
+the word <code>HELP</code> as follows :</p>
+
+<pre>
+       HELP &lt;word&gt;     \ get help for a word <br>
+       HELP            \ get help for the last error message<br>
+       DOCS            \ open the Win32Forth documentation</pre>
+
+<p>The same remarks as for <code>VIEW</code> apply to <code>HELP</code> . </p>
+
+<hr>
+
+<p>Document : w32f-HelpOthers.htm -- 2008/05/06 -- Camille Doiteau<p>
+
+</body>
+
+</html>

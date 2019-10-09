@@ -1,0 +1,15 @@
+( Note that this file is not intended for distribution. )
+Added files for ForthForm 2.02.08
+doc\forthform\FF-Toolbar Preview Window.gif
+doc\forthform\FF-Release Notes.htm
+apps\forthform\joinstr.f
+apps\forthform\splitter1.f
+apps\forthform\splitter2.f
+apps\forthform\splitter3.f
+apps\forthform\splitter4.f
+apps\forthform\splitter5.f
+apps\forthform\splitter6.f
+apps\forthform\formmonitor.f
+apps\forthform\exampleII.f
+apps\forthform\exampleII.ff
+apps\forthform\exampleII.frm

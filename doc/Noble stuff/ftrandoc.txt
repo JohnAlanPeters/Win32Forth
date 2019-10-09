@@ -1,0 +1,315 @@
+FALSE [IF]
+
+******** ANS-compatible FORmula TRANslator ********
+filenames:
+  ftran2xx.f
+
+---------------------------------------------------
+    (C) Copyright 2001, 2004  Julian V. Noble.
+      Permission is granted by the author to      
+      use this software for any application pro-  
+      vided this copyright notice is preserved,
+      as per GNU Public License agreement.
+---------------------------------------------------
+
+----------------------------------------------------------------
+Usage:
+
+Convert formula to Forth on the screen:
+
+  f" a=b*c-3.17e-5/tanh(w)+abs(x)"
+
+  b F@  c F@  F*  .317000E-4 w F@  FTANH  F/  F-
+  x F@  FABS  F+ a F! ok
+
+
+Evaluate an expression and leave the result on the stack:
+
+  fvariable x  fvariable y  ok
+  f$" x=3"     f$" y=4"  ok
+  f$" x*(x^2+y^2)" f. 75.0000  ok
+
+
+Compile formula into Forth word:
+
+      fvariable x  ok
+      fvariable w  ok
+      fvariable c  ok
+      fvariable b  ok
+      fvariable a  ok
+      : test  f" a=b*c-3.17e-5/tanh(w)+abs(x)"
+      ;  ok
+      see test
+      : TEST          B F@ C F@ F* flit 3.17000E-5 W F@ FTANH F/
+                      F- X F@ FABS F+ A F! ;  ok
+
+Numeric literals:
+
+  You do NOT need to include an exponent, all numeric literals
+  are converted to floating point literals. However, positive
+  integers in exponents,  a^n,  n in the range 1-4, are parsed
+  as f^2, f^3, f^4 or the complex equivalents.
+
+Multiple formulas, long furmulas:
+
+  A word can contain several formulas, as in
+
+  : test1  f" a=b*c+sin(w)"  rot dup  *
+           f" x=-3.75e6/a"  ;  ok
+
+  see test1
+  : TEST1         B F@ C F@ F* W F@ FSIN F+ A F! ROT DUP *
+                  flit -3.75000E6 A F@ F/ X F! ;  ok
+
+
+  Formulas can extend over multiple lines, to a maximum
+  of 255 characters, e.g.
+
+      : test4    f" a=b*c
+                    -x/cosh(w)"  ;  ok
+      see test4
+      : TEST4         B F@ C F@ F* X F@ W F@ FCOSH F/ F- A F!
+                      ;  ok
+
+Complex arithmetic:
+
+  ftran2xx.f now handles formulas with complex functions
+  and variables. Real literals are converted to complex
+  numbers, as in 3.75e0 -> 3.75e0 + i 0.0e0, so if you
+  want to include a complex literal, use the FORTRANish
+  locution cmplx(3.75,-4.21). At the moment all variables
+  in a complex expression must be complex, and all functions
+  must return complex numbers. The locutions that correspond
+  to f" and f$" are zz" and zz$" . The latter name was chosen
+  because Win32Forth already has z" defined in the file
+  primutil.f . I have no idea what z" is supposed to do.
+
+  
+  Ftran2xx.f does NO type-checking. Making sure that types
+  are consistent is the obligation of the programmer.
+
+
+Parsing rules:
+
+  Ftran2xx.f parses according to Fortran rules, EXCEPT:
+
+    - Exponentiation is done with ^ a la Basic, rather than
+      with ** as in Fortran;
+
+    - Assignments have the form
+
+        "var_name = expression" ;
+
+    - Formulas do NOT have to be assignments.
+      That is, expressions like f" a*(b+x)-w" are valid.
+      Thus f" a*(b+x)-w" will compile it within a word,
+      or will interactively translate it and display
+      the result on the screen.
+
+********** January 15th, 2004 - 12:57 ***********************
+
+New capabilities of ftran202.f
+
+Passing addresses as arguments in formulas:
+
+      ftran201.f assumed functions would find their arguments on
+      the fp stack. That is, atan2 is parsed as
+
+        f" atan2(x,y)"  ->   x F@  y F@     FATAN2
+
+      However, some functions would like arguments passed as
+      addresses. ftran202.f lets you enclose such an argument
+      in square braces, as in [a]. This can be useful if the
+      argument is an array name. Thus
+
+        f" Smul(lambda,[a])"  ->  lambda F@  a   Smul
+
+      You can include curly braces, as in
+
+        f" Smul(lambda,[a{ 0 }])"  ->  lambda F@  a{ 0 }   Smul
+
+      (see Arrays below)
+
+
+CONSTANT function arguments and formula elements:
+
+      The square brace notation can obviously handle FCONSTANTs
+      or FVALUEs (providing the latter have been defined) in
+      expressions, as with
+
+        FVARIABLE a  ok
+        f$" a=2"  ok
+        3e0 FCONSTANT x  ok
+        f$" a*[x]" f. 6.00000  ok
+        f$" [x] + a" f. 5.00000  ok
+
+        : test   FDUP  FNEGATE  FEXP  F*  ;
+        f$" test(a)" f. .270671  ok
+        f$" test([x])" f. .149361  ok
+
+        This is entirely ANS-compatible and should be portable
+        to any ANS-compliant system within the environmental
+        restriction to a separate floating point stack.
+
+      CAVEAT #1:
+        Constructions like
+
+            0e0 FVALUE y
+            f$" [y] = a*[x]"
+
+        will not work because the parser cannot tell the
+        difference between an FVALUE and an FVARIABLE,
+        so it doesn't know it should use FTO rather than F!
+
+      CAVEAT #2:
+        As noted above, ftran2xx.f does NO type-checking
+        and only minimal grammatical checking. Therefore it
+        is up to the programmer to enforce consistency with
+        these rules.
+    *************************************************************
+
+Arrays:
+
+  Ftran2xx.f handles arrays in "Scientific FORTH" notation:
+
+    include arrays.f
+    10 long 1 floats 1array v{  ok
+    : test   0 do  f" v{ I } =3"  loop  ;  ok
+    see test
+    : TEST      0
+                DO      flit 3.00000 V{ I } F!
+                LOOP    ;  ok
+
+  The space between curly braces {} can contain a Forth
+  index or other Forth code, as in v{ I 3 + } . You MUST
+  include the appropriate blanks or you will get error
+  messages. There can be no blanks or characters between
+  successive {'s or successive }'s.
+
+  In accordance with this notation, 2-dimensional arrays
+  have names like a{{ and are dereferenced with the oper-
+  ator }} . Thus ftran2xx.f recognizes a{{ I J }};
+  a{{I J}} however, does not contain the requisite blanks
+  following a{{ and preceding }} so it will not be accepted
+  during input.
+
+    include arrays.f
+
+    3 long 1 floats 1array v{
+
+    : test3   2 0 do  f" v{I}=a"  loop  ;
+    first char after last { must be blank
+
+    : test3   2 0 do  f" v{ I}=a"  loop  ;
+    last char before 1st } must be blank
+
+    : test3   2 0 do  f" v{ I }=a"  loop  ;
+    Error: a is undefined
+
+    fvariable a
+    : test3   2 0 do  f" v{ I }=a"  loop  ;  ok
+    see test3
+    : TEST3         lit "0x2" 0
+                    DO      A F@ V{ I } F!
+                    LOOP    ;  ok
+
+    f" m{{ I J }} = [a]"
+    a m{{ I J }} F!  ok
+
+
+------------------------ INSIDE THE COMPILER -------------------------
+
+
+----------------------------------------
+Environmental dependencies:
+      ANS CORE EXT, FLOAT, FLOAT EXT and
+      TOOLS EXT wordsets
+----------------------------------------
+
+----------------------------------------
+Non STANDARD, but common words:
+    OFF (alias 0!)  store 0  to a cell
+    NOOP  "no operation"    : NOOP   ;
+    PERFORM == @ EXECUTE
+    CAPS-FIND     (Win32Forth 3.5)
+    .NAME         (SwiftForth, WinForth & GForth)
+----------------------------------------
+
+Compiler documentation:
+----------------------------- Backus-Naur Rules for mini FORTRAN
+NOTATION:
+|               -> "or",
++               -> "unlimited repetitions"
+Q               -> "empty set"
+&               -> + | -
+%               -> * | /
+
+NUMBERS:
+fp#           -> {-|Q}{digit.digit+ | .digit digit+} exponent
+exponent      -> {dDeE {&|Q} digit {digit|Q} {digit|Q} | Q}
+
+FORMULAS:
+assignment    -> id = expression
+id            -> name | name {+ Forth }+  --curly braces balance!
+name          -> letter {letter|digit}+
+arglist       -> ( expression {,expression}+ )
+function      -> id arglist
+expression    -> term | expression & term
+term          -> factor | term % factor
+factor        -> id | fp# | ( expr ) | f^f | function
+------------------------------------------ end Backus-Naur Rules
+
+
+--------------------------------------- Description of algorithm
+
+This mini compiler uses recursive descent. It translates a valid
+expression or assignment statement into Forth code "on the fly".
+
+The key data structures are
+
+    1. Input buffer -- left intact
+    2. Output buffer
+    3. 3 cells wide stack holding pointers and operator tokens
+       (it must have enough levels not to overflow during
+       expression parsing)
+
+The input string (formula) is translated to an output string
+containing the Forth code. The words f", and f$" begin
+the formula input and translation, and differ only in how
+they treat the output string.
+
+"Exposed" (in the word op_find) means "not enclosed in parentheses".
+
+To ensure the proper order of operator precedence, the parser
+first decomposes expressions by terms at exposed + or - signs,
+then parses terms by factors, at exposed * or / operators, and
+finally treats exponentials (factor^factor) and functions, in that
+order. Thus the precedence, in decreasing order of evaluation
+priority, is
+
+    function  ^  */  +-
+
+Recursion is implemented via deferred definitions. Since ANS
+Forth does not contain the commonly employed words DEFER and
+IS, I have defined similar ones, together with some utilities,
+in the INCLUDEd file vector1.f .
+
+The fundamental coding paradigm (besides recursion) is the finite
+state machine. The FSM employed here uses a minicompiler that
+compiles the transition-table representation of a FSM to a Forth
+subroutine (word) embodying the FSM. See, e.g.,
+
+    http://www.jfar.org/article001.html
+
+The FSM code is contained in the INCLUDEd file fsm2.f .
+
+Characters input to a FSM are generally translated to a small
+set of numeric tokens using an automated translation table.
+The table translation code is INCLUDEd in chr_tbl.f .
+
+----------------------------------- end description of algorithm
+
+----------------------------------------------------------------------
+
+[THEN]
+

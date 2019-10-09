@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/xml; charset=iso-8859-1" />
+<meta name="GENERATOR" content="DexH v03" />
+<style type="text/css">
+</style>
+<title>
+</title>
+</head>
+<body>
+<hr /><h1>Paths -- Multiple search path support
+</h1><hr /><h2>Glossary
+</h2><pre><b><a name="0">: .program &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Type the program path.
+</p><pre><b><a name="1">: .forthdir &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Type the forth directory.
+</p><pre><b><a name="2">: &quot;chdir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a1 n1 -- )
+</a></b></pre><p>Set the current directory.
+</p><pre><b><a name="3">: .dir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Print the current directory.
+</p><pre><b><a name="4">: chdir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;optional_new_directory&gt;- -- )
+</a></b></pre><p>Set the current directory.
+</p><pre><b><a name="5">: path: &nbsp;( -- )
+</a></b></pre><p>Defines a directory search path. <br />
+The first cell holds a pointer to 2 cells in the user area which are used to handle a search path. <br />
+The next 260 bytes are reserved for a counted string of a path. <br />
+followed by null. <br />
+At runtime it returns address of the counted string of a path.
+</p><pre><b><a name="6">: path-source &nbsp;&nbsp;( path &nbsp;-- 2variable_path-source )
+</a></b></pre><p>Path-source points to a substring in a path. <br />
+Path-source returns this address.
+</p><pre><b><a name="7">: next-path&quot; &nbsp;&nbsp;&nbsp;( path -- a1 n1 &nbsp;) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path
+</a></b></pre><p>Get the next path from dir list.
+</p><pre><b><a name="8">: reset-path-source &nbsp;&nbsp;&nbsp;&nbsp;( path -- &nbsp;) &nbsp;&nbsp;&nbsp;\ w32f path
+</a></b></pre><p>Points the path-source to the whole path.
+</p><pre><b><a name="9">: first-path&quot; &nbsp;&nbsp;( path -- a1 n1 &nbsp;) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path
+</a></b></pre><p>Get the first forth directory path.
+</p><pre><b><a name="10">: &quot;path+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a1 n1 path -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path
+</a></b></pre><p>Append a directory to a path.
+</p><pre><b><a name="11">: .path &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( path -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path system
+</a></b></pre><p>Display a directory search path list.
+Note: The path source will be reset for this path.
+</p><pre><b><a name="12">: full-path &nbsp;&nbsp;&nbsp;&nbsp;{ a1 n1 path \ searchpath$ filename$ current$ -- a2 n2 f1 }
+</a></b></pre><p>Find the file <i>&nbsp;a1,n1 </i>&nbsp;in the path <i>&nbsp;path </i>&nbsp;and return the full path.
+<i>&nbsp;a2,n2 </i>&nbsp;. <i>&nbsp;f1 </i>&nbsp;= false if successful.
+</p><pre><b><a name="13">: find-path &nbsp;&nbsp;&nbsp;&nbsp;{ a1 n1 basepath path \ filename$ current$ search-current$ -- a2 n2 f1 }
+</a></b></pre><p>Find the file <i>&nbsp;a1,n1 </i>&nbsp;in the path <i>&nbsp;basepath </i>&nbsp;by scanning the sub folders
+defined in <i>&nbsp;path </i>. Returns the full path of the file if possible.
+<i>&nbsp;a2,n2 </i>&nbsp;. <i>&nbsp;f1 </i>&nbsp;= false if succeeded.
+</p><pre><b><a name="14">path: search-base-path &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path
+</a></b></pre><p>The path buffer for the base search folders for Forth.<br />
+Applications that let Forth compile should not change it.
+</p><pre><b><a name="15">path: search-path &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path
+</a></b></pre><p>The path buffer for the sub folders to search in.
+Applications that let Forth compile should not change it.
+</p><pre><b><a name="16">: &quot;fbase-path+ &nbsp;( a1 n1 -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path
+</a></b></pre><p>Append a directory to the Forth search base path.
+</p><pre><b><a name="17">: &quot;fpath+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a1 n1 -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path
+</a></b></pre><p>Append a directory to the Forth search path.
+</p><pre><b><a name="18">: fbase-path+ &nbsp;&nbsp;( -&lt;directory&gt;- -- ) &nbsp;&nbsp;&nbsp;\ w32f path system
+</a></b></pre><p>Append a directory to the Forth search base path.
+</p><pre><b><a name="19">: fpath+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;directory&gt;- -- ) &nbsp;&nbsp;&nbsp;\ w32f path system
+</a></b></pre><p>Append a directory to the Forth search path.
+</p><pre><b><a name="20">: .fpath &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f path system
+</a></b></pre><p>Display the Forth directory search path list.
+</p><pre><b><a name="21">: program-path-init ( -- )
+</a></b></pre><p>Initialize the Forth directory search path list. Automatically done at program
+initialization and when Paths.f is loaded.
+</p><pre><b><a name="22">: &quot;path-file &nbsp;&nbsp;&nbsp;( a1 n1 -- a2 n2 f1 )
+</a></b></pre><p>Find file a1,n1 in the Forth search path and return the full path. <br />
+a2,n2 and f1=false, succeeded.
+</p><pre><b><a name="23">: n&quot;open &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a1 n1 -- handle f1 )
+</a></b></pre><p>Open file a1,n1 with a Forth path search.
+</p><pre><b><a name="24">: MakeAbsolutePath &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a1 n1 a2 n2 -- a3 )
+</a></b></pre><p>Make path a1 n1 absolute to path a2 n2.
+</p><pre><b><a name="25">: IsPathRelativeTo? &nbsp;&nbsp;&nbsp;&nbsp;{ a1 n1 a2 n2 -- f }
+</a></b></pre><p>Return true if path a1 n1 is relative to path a2 n2
+</p><pre><b><a name="26">: MakePathRelativeTo &nbsp;&nbsp;&nbsp;( a1 n1 a2 n2 -- a3 )
+</a></b></pre><p>Make path a1 n1 relative to path a2 n2.
+</p><pre><b><a name="27">: FindRelativePath &nbsp;( a1 n1 path - a2 n2 )
+</a></b></pre><p>Returns a relative path for file a1 n1 in path ( first part ). <br />
+n2=0 means not in search path.
+</p><pre><b><a name="28">: FindRelativeName &nbsp;( a1 n1 path - a2 n2 f )
+</a></b></pre><p>Returns a relative name for file a1 n1 in path ( last-part ). <br />
+n2=0 means not in search path.
+</p><pre><b><a name="29">: &quot;LOADED? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- flag )
+</a></b></pre><p>True if a file addr len is loaded. The filename must contain a full path.
+</p><pre><b><a name="30">: LOADED? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;name&gt;- -- flag ) &nbsp;{ \ current$ }
+</a></b></pre><p>True if the following file is loaded. The filename may be relative.
+</p><pre><b><a name="31">: \LOADED- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;name&gt;- )
+</a></b></pre><p>If the following file IS NOT LOADED interpret line.
+</p><pre><b><a name="32">: \LOADED &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;name&gt;- )
+</a></b></pre><p>&nbsp;If the following file IS LOADED interpret line.
+</p><pre><b><a name="33">: NEEDS &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;name&gt;- )
+</a></b></pre><p>Conditionally load file &quot;name&quot; if not loaded.
+</p><pre><b><a name="34">: Require &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ synonym of NEEDS
+</a></b></pre><p>Forth 200X name for needs.
+</p><pre><b><a name="35">: &quot;file-clip&quot; &nbsp;&nbsp;{ addr len limit | temp$ pre -- addr len2 }
+</a></b></pre><p>Clip filename to limit. If limit is less than 20 then the filename is clipped to
+20. len2=len if len &lt;&nbsp;limit or len &lt;&nbsp;20. len2 = 20 if limit &lt;&nbsp;20. len2 = limt
+otherwise. The string (if clipped) contains ... in the middle to indicate that#
+it has been clipped.
+</p><hr />
+</body></html>

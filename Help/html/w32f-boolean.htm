@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Boolean and comparison operators</span></h1>
+
+
+
+<h2>boolean operators</h2>
+<pre>
+AND        ( n1 n2 -- n3 )   logical bitwise AND
+NOT        ( n1 -- n2 )      logical bitwise NOT (one' complement)
+OR         ( n1 n2 -- n3 )   logical bitwise OR
+XOR        ( n1 n2 -- n3 )   logical bitwise XOR
+
+TOGGLE     ( addr byte -- )  XOR byte contained at address
+INVERT     ( n1 -- n2 )      perform a bitwise -1 XOR on n1, return result n2
+LSHIFT     ( u1 n -- u2 )    shift u1 left by n bits (multiply)
+RSHIFT     ( u1 n -- u2 )    shift u1 right by n bits (divide)
+
+FALSE      ( -- 0 )          gives a false flag
+TRUE       ( -- -1 )         gives a true flag
+OFF        ( addr -- )       store false at address.
+ON         ( addr -- )       store true at address.
+NULL       ( -- 0 )          constant giving 0
+</pre>
+
+
+
+<h2>Comparison operators</h2>
+<pre>
+0=         ( n -- flag ) true if  n=0
+0<>        ( n -- flag ) true if  n different from 0
+0<         ( n -- flag ) true if  n<0
+0>         ( n -- flag ) true if  n>0
+=          ( n1 n2 -- flag ) true if n1=n2
+<>         ( n1 n2 -- flag ) true if n1 different from n2
+<          ( n1 n2 -- flag ) true if n1 < n2
+&gt;          ( n1 n2 -- flag ) true if n1 &gt; n2
+<=         ( n1 n2 -- flag ) true if n1 < or = n2
+>=         ( n1 n2 -- flag ) true if n1 &gt; or = n2
+U<         ( u1 u2 -- flag ) true if u1 < u2 (unsigned)
+U&gt;         ( u1 u2 -- flag ) true if u1 &gt; u2 (unsigned)
+</pre><pre>
+D0=        ( d -- flag ) true if  d = 0
+D0<        ( d -- flag ) true if  d<0
+D=         ( d1 d2 -- flag ) true if  d1 = d2
+D<>        ( d1 d2 -- flag ) true if  d1 different from d2
+D<         ( d1 d2 -- flag ) true if  d1 < d2
+D>         ( d1 d2 -- flag ) true if  d1 &gt; d2
+DU<        ( ud1 ud2 -- flag ) true if  ud1 < ud2 (unsigned)
+</pre>
+<pre>
+WITHIN     ( n1 low high -- f1 ) \ f1=true if ( (n1 >= low) and (n1 < high) )
+BETWEEN    ( n1 low high -- f1 ) \ f1=true if ( (n1 >= low) and (n1 <= high) )
+DMAX       ( d1 d2 -- d3 ) maximum of doubles d1 and d2
+DMIN       ( d1 d2 -- d3 ) minimum of doubles d1 and d2
+MAX        ( n1 n2 -- n3 ) maximum of singles n1 and n2
+0MAX       ( n1 -- n2 ) maximum of singles n1 and 0
+MIN        ( n1 n2 -- n3 ) minimum of singles n1 and n2
+</pre>
+<h2>Floating Point Comparison operators</h2>
+<a href="dexh-float.htm#Sec#9">see here</a>
+<p><hr>Document : w32f-boolean -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

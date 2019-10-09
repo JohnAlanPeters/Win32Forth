@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Using Compiled Forms</title>
+    <link rel="stylesheet" type="text/css" href="IDEstyle.css">
+</head>
+<body>
+
+<h1>Using Compiled Forms</h1>
+
+<br>
+
+
+<a name="top"></a>
+<p> Several files can possibly be loaded by a form - excontrols.f, bitmap.f,
+mdi.f, mdidialog.f, and folderview.f ExControls.f will be loaded if one or
+more controls are used in the form and Bitmap.f will be loaded if any bitmap
+buttons or static labels are used. Mdi.f and MdiDialog.f will be loaded if
+a form is set to compile as an MDI dialogwindow. Folderview.f is a directory
+browser loaded if a form has such a object. The paths for these files are
+already set but if your path is different then be sure to add it, as in
+<b>fpath+ yourdrive:\your\path</b>.
+
+<pre>Compiled forms can be used in an application in a number of ways -
+
+    A form can be copied to the clipboard and then pasted into the program and
+    modified.
+
+    It can be compiled to disk and the .frm file modified with a text editor.
+    Source file FormProperty.f is an example of this. One drawback to this
+    and the previous method is that any future desired modification to the form
+    wil prove difficult without erasing any modifications. As such, these two
+    methods are best used when no future changes to the designed form is
+    anticipated.
+
+    The third method involves compiling the form to a .frm file and loading the
+    form with the application. Controls would then be accessed directly or
+    indirectly to achieve the intended purpose. An alternative method would be to
+    use the loaded form object as the superclass for an additional form object.
+    The Preferences.frm source file from ForthForm and the code that uses it is
+    such an example of the former method. It is reproduce here for purposes of
+    explanation. An example of the latter method is also given.
+
+ <b>   /* ********************** ForthForm Preferences **************** */
+    needs preferences.frm     \ preferences dialog
+
+    : ApplyPreferences ( -- )
+                IsButtonChecked?: chkFlatToolBar to FlatToolBar?
+                IsButtonChecked?: chkButtonText  to ButtonText?
+                Close: TheControlToolBar
+                TheMainWindow Start: TheControlToolBar
+                false SaveRestore: TheControlToolBar
+    \+ withbgnd ReDrawImage: TheMainWindow
+                ;
+
+    : pref-func     { id obj -- }  ( h m w l id obj -- h m w l )
+                id
+                case    IDOK          of      ApplyPreferences Close: obj endof
+                        IDCANCEL      of      Close: obj                  endof
+                endcase ;
+
+    : doPreferences ( -- )
+                ['] pref-func SetCommand: frmPreferences
+                GetHandle: TheMainWindow SetParent: frmPreferences
+                IDOK SetID: btnOk
+                IDCANCEL SetID: btnCancel
+                Start: frmPreferences
+                FlatToolbar? Check: chkFlatToolBar
+                ButtonText?  Check: chkButtontext ; ' doPreferences is doPref
+    /* ************************************************************** */ </b>
+
+Notes - "ApplyPreferences" is the routine that will update the application if
+the user clicks the 'Ok' button.
+      - "pref-func" is the function that handles the form 'WM_COMMAND' message.
+Two parameters are of primary concern; 'id' which is the  id of the control that
+was clicked and 'obj' which is the address of the form object. An application
+can use these two values to control various aspects of the displayed form.
+To set the message handler for the WM_COMMAND message use the method
+SetCommand: (formname) e.g ['] pref-func SetCommand: frmPreferences.
+
+Controls can be compiled as global whereby they will be referenced by name or
+they can be referenced by dot notation (not recommended however)
+e.g. IDOK SetID: frmPreferences.btnOk
+
+If the form is a modal form its parent can be set by the SetParentWindow: method
+e.g Gethandle: TheMainWindow SetParentWindow: frmPreferences. If it is not modal but
+a parent is set the form will simply behave as an owned window, its title not
+being displayed in the task bar.
+
+Method #3
+
+fload test.frm		\ load the form
+
+:Object MyForm		&lt;Super frmTest	\ use the form in test.frm as super class
+
+\ all controls are automatically available without them being global
+
+\ you can change the window style
+:M WindowStyle:		( -- style )
+		WS_CAPTION ;M   \ eliminate the Close [x] button for this form
+
+:M On_Init:	( -- ) \ modify the behaviour of some controls
+		IDOK SetID: btnOk		\ change this id before starting the control
+
+		On_Init: Super 	\ initialize form
+
+		false Enable: chkButton		\ disable this one
+
+
+\ and anything else you wish
+
+		;M
+
+\ the power is yours!
+
+;Object
+
+Method #4<br>
+<A HREF="Code Window.htm">Add code at design time.</A><br><br>
+
+<h3>Control commands</h3>
+The controls directly supported by the Form Designer at this time include,
+Single and multi-selection listboxes
+Text and bitmap labels
+Single and multiline textboxes
+Text and bitmap buttons
+Checkboxes
+Radiobuttons
+Combo and combolist boxes
+Groupboxes
+Horizontal and vertical up/down controls
+Tab Controls
+A Directory Browser class
+
+Additional controls are available in the source file ExControls.f. In addition a
+generic control is provided to allow for any control not directly supported by
+Form Designer. Compiled forms will have the coordinates and dimensions of any
+such control added as values e.g
+A form having a generic control with the name "imgButton" will have the following
+values when compiled -
+'x' value imgButtonX	  - x coordinate
+'y' value imgButtonY	  - y coordinate
+'w' value imgButtonW	  - width
+'h' value imgButtonH	  - height
+
+The directory browser object is created by the FileWindow class. This object is
+capable of displaying files matching different specs for a directory as well as
+displaying the files and directories in ascending or descending order. The method
+"SetSpecs:" with an argument for e.g "*.f;*.htm;*.frm" (note each spec is separated
+by a ; ) sets the object to display files with matching extensions. Some other methods
+include -
+
+<b>ShowFiles:</b> ( flag -- ) display files if flag is true otherwise show
+directories only.
+
+<b>UpdateFiles:</b> ( -- ) update the file display, perhaps after changing the
+filespecs or the path.
+
+<b>IsOn_Update:</b> ( cfa -- ) the function at cfa will be executed after the file
+display is updated.
+
+<b>SetPath:</b> ( addr cnt -- ) set the path for the the displaying of files.
+
+<b>SortAscending:, SortDescending:</b> change the display order of files and
+directories. Directories will always be displayed first.
+
+<b>#Dirs:, #Files:</b> return the number of directories or files respectively.
+
+For further information please browse the file Folderview.f.
+
+Following are some other control methods that may be useful in forms.
+
+<b>AddStyle:</b> ( style -- ) - add any additional style to a control before
+it is created.
+
+<b>Enable:</b>, <b>Disable:</b>, - self-explanatory
+
+<b>SetFont:</b> ( fonthndl -- ) - set the font for applicable controls
+
+<b>AddStringTo:</b> ( stringz -- ) - add asciiz string to listboxes and comboboxes
+
+<b>SetSelection:</b> ( n -- ) - set current selection for listboxes and comboboxes
+
+<b>Clear:</b> - erases contents of listboxes and comboboxes
+
+<b>Check:</b> ( flag -- ) - checks (true) or unchecks (false) a checkbox or radiobutton
+
+<b>IsButtonchecked?:</b> ( -- f ) - return state of radiobutton or checkbox
+
+<b>SetBitmap:</b> ( hbitmap -- ) - set image for a bitmap button
+
+<b>ToolString:</b> ( addr cnt -- ) - set the tooltip for a bitmap button
+</pre>
+
+<p>N.B All controls are derive from the basic Win32Forth controls. As such any methods
+available for those controls can also be used. Please review the source files
+ExControls.f (and its component files), Control.f, Controls.f as well as Generic.f
+for a more exhaustive list of methods for the various controls.</p>
+
+<hr>
+
+<p>Document : using forms.htm -- 2008/08/26 -- Ezra Boyce</p>
+
+</body>
+
+</html>

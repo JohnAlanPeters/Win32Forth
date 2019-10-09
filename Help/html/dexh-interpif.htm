@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+interpif.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Interpretive conditionals in Win32Forth
+</h1><p>Win32Forth supports the ANSI interpretive conditionals from the tools extension wordset, with some
+W32F specific extensions as well as an alternative set based on the 'C' style words
+#if #else #then etc.
+</p><h2>Glossary
+</h2><p><b><code>: [else] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXT
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( &quot;&lt;spaces&gt;name&quot; ... -- )
+Skipping leading spaces, parse and discard space-delimited words from the parse area,
+including nested occurrences of [IF] ... [THEN] and [IF] ... [ELSE] ... [THEN], until
+the word [THEN] has been parsed and discarded. If the parse area becomes exhausted,
+it is refilled as with REFILL. [ELSE] is an immediate word.
+</p><p><b><code>: [if] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( flag -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXT
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( flag | flag &quot;&lt;spaces&gt;name&quot; ... -- )
+If flag is true, do nothing. Otherwise, skipping leading spaces, parse and discard
+space-delimited words from the parse area, including nested occurrences of
+[IF] ... [THEN], [IF] ... [ELSE] ... [THEN], [IF] ... [ENDIF] and
+[IF] ... [ELSE] ... [ENDIF], until either the word [ELSE],
+the word [THEN] or the word [ENDIF] has been parsed and discarded.
+If the parse area becomes exhausted, it is refilled as with REFILL.
+[IF] is an immediate word.
+An ambiguous condition exists if [IF] is POSTPONEd.
+If the end of the input buffer is reached and cannot be refilled before the terminating
+[ELSE], [THEN] or [ENDIF] is parsed then error -58 is thrown.
+</p><p><b><code>: [then] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXT
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( -- )
+Does nothing. [THEN] is an immediate word.
+</p><p><b><code>: [endif] &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXTRA
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( -- )
+Does nothing. [ENDIF] is an immediate word.
+</p><p><b><code>: #else &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXTRA
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( &quot;&lt;spaces&gt;name&quot; ... -- )
+Skipping leading spaces, parse and discard space-delimited words from the parse area,
+including nested occurrences of #IF ... #THEN and #IF ... #ELSE ... #THEN, until
+the word #THEN has been parsed and discarded. If the parse area becomes exhausted,
+it is refilled as with REFILL. #ELSE is an immediate word.
+</p><p><b><code>: #if &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( flag -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXTRA
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( flag | flag &quot;&lt;spaces&gt;name&quot; ... -- )
+If flag is true, do nothing. Otherwise, skipping leading spaces, parse and discard
+space-delimited words from the parse area, including nested occurrences of
+#IF ... #THEN, #IF ... #ELSE ... #THEN, #IF ... #ENDIF and
+#IF ... #ELSE ... #ENDIF, until either the word #ELSE,
+the word #THEN or the word #ENDIF has been parsed and discarded.
+If the parse area becomes exhausted, it is refilled as with REFILL.
+#IF is an immediate word.
+An ambiguous condition exists if #IF is POSTPONEd.
+If the end of the input buffer is reached and cannot be refilled before the terminating
+#ELSE, #THEN or #ENDIF is parsed then error -58 is thrown.
+</p><p><b><code>: #then &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXTRA
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( -- )
+Does nothing. #THEN is an immediate word.
+</p><p><b><code>: #endif &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXTRA
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( -- )
+Does nothing. #ENDIF is an immediate word.
+</p><p><b><code>: #ifdef &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( &quot;aword&quot; -- ) &nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXTRA
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( &quot;aword&quot; | &quot;aword&lt;spaces&gt;name&quot; ... -- )
+If &quot;aword&quot; is found in the search order, do nothing. Otherwise, skipping
+leading spaces, parse and discard
+space-delimited words from the parse area, including nested occurrences of
+#IF ... #THEN, #IF ... #ELSE ... #THEN, #IF ... #ENDIF and
+#IF ... #ELSE ... #ENDIF, until either the word #ELSE,
+the word #THEN or the word #ENDIF has been parsed and discarded.
+If the parse area becomes exhausted, it is refilled as with REFILL.
+#IF is an immediate word.
+An ambiguous condition exists if #IF is POSTPONEd.
+If the end of the input buffer is reached and cannot be refilled before the terminating
+#ELSE, #THEN or #ENDIF is parsed then error -58 is thrown.
+This word is designed to ignore object.ivar type words.
+</p><p><b><code>: #ifndef &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( &quot;aword&quot; -- ) &nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXTRA
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: ( &quot;aword&quot; | &quot;aword&lt;spaces&gt;name&quot; ... -- )
+If &quot;aword&quot; is not found in the search order, do nothing. Otherwise, skipping
+leading spaces, parse and discard
+space-delimited words from the parse area, including nested occurrences of
+#IF ... #THEN, #IF ... #ELSE ... #THEN, #IF ... #ENDIF and
+#IF ... #ELSE ... #ENDIF, until either the word #ELSE,
+the word #THEN or the word #ENDIF has been parsed and discarded.
+If the parse area becomes exhausted, it is refilled as with REFILL.
+#IF is an immediate word.
+An ambiguous condition exists if #IF is POSTPONEd.
+If the end of the input buffer is reached and cannot be refilled before the terminating
+#ELSE, #THEN or #ENDIF is parsed then error -58 is thrown.
+This word is designed to ignore object.ivar type words.
+</p><p><b><code>: [DEFINED] &nbsp;&nbsp;&nbsp;&nbsp;( &quot;aword&quot; -- f1 ) \ Forth200X &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXT
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: Return true if &quot;aword&quot; is found in a search of the search order.
+This word is designed to ignore object.ivar type words.
+</p><p><b><code>: [UNDEFINED] &nbsp;&nbsp;( &quot;aword&quot; -- f1 ) \ Forth200X &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TOOLS EXT
+</code></b><br>Compilation: Perform the execution semantics given below. <br />
+Execution: Return false if &quot;aword&quot; is found in a search of the search order.
+This word is designed to ignore object.ivar type words.
+</p></body></html>

@@ -1,0 +1,27 @@
+ProjectName= Chess
+BuildFile= apps\Chess\_fcp3D.f
+SearchPath=
+Chess,0
+Modules,16
+apps\Chess\_fcp3D.f
+apps\Chess\fcp_inputwin.f
+apps\Chess\FCP131wf32.f
+apps\Chess\fcp-book.f
+apps\Chess\oglevts.f
+apps\Chess\bmpdot.f
+apps\Chess\palette.f
+apps\Chess\gldefs.f
+apps\Chess\bmpio.f
+apps\Chess\opengl.f
+apps\Chess\pixelfrm.f
+apps\Chess\fullscreen.f
+apps\Chess\fcp3d.f
+apps\Chess\MenuFile.f
+apps\Chess\MenuOgl.f
+apps\Chess\oglwin.f
+DLLs,0
+Forms,0
+Auxiliary Files,0
+Resources,1
+apps\Chess\t1600017.bmp
+Docs,0

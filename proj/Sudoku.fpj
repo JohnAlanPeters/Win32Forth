@@ -1,0 +1,38 @@
+ProjectName= Sudoku
+BuildFile= apps\Sudoku\Sudoku.f
+SearchPath= 
+Sudoku,0
+Modules,13
+apps\Sudoku\Sudoku.f
+SRC\LIB\AcceleratorTables.f
+SRC\LIB\RegistrySupport.f
+apps\Sudoku\SudokuMenu.f
+SRC\LIB\RecentFiles.F
+apps\Sudoku\SudokuStatusBar.f
+SRC\LIB\StatusBar.f
+apps\Sudoku\SudokuToolbar.f
+SRC\LIB\Toolbar.f
+apps\Sudoku\SudokuDialogs.f
+apps\Sudoku\SudokuPrinting.f
+apps\Sudoku\SudokuResources.F
+SRC\LIB\Resources.f
+DLLs,1
+FreeImage.dll
+Forms,0
+Auxiliary Files,0
+Resources,14
+APPS\SUDOKU\RES\Toolbar.bmp
+APPS\SUDOKU\RES\SudokuDialog.h
+APPS\SUDOKU\RES\SudokuDialog.res
+apps\Sudoku\Res\arrow_m0.cur
+apps\Sudoku\Res\arrow_m1.cur
+apps\Sudoku\Res\arrow_m2.cur
+apps\Sudoku\Res\arrow_m3.cur
+apps\Sudoku\Res\arrow_m4.cur
+apps\Sudoku\Res\arrow_m5.cur
+apps\Sudoku\Res\arrow_m6.cur
+apps\Sudoku\Res\arrow_m7.cur
+apps\Sudoku\Res\arrow_m8.cur
+apps\Sudoku\Res\arrow_m9.cur
+apps\Sudoku\Res\Sudoku.ico
+Docs,0

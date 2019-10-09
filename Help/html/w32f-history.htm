@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+<h1>The History of Win32Forth</h1>
+
+<h2>History </h2>
+
+<p><i>[ Which is maintained as
+a historical curiosity; please see the rest of the doc for how it really is
+now. Original by Tom Zimmer ]</i></p>
+
+<p>Andrew McKewan initially
+wrote the kernel for Win32Forth (mid 1994) in assembly language as a personal
+experiment in the process of bringing up a Forth under Microsoft WindowsNT.
+Win32Forth uses a (relatively) small wrapper or loader written in 'C' that
+loads the Forth image file and executes it. The wrapper provides some limited
+console I/O to support program development. Andrew also ported (re-wrote
+actually) the NEON OOP (Object Oriented Programming) support to simplify the
+interface to the windows operating system calls. </p>
+
+<p>In late 1994, Andrew's
+&quot;baby&quot; kernel was turned over to me (Tom Zimmer) for possible use in
+porting a large data processing application from DOS into the WindowsNT
+environment. We had looked at and purchased what seemed the only available
+commercial Forth system at the time, but unfortunately it was not yet mature
+enough to handle our task or needs. I ported most of the tools and utilities
+from my public domain F-PC Forth system to Win32Forth to make the application
+porting task easier. </p>
+
+<p>The Win32Forth system,
+derived from Andrew's personal work, and the public domain F-PC, has remained
+in the public domain Jim Schneider wrote the 486 prefix assembler for
+Win32Forth, included under the GNU public license. This is the only part of
+Win32Forth that is not truly public domain. Please read Jim's documents for
+details of its use in commercial applications: <a href="w32f-486asm.htm">
+w32f-486asm.htm</a>. </p>
+
+<p>In early 1995, Robert Smith
+wrote the floating point support for Win32Forth. Robert is very experienced
+with such tasks, having written several floating point packages in the past,
+including two for F-PC. The floating point package includes support for both
+the eight byte and the ten byte floating point formats. Win32Forth took a side
+road into the area of using only absolute addresses during 1995, but many
+problems with compatibility with Windows95 and Win32s led me to return to
+relative addressing as a much more portable solution. </p>
+
+<p>In January 1996, Andrew
+completed the &quot;F83&quot; style meta-compiler and forth source kernel for
+Win32Forth. This opened the door to further kernel development, including
+separated heads, and dual dictionaries. Version 3.1 released in March 1996,
+Includes 'Ctrl+F1' help on the ANS Forth words described in the DPANS94
+document while in the WinView [now WinEd] editor. I hypertext compiled the
+DPANS94 without making any changes to the document by extending the hypertext
+compiler to recognize additional search word context. This version also has
+much better compatibility with Win32s running under OS/2 and Windows 3.1, due
+to corrections made to the memory management code in the wrapper. </p>
+
+<p>In May 1996, the source
+level debugger interface to the WinView editor was completed. It is now
+possible to debug a Win32Forth application remotely, including; setting
+breakpoints, single step execution, and parameter monitoring. The requirement
+to be able to perform these operations is that the application be created with
+the &quot;APPLICATION&quot; program save facility rather than the
+&quot;TURNKEY&quot; facility so that the programs symbols are still available
+for remote debugger control. </p>
+
+<p>July 1996, Enhancements to
+windows to allow them to each have their own menus, and enhancements to objects
+to allow the use of a dotted notation to access local data within an object. An
+updated version of Jim Schneider's assembler has also been included with this
+release. Compatibility with Win32s under Windows 3.1 and OS/2 has been
+retained, but you should be warned that Microsoft has stopped supporting Win32s
+in their latest version (4.2) of Visual C++. Future versions of Win32Forth may
+not be compatible with Win32s. I believe the hand writing is on the wall. It is
+time to start moving off of Windows 3.1 and onto Windows95 or WindowsNT. I
+don't know what you users of OS/2 will do. If IBM doesn't support the Win32 API
+directly, then you will soon lose access to programs developed for Windows95
+and WindowsNT. </p>
+
+<p><i>[ In fact, OS/2 died,
+and Win32Forth no longer supports Win32s. It does support
+Windows95/98/ME/NT3.51/NT4/2000 and XP, although some of the support for
+Windows 95 and NT is academic; there appear to be no users currently to let us
+test it ]</i></p>
+
+<p>Version 3.2 released July
+1996, included enhancements to Windows support including separate menus for
+each application window. Added documentation (in the file Win32For.PRV) on how
+to create a DLL with Win32Forth. Added an Optimizer (in the form of OPTIMIZE.F)
+to Win32Forth that allows code sections to be compiled to assembly language to
+improve performance. Fixed various minor bugs in floating point number support.
+Added data structure support (in the form of RECORD:) for use inside classes. Added
+dotted notation support to classes and sub objects. </p>
+
+<p>Version 3.3 Released
+October 1996, includes a new Font class, making font manipulation in an
+application more manageable. I have started adding HTML support to WinView, so
+it may eventually be used for documentation. Bill Muench donated multi-tasking
+support. Additional changes were made to enahnce ANS compatibility. Andrew
+donated a DLL that allowed the removal of over 2000 Windows constants. The DLL
+is linked into NUMBER, so it can be used to lookup over 8000 Windows constants
+without them having to be in the Forth dictionary. Extensive documentation has
+been added to FSAVE, TURNKEY and APPLICATION, the words used to create
+programs. </p>
+
+<p>Version 3.5 Released mid
+1997, is primarily a bug fix release, but several enhancements to the WinView
+editor, now allow it to edit multiple files in memory at the same time (you
+need more memory), and I have fixed the screen update code, to improve the
+redisplay performance, which several people complained about. </p>
+
+<p>During most of 1997, and
+the first half of 1998, Win32Forth took a jaunt into the world of commercial
+Forth systems. Unfortunately, or perhaps fortunately, depending on how you look
+at it, Win32Forth proved to be too large and complex for the commercial vendor to
+use and document. In mid 1998, Win32Forth was restored to myself, and it has
+enjoyed further, though limited development since that time. </p>
+
+<p><i>[ Addendum: Tom Zimmer
+quit maintaining Win32Forth and it led a secret life for several years going
+through permutations as versions 4 and 5. After some time and through the
+persistence and endurance of John Peters and a small group of die-hards,
+Win32Forth evolved into a separate-directory system (by Rainbow Sally) which
+offered promise of being a cleaner more friendly environment for beginners and
+developers with some primitive batch file tools for developers to share/test
+and modify their systems efficiently. Simultaneously and independently Alex
+McDonald had been working on removing the C wrapper from the kernel (as sort of
+a hobby) which is necessary to take total control of the Meta Compile process
+to Forth itself in the outstanding tradition of Laxen and Perry, and which will
+allow compilation of stand- alone executable Windows applications. With the
+continued support of Dirk Busch, Ezra Boyce, George Hubert and others, and a
+splendid CVS provided by Ron Aaron, Alex McDonald has taken up the
+responsibility of maintaining, coordinating and generally irritating other
+members of the group. ]</i></p>
+
+<hr>
+
+<p>Document $Id: w32f-history.htm   2004/12/21  alex_mcdonald </p>
+
+</body>
+
+</html>

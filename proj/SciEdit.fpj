@@ -1,0 +1,11 @@
+ProjectName= MDi SciEdit
+BuildFile= apps\SciEdit\Main.f
+SearchPath=
+MDi SciEdit,0
+Modules,1
+demos\MdiEdit\Main.f
+DLLs,0
+Forms,0
+Auxiliary Files,0
+Resources,0
+Docs,0

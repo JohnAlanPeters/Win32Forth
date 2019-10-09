@@ -1,0 +1,427 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>gdiFont -- Class for GDI Fonts.
+</h1><hr /><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><h2>Glossary
+</h2><a name="gdiFont"></a>
+<pre><b><a name="0">:Class gdiFont &nbsp;&lt;Super GdiObject
+</a></b></pre><p>GDI Font class
+</p><pre><b><a name="1">:M SetHeight: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n1 -- )
+</a></b></pre><p>Set the height, in logical units, of the font's character cell or character. The character
+height value (also known as the em height) is the character cell height value minus the
+internal-leading value. The font mapper interprets the value specified in lfHeight in the
+following manner.
+</p><table border="1"><tr><td>&gt;&nbsp;0
+</td>
+<td>The font mapper transforms this value into device units and matches it against the cell height of the available fonts.
+</td>
+</tr>
+<tr><td>0
+</td>
+<td>The font mapper uses a default height value when it searches for a match.
+</td>
+</tr>
+<tr><td>&lt;&nbsp;0
+</td>
+<td>The font mapper transforms this value into device units and matches its absolute value against the character height of the available fonts.
+</td>
+</tr>
+</table><p>For all height comparisons, the font mapper looks for the largest font that does not exceed
+the requested size. This mapping occurs when the font is used for the first time.
+</p><pre><b><a name="2">:M SetWidth: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n1 -- )
+</a></b></pre><p>Specifies the average width, in logical units, of characters in the font. If lfWidth is zero,
+the aspect ratio of the device is matched against the digitization aspect ratio of the available
+fonts to find the closest match, determined by the absolute value of the difference.
+</p><pre><b><a name="3">:M SetEscapement: &nbsp;&nbsp;&nbsp;&nbsp;( n1 -- )
+</a></b></pre><p>Set the angle, in tenths of degrees, between the escapement vector and the x-axis of the device.
+The escapement vector is parallel to the base line of a row of text. <br />
+Windows NT/ 2000: When the graphics mode is set to GM_ADVANCED, you can specify the escapement
+angle of the string independently of the orientation angle of the string's characters. <br />
+When the graphics mode is set to GM_COMPATIBLE, lfEscapement specifies both the escapement and
+orientation. You should set lfEscapement and lfOrientation to the same value. <br />
+Windows 95: The lfEscapement member specifies both the escapement and orientation. You should set
+lfEscapement and lfOrientation to the same value.
+</p><pre><b><a name="4">:M SetOrientation: &nbsp;&nbsp;&nbsp;( n1 -- )
+</a></b></pre><p>Set the angle, in tenths of degrees, between each character's base line and the x-axis of the device.
+</p><pre><b><a name="5">:M SetWeight: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n1 -- )
+</a></b></pre><p>Specifies the weight of the font in the range 0 through 1000. For example, 400 is normal and 700 is bold.
+If this value is zero, a default weight is used. The following values are defined for convenience.
+</p><table border="1"><tr><td>FW_DONTCARE
+</td>
+<td>0
+</td>
+</tr>
+<tr><td>FW_THIN
+</td>
+<td>100
+</td>
+</tr>
+<tr><td>FW_EXTRALIGHT
+</td>
+<td>200
+</td>
+</tr>
+<tr><td>FW_ULTRALIGHT
+</td>
+<td>200
+</td>
+</tr>
+<tr><td>FW_LIGHT
+</td>
+<td>300
+</td>
+</tr>
+<tr><td>FW_NORMAL
+</td>
+<td>400
+</td>
+</tr>
+<tr><td>FW_REGULAR
+</td>
+<td>400
+</td>
+</tr>
+<tr><td>FW_MEDIUM
+</td>
+<td>500
+</td>
+</tr>
+<tr><td>FW_SEMIBOLD
+</td>
+<td>600
+</td>
+</tr>
+<tr><td>FW_DEMIBOLD
+</td>
+<td>600
+</td>
+</tr>
+<tr><td>FW_BOLD
+</td>
+<td>700
+</td>
+</tr>
+<tr><td>FW_EXTRABOLD
+</td>
+<td>800
+</td>
+</tr>
+<tr><td>FW_ULTRABOLD
+</td>
+<td>800
+</td>
+</tr>
+<tr><td>FW_HEAVY
+</td>
+<td>900
+</td>
+</tr>
+<tr><td>FW_BLACK
+</td>
+<td>900
+</td>
+</tr>
+</table><pre><b><a name="6">:M SetItalic: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f1 -- )
+</a></b></pre><p>Specifies an italic font if set to TRUE.
+</p><pre><b><a name="7">:M SetUnderline: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f1 -- )
+</a></b></pre><p>Specifies an underlined font if set to TRUE.
+</p><pre><b><a name="8">:M SetStrikeOut: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f1 -- )
+</a></b></pre><p>Specifies a strikeout font if set to TRUE.
+</p><pre><b><a name="9">:M SetCharSet: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n1 -- )
+</a></b></pre><p>Specifies the character set. The following values are predefined.
+</p><table border="1"><tr><td>ANSI_CHARSET
+</td>
+</tr>
+<tr><td>BALTIC_CHARSET
+</td>
+</tr>
+<tr><td>CHINESEBIG5_CHARSET
+</td>
+</tr>
+<tr><td>DEFAULT_CHARSET
+</td>
+</tr>
+<tr><td>EASTEUROPE_CHARSET
+</td>
+</tr>
+<tr><td>GB2312_CHARSET
+</td>
+</tr>
+<tr><td>GREEK_CHARSET
+</td>
+</tr>
+<tr><td>HANGUL_CHARSET
+</td>
+</tr>
+<tr><td>MAC_CHARSET
+</td>
+</tr>
+<tr><td>OEM_CHARSET
+</td>
+</tr>
+<tr><td>RUSSIAN_CHARSET
+</td>
+</tr>
+<tr><td>SHIFTJIS_CHARSET
+</td>
+</tr>
+<tr><td>SYMBOL_CHARSET
+</td>
+</tr>
+<tr><td>TURKISH_CHARSET
+</td>
+</tr>
+</table><p>Windows NT/ 2000 or Middle-Eastern Windows 3.1 or later:
+</p><table border="1"><tr><td>HEBREW_CHARSET
+</td>
+</tr>
+<tr><td>ARABIC_CHARSET
+</td>
+</tr>
+</table><p>Windows NT/ 2000 or Thai Windows 3.1 or later:
+</p><table border="1"><tr><td>THAI_CHARSET
+</td>
+</tr>
+</table><p>The OEM_CHARSET value specifies a character set that is operating-system dependent.
+Windows 95/98: You can use the DEFAULT_CHARSET value to allow the name and size of a font
+to fully describe the logical font. If the specified font name does not exist, a font from
+any character set can be substituted for the specified font, so you should use DEFAULT_CHARSET
+sparingly to avoid unexpected results. <br />
+Windows NT/ 2000: DEFAULT_CHARSET is set to a value based on the current system locale. For
+example, when the system locale is English (United States), it is set as ANSI_CHARSET. <br />
+Fonts with other character sets may exist in the operating system. If an application uses a
+font with an unknown character set, it should not attempt to translate or interpret strings
+that are rendered with that font. <br />
+This parameter is important in the font mapping process. To ensure consistent results, specify
+a specific character set. If you specify a typeface name in the lfFaceName member, make sure
+that the lfCharSet value matches the character set of the typeface specified in lfFaceName.
+</p><pre><b><a name="10">:M SetOutPrecision: &nbsp;&nbsp;( n1 -- )
+</a></b></pre><p>Specifies the output precision. The output precision defines how closely the output must match
+the requested font's height, width, character orientation, escapement, pitch, and font type. It can
+be one of the following values.
+</p><table border="1"><tr><td>OUT_CHARACTER_PRECIS Not used
+</td>
+</tr>
+<tr><td>OUT_DEFAULT_PRECIS
+</td>
+<td>Specifies the default font mapper behavior.
+</td>
+</tr>
+<tr><td>OUT_DEVICE_PRECIS
+</td>
+<td>Instructs the font mapper to choose a Device font when the system contains multiple fonts with the same name.
+</td>
+</tr>
+<tr><td>OUT_OUTLINE_PRECIS
+</td>
+<td>Windows NT/ 2000: This value instructs the font mapper to choose from TrueType and other outline-based fonts.
+</td>
+</tr>
+<tr><td>OUT_RASTER_PRECIS
+</td>
+<td>Instructs the font mapper to choose a raster font when the system contains multiple fonts with the same name.
+</td>
+</tr>
+<tr><td>OUT_TT_ONLY_PRECIS
+</td>
+<td>Instructs the font mapper to choose from only TrueType fonts. If there are no TrueType fonts installed in the system, the font mapper returns to default behavior.
+</td>
+</tr>
+<tr><td>OUT_TT_PRECIS
+</td>
+<td>Instructs the font mapper to choose a TrueType font when the system contains multiple fonts with the same name.
+</td>
+</tr>
+</table><p>Applications can use the OUT_DEVICE_PRECIS, OUT_RASTER_PRECIS, and OUT_TT_PRECIS values to control
+how the font mapper chooses a font when the operating system contains more than one font with a
+specified name. For example, if an operating system contains a font named Symbol in raster and TrueType
+form, specifying OUT_TT_PRECIS forces the font mapper to choose the TrueType version. Specifying
+OUT_TT_ONLY_PRECIS forces the font mapper to choose a TrueType font, even if it must substitute a TrueType
+font of another name.
+</p><pre><b><a name="11">:M SetClipPrecision: &nbsp;( n1 -- )
+</a></b></pre><p>Specifies the clipping precision. The clipping precision defines how to clip characters that are partially
+outside the clipping region. It can be one or more of the following values.
+</p><table border="1"><tr><td>CLIP_DEFAULT_PRECIS
+</td>
+<td>Specifies default clipping behavior.
+</td>
+</tr>
+<tr><td>CLIP_CHARACTER_PRECIS
+</td>
+<td>Not used.
+</td>
+</tr>
+<tr><td>CLIP_EMBEDDED
+</td>
+<td>You must specify this flag to use an embedded read-only font.
+</td>
+</tr>
+<tr><td>CLIP_LH_ANGLES
+</td>
+<td>When this value is used, the rotation for all fonts depends on whether the orientation of the coordinate system is left-handed or right-handed
+</td>
+</tr>
+</table><p>For more information about the orientation of coordinate systems, see the description of the nOrientation parameter |
+</p><pre><b><a name="12">:M SetQuality: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n1 -- )
+</a></b></pre><p>Specifies the output quality. The output quality defines how carefully the graphics device interface (GDI) must
+attempt to match the logical-font attributes to those of an actual physical font. It can be one of the following
+values.
+</p><table border="1"><tr><td>ANTIALIASED_QUALITY
+</td>
+<td>Font is always antialiased if the font supports it and the size of the font is not too small or too large.
+</td>
+</tr>
+<tr><td>DEFAULT_QUALITY
+</td>
+<td>Appearance of the font does not matter.
+</td>
+</tr>
+<tr><td>DRAFT_QUALITY
+</td>
+<td>Appearance of the font is less important than when PROOF_QUALITY is used. For GDI raster fonts, scaling is enabled, which means that more font sizes are available, but the quality may be lower.
+</td>
+</tr>
+<tr><td>NONANTIALIASED_QUALITY
+</td>
+<td>Font is never antialiased.
+</td>
+</tr>
+<tr><td>PROOF_QUALITY
+</td>
+<td>Character quality of the font is more important than exact matching of the logical-font attributes.
+</td>
+</tr>
+</table><p>If neither ANTIALIASED_QUALITY nor NONANTIALIASED_QUALITY is selected, the font is antialiased only if the user chooses
+smooth screen fonts in Control Panel.
+</p><pre><b><a name="13">:M SetPitchAndFamily: ( n1 -- )
+</a></b></pre><p>Specifies the pitch and family of the font. The two low-order bits specify the pitch of the font and can
+be one of the following values.
+</p><table border="1"><tr><td>DEFAULT_PITCH
+</td>
+</tr>
+<tr><td>FIXED_PITCH
+</td>
+</tr>
+<tr><td>VARIABLE_PITCH
+</td>
+</tr>
+</table><p>Bits 4 through 7 of the member specify the font family and can be one of the following values.
+</p><table border="1"><tr><td>FF_DECORATIV
+</td>
+</tr>
+<tr><td>FF_DONTCAR
+</td>
+</tr>
+<tr><td>FF_MODER
+</td>
+</tr>
+<tr><td>FF_ROMA
+</td>
+</tr>
+<tr><td>FF_SCRIP
+</td>
+</tr>
+<tr><td>FF_SWIS
+</td>
+</tr>
+</table><p>The proper value can be obtained by using the Boolean OR operator to join one pitch constant with one
+family constant.
+</p><p>Font families describe the look of a font in a general way. They are intended for specifying fonts
+when the exact typeface desired is not available. The values for font families are as follows.
+</p><table border="1"><tr><td>FF_DECORATIVE
+</td>
+<td>Novelty fonts. Old English is an example.
+</td>
+</tr>
+<tr><td>FF_DONTCARE
+</td>
+<td>Don't care or don't know.
+</td>
+</tr>
+<tr><td>FF_MODERN
+</td>
+<td>Fonts with constant stroke width (monospace), with or without serifs. Monospace fonts are usually modern. Pica, Elite, and CourierNew® are examples.
+</td>
+</tr>
+<tr><td>FF_ROMAN
+</td>
+<td>Fonts with variable stroke width (proportional) and with serifs. MS® Serif is an example.
+</td>
+</tr>
+<tr><td>FF_SCRIPT
+</td>
+<td>Fonts designed to look like handwriting. Script and Cursive are examples.
+</td>
+</tr>
+<tr><td>FF_SWISS
+</td>
+<td>Fonts with variable stroke width (proportional) and without serifs. MS® Sans Serif is an example.
+</td>
+</tr>
+</table><pre><b><a name="14">:M SetFaceName: ( a1 n1 -- )
+</a></b></pre><p>Specifies the typeface name of the font. The length of this string must not exceed 32 characters, including
+the null terminator. The EnumFontFamilies function can be used to enumerate the typeface names of all
+currently available fonts. If lfFaceName is an empty string, GDI uses the first font that matches the other
+specified attributes.
+</p><pre><b><a name="15">:M GetHeight: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Fet the height, in logical units, of the font's character cell or character
+</p><pre><b><a name="16">:M GetWidth: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Get the average width, in logical units, of characters in the font
+</p><pre><b><a name="17">:M GetEscapement: &nbsp;&nbsp;&nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Get the angle, in tenths of degrees, between the escapement vector and the x-axis of
+the device. The escapement vector is parallel to the base line of a row of text.
+</p><pre><b><a name="18">:M GetOrientation: &nbsp;&nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Get the angle, in tenths of degrees, between each character's base line and the x-axis of the device.
+</p><pre><b><a name="19">:M GetWeight: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Get the weight of the font
+</p><pre><b><a name="20">:M GetItalic: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f1 )
+</a></b></pre><p>TRUE if it's an italic font.
+</p><pre><b><a name="21">:M GetUnderline: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f1 )
+</a></b></pre><p>TRUE if it's a underlined font.
+</p><pre><b><a name="22">:M GetStrikeOut: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f1 )
+</a></b></pre><p>TRUE if it's a strikeout font.
+</p><pre><b><a name="23">:M GetCharSet: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Get the character set.
+</p><pre><b><a name="24">:M GetOutPrecision: &nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Get the output precision.
+</p><pre><b><a name="25">:M GetClipPrecision: &nbsp;( -- n1 )
+</a></b></pre><p>Get the clipping precision
+</p><pre><b><a name="26">:M GetQuality: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Get the output quality.
+</p><pre><b><a name="27">:M GetPitchAndFamily: ( -- n1 )
+</a></b></pre><p>Get the pitch and family of the font.
+</p><pre><b><a name="28">:M GetFaceName: ( -- a1 n1 )
+</a></b></pre><p>Get the typeface name of the font.
+</p><pre><b><a name="29">:M GetLogfont: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n1 )
+</a></b></pre><p>Get the address of the LOGFONT structure
+</p><pre><b><a name="30">:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</a></b></pre><p>Create a new font. If the current font handle is valid, the font will be destroyed.
+</p><pre><b><a name="31">:M Choose: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( hWnd -- f )
+</a></b></pre><p>Open a dialog to choose a Screen font. If the dialog is closed with OK, the font
+will be created.
+</p><pre><b><a name="32">:M ChoosePrinter: ( hWnd hDC -- f )
+</a></b></pre><p>Open a dialog to choose a Printer font for the PrinterDC hDC. If the dialog is closed
+with OK, the fontwill be created.
+</p><pre><b><a name="33">;Class
+</a></b></pre><p>End of gdiFont class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

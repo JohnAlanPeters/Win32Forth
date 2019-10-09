@@ -1,0 +1,139 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+gdiPen.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>GdiPen -- Class for GDI Pens
+</h1><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><a name="gdiPen"></a>
+<h2>gdiPen class
+</h2><p><b><code>:class gdiPen &lt;super gdiObject
+</code></b><br>Class for cosmetic pen's
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Init the class
+</p><p><b><code>:M SetStyle: &nbsp;&nbsp;&nbsp;( style -- )
+</code></b><br>Set Syle of the pen. Possible values are:
+</p><table><tr><th>PS_SOLID
+</th>
+<th>The pen is solid.
+</th>
+</tr>
+<tr><td>PS_DASH
+</td>
+<td>The pen is dashed. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DOT
+</td>
+<td>The pen is dotted. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DASHDOT
+</td>
+<td>The pen has alternating dashes and dots. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DASHDOTDOT
+</td>
+<td>The pen has alternating dashes and double dots. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_NULL
+</td>
+<td>The pen is invisible.
+</td>
+</tr>
+<tr><td>PS_INSIDEFRAME
+</td>
+<td>The pen is solid. When this pen is used the dimensions of the figure are shrunk so that it fits entirely in the bounding rectangle, taking into account the width of the pen. Only for geometric pens.
+</td>
+</tr>
+</table><p><b><code>:M SetWidth: &nbsp;&nbsp;&nbsp;( width -- )
+</code></b><br>Set the width of the pen in logical units. If Width is zero, the pen is a single pixel
+wide, regardless of the current transformation.
+</p><p><b><code>:M SetRValue: &nbsp;&nbsp;( r -- )
+</code></b><br>Set the red component of the pen color.
+</p><p><b><code>:M SetGValue: &nbsp;&nbsp;( g -- )
+</code></b><br>Set the green component of the pen color.
+</p><p><b><code>:M SetBValue: &nbsp;&nbsp;( b -- )
+</code></b><br>Set the blue component of the pen color.
+</p><p><b><code>:M SetRGB: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( r g b -- )
+</code></b><br>Set the red, green and blue component of the pen color.
+</p><p><b><code>:M SetColor: &nbsp;&nbsp;&nbsp;( colorref -- )
+</code></b><br>Set color of the pen.
+</p><p><b><code>:M SetSysColor: ( n -- )
+</code></b><br>Set the color of the pen to a system color.
+</p><p><b><code>:M ChooseColor: ( hWnd -- f )
+</code></b><br>Open a dialog to choose the color of the pen.
+</p><p><b><code>:M GetStyle: &nbsp;&nbsp;&nbsp;( -- style )
+</code></b><br>Get Syle of the pen. Possible values are:
+</p><table><tr><th>PS_SOLID
+</th>
+<th>The pen is solid.
+</th>
+</tr>
+<tr><td>PS_DASH
+</td>
+<td>The pen is dashed. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DOT
+</td>
+<td>The pen is dotted. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DASHDOT
+</td>
+<td>The pen has alternating dashes and dots. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DASHDOTDOT
+</td>
+<td>The pen has alternating dashes and double dots. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_NULL
+</td>
+<td>The pen is invisible.
+</td>
+</tr>
+<tr><td>PS_INSIDEFRAME
+</td>
+<td>The pen is solid. When this pen is used the dimensions of the figure are shrunk so that it fits entirely in the bounding rectangle, taking into account the width of the pen. This applies only to geometric pens.
+</td>
+</tr>
+</table><p><b><code>:M GetWidth: &nbsp;&nbsp;&nbsp;( -- width )
+</code></b><br>Get the width of the pen in logical units. If the width is zero, the pen is a single pixel
+wide, regardless of the current transformation.
+</p><p><b><code>:M GetRValue: &nbsp;&nbsp;( -- r )
+</code></b><br>Get the red component of the pen color.
+</p><p><b><code>:M GetGValue: &nbsp;&nbsp;( -- g )
+</code></b><br>Get the green component of the pen color.
+</p><p><b><code>:M GetBValue: &nbsp;&nbsp;( -- b )
+</code></b><br>Get the blue component of the pen color.
+</p><p><b><code>:M GetColor: &nbsp;&nbsp;&nbsp;( -- colorref )
+</code></b><br>Get the color of the pen as a windows COLORREF value.
+</p><p><b><code>:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>Create the pen with the current style, color and width.
+</p><p><b><code>:M CreateIndirect: ( pLogpen -- f )
+</code></b><br>The CreateIndirect function creates a logical cosmetic pen that
+has the style, width, and color specified in a structure.
+</p><p><b><code>;class
+</code></b><br>End of class
+</p><a name="gdiGeometricPen"></a>
+<h2>gdiGeometricPen class
+</h2><p><b><code>:class gdiGeometricPen &lt;super gdiObject
+</code></b><br>Class for geometric pen's &nbsp;&nbsp;<br />
+Note: this class isn't implemented yet
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Init the class
+</p><p><b><code>;class
+</code></b><br>End of class
+</p></body></html>

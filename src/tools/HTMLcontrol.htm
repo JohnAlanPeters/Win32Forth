@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>HTMLcontrol -- HTML control
+</h1><hr /><p>This class is using the MSHTML ActiveX control
+so you must install the MS Internet Explorer to use it.
+</p><h2>Glossary
+</h2><pre><b><a name="0">:CLASS HTMLControl &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SUPER AXControl
+</a></b></pre><p>HTML control class.
+</p><pre><b><a name="1">:M Start: ( Parent -- )
+</a></b></pre><p>Start the control
+</p><pre><b><a name="2">:M GetLocationURL: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- str len )
+</a></b></pre><p>Retrieves the URL of the resource that the browser is currently displaying.
+</p><pre><b><a name="3">:M GetLocationName: &nbsp;&nbsp;&nbsp;&nbsp;( -- str len )
+</a></b></pre><p>Retrieves the name of the resource that the browser is currently displaying.
+</p><pre><b><a name="4">:M GetType: &nbsp;&nbsp;&nbsp;&nbsp;( -- str len )
+</a></b></pre><p>Retrieves the type name of the contained document object.
+</p><pre><b><a name="5">:M Busy?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- flag )
+</a></b></pre><p>Retrieves a boolean value that indicates whether the browser is engaged in a
+downloading operation or other activity.
+</p><pre><b><a name="6">:M Offline?: &nbsp;&nbsp;&nbsp;( -- flag )
+</a></b></pre><p>Retrieves a Boolean value indicating whether the browser is currently operating
+in offline mode.
+</p><pre><b><a name="7">:M GoURL: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( str len -- )
+</a></b></pre><p>Navigates to a resource identified by a Uniform Resource
+Locator (URL) or to the file identified by a full path.
+</p><pre><b><a name="8">:M SetURL: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( zUrl -- )
+</a></b></pre><p>Navigates to a resource identified by a Uniform Resource
+Locator (URL) or to the file identified by a full path.
+</p><pre><b><a name="9">:M GoHome: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Navigates to the current home or start page.
+</p><pre><b><a name="10">:M GoSearch: &nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Navigates to the current search page.
+</p><pre><b><a name="11">:M GoForward: &nbsp;&nbsp;( -- )
+</a></b></pre><p>Navigates forward one item in the history list.
+</p><pre><b><a name="12">:M GoBack: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Navigates backward one item in the history list.
+</p><pre><b><a name="13">:M Refresh: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Reloads the file that the browser is currently displaying.
+</p><pre><b><a name="14">:M Stop: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Cancels any pending navigation or download operation and
+stops any dynamic page elements, such as background sounds
+and animations.
+</p><pre><b><a name="15">;CLASS
+</a></b></pre><p>End of HTML control class
+</p><h2>Example (demos\HtmlControlDemo.f)
+</h2><pre>
+needs HtmlControl.f
+
+\&nbsp;Create a simple browser window
+:class Browserwin &lt;super window
+
+HTMLcontrol html
+
+:M On_Init: ( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Init: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self Start: html ;M
+
+:M On_Size: ( h m w -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2drop drop autosize: html ;M
+
+:M GoURL: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( str len -- ) GoURL: html ;M
+:M GetLocationURL: &nbsp;&nbsp;&nbsp;( -- str len ) GetLocationURL: html ;M
+:M GetLocationName: &nbsp;&nbsp;( -- str len ) GetLocationName: html ;M
+:M Busy?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- flag ) &nbsp;&nbsp;&nbsp;Busy?: html ;M
+:M Offline?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- flag ) &nbsp;&nbsp;&nbsp;Offline?: html ;M
+:M GetType: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- str len ) GetType: html ;M
+
+:M Wait: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+\&nbsp;Wait until the browser has finished all
+\&nbsp;downloading operation or other activity.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;begin winpause
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Busy?: self 0=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;until ;M
+
+;class
+
+BrowserWin bwin
+
+: test
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;start the window
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;start: bwin
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;let the browser load a document
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Offline?: bwin
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if &nbsp;&nbsp;s&quot; doc\p-index.htm&quot; Prepend&lt;home&gt;\
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else s&quot; www.win32forth.org\doc\p-index.htm&quot;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;then GoURL: bwin
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;wait until browser is ready
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Wait: bwin
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;display some information about the document
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cr GetLocationURL: bwin type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cr GetLocationName: bwin type
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cr GetType: bwin type
+; test
+
+</pre><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

@@ -1,0 +1,360 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+gdiStruct.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>gdiStruct -- Wrapper classes for GDI structs.
+</h1><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><a name="gdiPOINT"></a>
+<h2>gdiPOINT class
+</h2><p><b><code>:class gdiPOINT &lt;super object
+</code></b><br>Wrapper class for a POINT struct.
+</p><p><b><code>:M GetX: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- x )
+</code></b><br>Get the x value of the point.
+</p><p><b><code>:M GetY: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- y )
+</code></b><br>Get the y value of the point.
+</p><p><b><code>:M SetX: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x -- )
+</code></b><br>Set the x value of the point.
+</p><p><b><code>:M SetY: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( y -- )
+</code></b><br>Get the y value of the point.
+</p><p><b><code>\ :M Addr: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- addr )
+</code></b><br>Get the address of the point struct.
+</p><p><b><code>:M Size: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- size )
+</code></b><br>Get the site of the point struct
+</p><p><b><code>;class
+</code></b><br>End of gdiPOINT class
+</p><a name="gdiCOLORREF"></a>
+<h2>gdiCOLORREF class
+</h2><p><b><code>:class gdiCOLORREF &lt;super object
+</code></b><br>Wrapper class for a COLORREF struct.
+</p><p>A COLORREF value is used to specify an RGB color.
+</p><p>When specifying an explicit RGB color, the COLORREF value has the following
+hexadecimal form: 0x00bbggrr <br />
+The low-order byte contains a value for the relative intensity of red;
+the second byte contains a value for green; and the third byte contains a
+value for blue. The high-order byte must be zero. The maximum value for a
+single byte is 0xFF.
+</p><p><b><code>:M SetRValue: &nbsp;&nbsp;( r -- )
+</code></b><br>Set the red value of the color
+</p><p><b><code>:M SetGValue: &nbsp;&nbsp;( g -- )
+</code></b><br>Set the green value of the color
+</p><p><b><code>:M SetBValue: &nbsp;&nbsp;( b -- )
+</code></b><br>Set the blue value of the color
+</p><p><b><code>:M GetRValue: &nbsp;&nbsp;( -- r )
+</code></b><br>Get the red value of the color
+</p><p><b><code>:M GetGValue: &nbsp;&nbsp;( -- g )
+</code></b><br>Get the green value of the color
+</p><p><b><code>:M GetBValue: &nbsp;&nbsp;( -- b )
+</code></b><br>Get the blue value of the color
+</p><p><b><code>:M SetColor: &nbsp;&nbsp;&nbsp;( colorref -- )
+</code></b><br>Set the color
+</p><p><b><code>:M SetSysColor: ( n -- )
+</code></b><br>Set a system color. Possible values are:
+</p><table><tr><th>COLOR_3DDKSHADOW
+</th>
+<th>Dark shadow for three-dimensional display elements.
+</th>
+</tr>
+<tr><td>COLOR_3DFACE, COLOR_BTNFACE
+</td>
+<td>Face color for three-dimensional display elements and for dialog box backgrounds.
+</td>
+</tr>
+<tr><td>COLOR_3DHILIGHT
+</td>
+<td>Highlight color for three-dimensional display elements (for edges facing the light source.)
+</td>
+</tr>
+<tr><td>COLOR_3DHIGHLIGHT
+</td>
+<td>Highlight color for three-dimensional display elements (for edges facing the light source.)
+</td>
+</tr>
+<tr><td>COLOR_BTNHILIGHT
+</td>
+<td>Highlight color for three-dimensional display elements (for edges facing the light source.)
+</td>
+</tr>
+<tr><td>COLOR_BTNHIGHLIGHT
+</td>
+<td>Highlight color for three-dimensional display elements (for edges facing the light source.)
+</td>
+</tr>
+<tr><td>COLOR_3DLIGHT
+</td>
+<td>Light color for three-dimensional display elements (for edges facing the light source.)
+</td>
+</tr>
+<tr><td>COLOR_3DSHADOW, COLOR_BTNSHADOW
+</td>
+<td>Shadow color for three-dimensional display elements (for edges facing away from the light source).
+</td>
+</tr>
+<tr><td>COLOR_ACTIVEBORDER
+</td>
+<td>Active window border.
+</td>
+</tr>
+<tr><td>COLOR_ACTIVECAPTION
+</td>
+<td>Active window title bar. Windows 98, Windows 2000: Specifies the left side color in the color gradient of an active window's title bar if the gradient effect is enabled.
+</td>
+</tr>
+<tr><td>COLOR_APPWORKSPACE
+</td>
+<td>Background color of multiple document interface (MDI) applications.
+</td>
+</tr>
+<tr><td>COLOR_BACKGROUND, COLOR_DESKTOP
+</td>
+<td>Desktop.
+</td>
+</tr>
+<tr><td>COLOR_BTNTEXT
+</td>
+<td>Text on push buttons.
+</td>
+</tr>
+<tr><td>COLOR_CAPTIONTEXT
+</td>
+<td>Text in caption, size box, and scroll bar arrow box.
+</td>
+</tr>
+<tr><td>COLOR_GRADIENTACTIVECAPTION
+</td>
+<td>Windows 98, Windows 2000: Right side color in the color gradient of an active window's title bar
+</td>
+</tr>
+<tr><td>COLOR_ACTIVECAPTION
+</td>
+<td>Windows 98, Windows 2000: specifies the left side color
+</td>
+</tr>
+<tr><td>COLOR_GRADIENTINACTIVECAPTION
+</td>
+<td>Windows 98, Windows 2000: Right side color in the color gradient of an inactive window's title bar
+</td>
+</tr>
+<tr><td>COLOR_INACTIVECAPTION
+</td>
+<td>Windows 98, Windows 2000: specifies the left side color.
+</td>
+</tr>
+<tr><td>COLOR_GRAYTEXT
+</td>
+<td>Grayed (disabled) text. This color is set to 0 if the current display driver does not support a solid gray color.
+</td>
+</tr>
+<tr><td>COLOR_HIGHLIGHT
+</td>
+<td>Item(s) selected in a control.
+</td>
+</tr>
+<tr><td>COLOR_HIGHLIGHTTEXT
+</td>
+<td>Text of item(s) selected in a control.
+</td>
+</tr>
+<tr><td>COLOR_HOTLIGHT
+</td>
+<td>Windows 98, Windows 2000: Color for a hot-tracked item. Single clicking a hot-tracked item executes the item.
+</td>
+</tr>
+<tr><td>COLOR_INACTIVEBORDER
+</td>
+<td>Inactive window border.
+</td>
+</tr>
+<tr><td>COLOR_INACTIVECAPTION
+</td>
+<td>Inactive window caption. Windows 98, Windows 2000: Specifies the left side color in the color gradient of an inactive window's title bar if the gradient effect is enabled.
+</td>
+</tr>
+<tr><td>COLOR_INACTIVECAPTIONTEXT
+</td>
+<td>Color of text in an inactive caption.
+</td>
+</tr>
+<tr><td>COLOR_INFOBK
+</td>
+<td>Background color for tooltip controls.
+</td>
+</tr>
+<tr><td>COLOR_INFOTEXT
+</td>
+<td>Text color for tooltip controls.
+</td>
+</tr>
+<tr><td>COLOR_MENU
+</td>
+<td>Menu background.
+</td>
+</tr>
+<tr><td>COLOR_MENUTEXT
+</td>
+<td>Text in menus.
+</td>
+</tr>
+<tr><td>COLOR_SCROLLBAR
+</td>
+<td>Scroll bar gray area.
+</td>
+</tr>
+<tr><td>COLOR_WINDOW
+</td>
+<td>Window background.
+</td>
+</tr>
+<tr><td>COLOR_WINDOWFRAME
+</td>
+<td>Window frame.
+</td>
+</tr>
+<tr><td>COLOR_WINDOWTEXT
+</td>
+<td>Text in windows.
+</td>
+</tr>
+</table><p><b><code>:M GetColor: &nbsp;&nbsp;&nbsp;( -- colorref )
+</code></b><br>Get the color
+</p><p><b><code>:M SetRGB: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( r g b -- )
+</code></b><br>Set the red, green and blue values of the color
+</p><p><b><code>\ :M Addr: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- addr )
+</code></b><br>Get the address of the COLORREF struct
+</p><p><b><code>:M Size: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- size )
+</code></b><br>Get the size of the COLORREF struct
+</p><p><b><code>:M Choose: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( hWnd -- f )
+</code></b><br>Open the windows dialog for choosing a color.
+</p><p><b><code>:M CustomColors: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- addr len )
+</code></b><br>Get the address and length (in cells) of the CustomColors array
+used by Choose:
+</p><p><b><code>;class
+</code></b><br>End of gdiCOLORREF class
+</p><a name="gdiRGBQUAD"></a>
+<h2>gdiRGBQUAD class
+</h2><p><b><code>synonym gdiRGBQUAD gdiCOLORREF
+</code></b><br>Wrapper class for a RGBQUAD struct
+</p><p>The RGBQUAD structure describes a color consisting of relative
+intensities of red, green, and blue.
+</p><p>The bmiColors member of the BITMAPINFO structure consists of an array
+of RGBQUAD structures.
+</p><p>Note: This class is a synonym of gdiCOLORREF. For a description
+of the methods see the <i>&nbsp;gdiCOLORREF </i>&nbsp;class.
+</p><p><b><code>\ ;class
+</code></b><br>End of gdiRGBQUAD class
+</p><a name="gdiSIZE"></a>
+<h2>gdiSIZE class
+</h2><p><b><code>:class gdiSIZE &lt;super object
+</code></b><br>Wrapper class for a SIZE struct
+</p><p><b><code>:M GetX: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- x )
+</code></b><br>Get the x value
+</p><p><b><code>:M GetY: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- y )
+</code></b><br>Get the y value
+</p><p><b><code>:M SetX: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x -- )
+</code></b><br>Set the x value
+</p><p><b><code>:M SetY: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( y -- )
+</code></b><br>Set the y value
+</p><p><b><code>\ :M Addr: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- addr )
+</code></b><br>Get the address of the SIZE struct
+</p><p><b><code>:M Size: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- size )
+</code></b><br>Get the size of the SIZE struct
+</p><p><b><code>;class
+</code></b><br>End of gdiSIZE class
+</p><a name="gdiTEXTMETRIC"></a>
+<h2>gdiTEXTMETRIC class
+</h2><p><b><code>:class gdiTEXTMETRIC &lt;super object
+</code></b><br>Wrapper class for a TEXTMETRIC struct
+</p><p><b><code>:M SetHeight: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetAscent: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetDescent: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetInternalLeading: &nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetExternalLeading: &nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetAveCharWidth: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetMaxCharWidth: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetWeight: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetOverhang: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetDigitizedAspectX: &nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetDigitizedAspectY: &nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetFirstChar: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetLastChar: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetDefaultChar: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetBreakChar: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetItalic: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetUnderlined: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetStruckOut: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetPitchAndFamily: &nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M SetCharSet: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>
+</p><p><b><code>:M GetHeight: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetAscent: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetDescent: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetInternalLeading: &nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetExternalLeading: &nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetAveCharWidth: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetMaxCharWidth: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetWeight: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetOverhang: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetDigitizedAspectX: &nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetDigitizedAspectY: &nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetFirstChar: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetLastChar: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetDefaultChar: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetBreakChar: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetItalic: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetUnderlined: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetStruckOut: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetPitchAndFamily: &nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>:M GetCharSet: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>
+</p><p><b><code>\ :M Addr: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- addr ) &amp;TEXTMETRIC ;M
+</code></b><br>Get the address of the TEXTMETRIC struct.
+</p><p><b><code>:M Size: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- size ) sizeof(TEXTMETRIC) ;M
+</code></b><br>Get the size of the TEXTMETRIC struct.
+</p><p><b><code>;class
+</code></b><br>End of gdiTEXTMETRIC class
+</p></body></html>

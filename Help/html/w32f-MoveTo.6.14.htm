@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>How to convert code <br> from version 6.12.00 to 6.14.00</h1>
+
+<p>Alhought we do understand that upgrading code is boring some changes cannot be
+avoided if we want to improve Win32Forth. This page explains how to convert your
+6.12.00 sources to the 6.14.00 Win32Forth version. We apologize for any
+inconvenience and hope that you will be satisfied with the new version and its
+new features.</p>
+
+<p>Depending on the changes involved, upgrading is more or less difficult. The
+steepest changes make your old code not running at all. You will have to do
+any needed conversion immediately. Light changes usually are words being
+declared "DEPRECATED". They keep your code running but you are strongly encouraged
+to make conversions as soon as possible because these words will simply have
+disappeared in the next version.</p>
+
+<p>Here is the list of the changes, in decreasing priority order,  follow the links
+to get instructions on how to convert :</p>
+
+<ul>
+  <li><b>Steep change </b><a href='#savewords'>Saving programs</a></li>
+  <li><b>Steep change </b><a href='#w32fmsg'>Win32Forth messaging</a></li>
+  <li><b>Soft change </b><a href='#deprecated'>Deprecated words</a></li>
+</ul>
+
+
+
+<a name='savewords'><h3>Saving programs</h3></a>
+
+<p>The words <code>APPLICATION</code> and <code>FSAVE</code> have been removed
+and replaced by the word <code>SAVE</code> . The word <code>TURNKEY</code> is
+still here but its behaviour has slightly changed.</p>
+
+<p>Behind these changes are two ideas : avoid the need of setting defers
+before a save, particularly <code>DEFAULT-HELLO</code> which is too close to
+the sytem and easily handle the inclusion of a console and/or message loop
+in the saved program.</p>
+
+<p>You can have further details about new <code>SAVE</code> and
+<code>TURNKEY</code> words in the help topic
+<a href='w32f-imageman.htm'>"Save / Turnkey"</a>.</p>
+
+<p>Here is a procedure for converting : </p>
+
+<p>Suppress any redirection of the defers BOOT , DEFAULT-HELLO and
+DEFAULT-APPLICATION .</p>
+
+<p>If you had any application specific initializations in your own definitions
+for BOOT or DEFAULT-HELLO , move them in your program's main word.  Delete the
+words you were using as BOOT and DEFAULT-HELLO .</p>
+
+<p>Use the cfa of the word you previously put in DEFAULT-APPLICATION as the app-cfa
+for either SAVE or TURNKEY .</p>
+
+<p>Suppress any use of <code>MessageLoop</code> (and words that you could get
+undefined such as <code>NoConsole></code>) in your program.</p>
+
+<p><br>Then :<br></p>
+
+<p>Replace FSAVE and APPLICATION with SAVE : don't forget to give your program's
+main word as the application cfa of SAVE . <br>(TURNKEY remains the same)</p>
+
+<p><br>Then :<br></p>
+
+<p>If you were turnkeying a pure window application (no use of Forth i/o) then
+remove any reference to :</p>
+<pre>     NoConsole NoConsoleInImage</pre>
+<p>and remove from your program's main word:</p>
+<pre>     Turnkeyed? if MessageLoop Bye then</pre>
+
+
+<p>If you were turnkeying a console application prepend :</p>
+<pre>     ConsoleBoot</pre>
+<p>before your turnkey command.</p>
+
+
+<p>If your APPLICATION or TURNKEY used a customized forth console, prepend :</p>
+<pre>     ConsoleHiddenBoot</pre>
+<p>before your SAVE or TURNKEY command and do whatever further console
+initialization in your program's main word.</p>
+
+
+<p>All other cases should need no more conversion.</p>
+
+
+
+
+
+<a name='w32fmsg'><h3>Win32Forth messaging</h3></a>
+
+<p>This feature is mainly used internally, by the Win32Forth system. You
+probably didn't use it and so you don't have to convert anything, nor
+read the following paragraph.</p>
+
+<p>However, for the case somebody did use it, here is what is going on : all
+the inter-process communication (by win32forth specific messages) and launching
+a process by another has been rewritten. The main result is that all messages
+between processes are now handled by WM_COPYDATA . The method
+<code>WIN32FORTH:</code> has been removed. Knowing that the new console is now
+a window like any other one, and hence has its own message loop (ie no longer
+uses w32fconsole.dll), the win32forth message chain for handling messages
+sent to the console as been removed too. To convert your sources, you will have
+to read the Help topic <a href='dexh-w32fmsg.htm'>"win32forth messaging"</a>
+and the source src\w32fmsg.f .</p>
+
+
+
+<a name='deprecated'><h3>Deprecated words</h3></a>
+
+<p>The use of words that have been deprectaed will emit a loud warning message.
+Your application can still run but you should follow the instructions given by
+the warning, that is look at the file src\compat\evolve.f which contains very
+simple instructions to remove the deprecated word from your source. Usually, this
+can be done by a simple search and replace, so don't hesitate to do the work, as
+you know that these words will not be in the future Win32Forth release.</p>
+
+
+
+<p><hr>Document : w32f-MoveTo.6.14.htm -- 2008/08/27 -- Camille Doiteau<p>
+
+</body>
+</html>

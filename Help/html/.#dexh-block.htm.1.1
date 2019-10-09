@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+block.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Using the Block Wordset
+</h1><p>Win32Forth implements a virtual block system, based on the ANSI standard Block
+and Block extension wordsets. <br />
+The block words are not loaded by default and have to be included. The file
+BLOCK.F is in the lib folder (some older versions of W32F placed it in the extras
+folder). <br />
+The constants B/BUF, and #BUFFERS control the block size, and the number of
+buffers the system uses. &nbsp;These are defaulted to 1024 byte blocks, and
+8 buffers. &nbsp;A true LRU (least recently used) buffer allocation mechanism
+is used, implemented as a bubble up buffer stack. &nbsp;The least recently used
+buffer is always on the bottom of the stack. &nbsp;As buffers are used or
+re-used, they are bubbled immediately up to the top of the stack, destined
+to settle to the bottom of the stack if the same record is not accessed
+again. <br />&nbsp;Blocks are stored in a blockfile (normally with the .blk extension,
+although some forths use .fb) which is set by the words set-blockfile,
+open-blockfile or create-blockfile and closed by close-blockfile. Only one
+blockfile is active at any one time, open-blockfile and create-blockfile
+automatically close the current one prior to setting themselves as the current
+blockfile. <br />
+<b>&nbsp;NOTE </b>&nbsp;set-blockfile does not close the current blockfile.
+</p><p>A sample block file BANNER.BLK has been included for your examination. <br />
+type the following commands after loading BLOCK.F <br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OPEN-BLOCKFILE DEMOS\BANNER.BLK
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 7 THRU
+<br />
+This will load and run a simple demo. <br />
+<br />
+Type DEMO again to run it again after it has been loaded.
+</p><h2>Glossary
+</h2><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1024 constant b/buf &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>Length of each block.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;64 constant c/l &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>Number of characters per line.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8 constant #buffers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>Number of block buffers.
+</p><p><b><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-1 &nbsp;&nbsp;&nbsp;value blockhandle &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>The handle of the current block file, or -1 if no current block file.
+</p><p><b><code>variable blk &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- a-addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block
+</code></b><br>a-addr is the address of a cell containing zero or the number of the mass-storage
+block being interpreted. If BLK contains zero, the input source is not a block
+and can be identified by SOURCE-ID, if SOURCE-ID is available. An ambiguous
+condition exists if a program directly alters the contents of BLK.
+</p><p><b><code>variable scr &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- a-addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block ext
+</code></b><br>a-addr is the address of a cell containing the block number of the block most
+recently listed.
+</p><p><b><code>: save-buffers &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block
+</code></b><br>Transfer the contents of each updated block buffer to mass storage.
+Mark all buffers as unmodified.
+</p><p><b><code>: buffer &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( u -- a-addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block
+</code></b><br>a-addr is the address of the first character of the block buffer assigned to block u.
+The contents of the block are unspecified. An ambiguous condition exists if u is not
+an available block number. <br />
+If block u is already in a block buffer, a-addr is the address of that block buffer. <br />
+If block u is not already in memory and there is an unassigned buffer, a-addr is the
+address of that block buffer. <br />
+If block u is not already in memory and there are no unassigned block buffers,
+unassign a block buffer. If the block in that buffer has been UPDATEd, transfer
+the block to mass storage. a-addr is the address of that block buffer.
+At the conclusion of the operation, the block buffer pointed to by a-addr is
+the current block buffer and is assigned to u.
+</p><p><b><code>: empty-buffers &nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block ext
+</code></b><br>Unassign all block buffers. Do not transfer the contents of any updated
+block buffer to mass storage.
+</p><p><b><code>: flush &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block
+</code></b><br>Perform the function of SAVE-BUFFERS, then unassign all block buffers.
+</p><p><b><code>: update &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block
+</code></b><br>Mark the current block buffer as modified. An ambiguous condition exists if there
+is no current block buffer. <br />
+Update does not write the block to the disc.
+</p><p><b><code>: block &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( u -- a-addr ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block
+</code></b><br>a-addr is the address of the first character of the block buffer assigned to
+mass-storage block u. An ambiguous condition exists if u is not an available
+block number. <br />
+If block u is already in a block buffer, a-addr is the address of that block buffer. &nbsp;<br />
+If block u is not already in memory and there is an unassigned block buffer,
+transfer block u from mass storage to an unassigned block buffer. a-addr is
+the address of that block buffer. <br />
+If block u is not already in memory and there are no unassigned block buffers, unassign
+a block buffer. If the block in that buffer has been UPDATEd, transfer the block to
+mass storage and transfer block u from mass storage into that buffer. a-addr is the
+address of that block buffer. <br />
+At the conclusion of the operation, the block buffer pointed to by a-addr is the
+current block buffer and is assigned to u.
+</p><p><b><code>: list &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( u -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block ext
+</code></b><br>Display block u in the console in a 16 line format. Store u in SCR. <br />
+An error occurs if u is greater than the number of blocks in the current blockfile.
+</p><p><b><code>: wipe &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( u -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>Erase the specified block to blanks.
+</p><p><b><code>: set-blockfile &nbsp;&nbsp;&nbsp;&nbsp;( fileid -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>Make fileid the current blockfile.
+</p><p><b><code>: load &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( i*x u -- j*x ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block
+</code></b><br>Save the current input-source specification. Store u in BLK (thus making block
+u the input source and setting the input buffer to encompass its contents), set
+&gt;IN to zero, and interpret. When the parse area is exhausted, restore the prior
+input source specification. Other stack effects are due to the words LOADed.
+An ambiguous condition exists if u is zero or is not a valid block number.
+</p><p><b><code>: thru &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( i*x u1 u2 -- j*x ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ ANSI &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block ext
+</code></b><br>LOAD the mass storage blocks numbered u1 through u2 in sequence. Other stack
+effects are due to the words LOADed.
+</p><p><b><code>: close-blockfile &nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>Close the current blockfile, flushing any updated buffers. Set the current blockfile
+to no file.
+</p><p><b><code>: open-blockfile &nbsp;&nbsp;&nbsp;( &quot;&lt;spaces&gt;'filename'&quot; ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>Close the current blockfile. Open the file and make it the current block file.
+</p><p><b><code>: create-blockfile &nbsp;( u &quot;&lt;spaces&gt;'filename'&quot; ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>Close the current blockfile. Create a file of u blocks long, initialise the
+blocks to blanks and make it the current blockfile.
+</p><p><b><code>: #blocks &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- u ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>u is the number of blocks in the current blockfile.
+</p><p><b><code>: List-All &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Block extra
+</code></b><br>To list all blocks in the current blockfile.
+</p></body></html>

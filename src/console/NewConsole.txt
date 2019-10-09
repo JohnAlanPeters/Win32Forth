@@ -1,0 +1,79 @@
+New Console for Win32Forth which works without w32fConsole.dll
+
+This version supports GETXY and GOTOXY
+Fload NewConsoleTest.f to demonstrate the new console alongside the original Forth console.
+Use oo and nn to switch between them.
+
+BuildNew.bat will rebuild Win32For.exe using ExtendNew.f
+(Build.bat will rebuild the original Win32For.exe using Extend.f)
+
+ExtendNew.f loads the following files which replace the original files:
+
+Console1New.f
+Console2New.f
+ConsoleMenuNew.f
+ConsoleStatBarNew.f
+BootNew.f
+CommandWindow.f
+NewConsole.f
+
+Applications which turnkey without the console should work provided the default-hello is something like this:
+
+: New-default-hello ( -- )                          \ startup stuff
+                initialization-chain do-chain
+                exception@ if bye then
+                get-commandline                 \ commandline to SOURCE
+                default-application
+                ;
+
+' New-default-hello is default-hello
+
+Applications which use the (New) console need to change the default-hello so that initialization-chain do-chain is done before init-console e.g.:
+
+: tetris-hello ( -- )  \ startup stuff
+
+        \ default initialization (needed for all turnkey apps)
+        initialization-chain do-chain
+        init-console drop
+        exception@ if bye then
+        unset-except set-except         \ exception handling needs to be set after the console is started
+
+
+        \ our own initialization
+        menu-off                        \ close menubar
+        HideStatusBar: ConsoleWindow    \ close the statusbar
+        set-console-title               \ set window title
+        init-screen                     \ show console
+        get-commandline       \ copy commandline to SOURCE
+        default-application   \ and run our app
+;
+ 
+instead of:
+
+: tetris-hello ( -- )  \ startup stuff
+
+        \ default initialization (needed for all turnkey apps)
+        init-console
+        if initialization-chain do-chain then
+        exception@ if bye then
+
+        \ our own initialization
+        menu-off                        \ close menubar
+        ['] _interpret is interpret     \ close the statusbar
+        Destroy: ConsoleStatusbar
+        set-console-title               \ set window title
+        init-screen                     \ show console
+
+        get-commandline       \ copy commandline to SOURCE
+        default-application   \ and run our app
+;
+
+NOTE:
+To set the foreground and background colours in the new console FGBG!
+takes colour objects rather than RGB colorref values.
+e.g. green red FGBG!   (was color: green color: red FGBG!)
+black White FGBG! restores the normal colours
+
+
+Rod Oakford
+July 2008

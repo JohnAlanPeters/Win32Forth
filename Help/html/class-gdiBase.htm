@@ -1,0 +1,178 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+gdiBase.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>gdiObject -- Base class for GDI objects
+</h1><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><p>gdiObject is the base class for all GDI objects. &nbsp;This class
+contains a single ivar, hObject, that is the (MS Windows) handle for the
+GDI object. Since GdiObject is a generic class it should not be used to create
+any instances. There will be the following subclasses of gdiObject:
+</p><ul>
+<li><a href="clas-gdiPen.htm#gdiPen">gdiPen</a> Class for cosmetic pen's</li>
+<li><a href="clas-gdiPen.htm#gdiGeometricPen">gdiGeometricPen</a> Class for geometric pen's</li>
+<li><a href="clas-gdiBrush.htm#gdiSolidBrush">gdiSolidBrush</a> Solid brush class</li>
+<li><a href="clas-gdiBrush.htm#gdiHatchBrush">gdiHatchBrush</a> Hatch brush class</li>
+<li><a href="clas-gdiBrush.htm#gdiPatternBrush">gdiPatternBrush</a> Pattern brush class</li>
+<li><a href="clas-gdiBrush.htm#gdiDIBPatternBrush">gdiDIBPatternBrush</a> DIBPattern brush class</li>
+<li><a href="clas-gdiFont.htm">gdiFont</a> Class for windows fonts</li>
+<li><a href="clas-gdiBitmap.htm">gdiBitmap</a> Class for bitmaps</li>
+<li><a href="clas-gdiMetafile.htm">gdiMetafile</a> Class for enhanced metafiles</li>
+<li><a href="clas-gdiDC.htm">gdiDC</a> Base device context class</li>
+<li><a href="clas-gdiWindowDC.htm">gdiWindowDC</a> Device context class for windows</li>
+<li><a href="clas-gdiMetafileDC.htm">gdiMetafileDC</a> Device context class for enhanced metafiles</li>
+</ul>
+<p>There are some other (old) classes in Win32Forth that are dealing with the GDI:
+</p><table><tr><th>ColorObject
+</th>
+<th>Class for color objects
+</th>
+</tr>
+<tr><td>ExtColorObject
+</td>
+<td>Class for extended color objects
+</td>
+</tr>
+<tr><td>HatchColorObject
+</td>
+<td>Class for hatch color objects
+</td>
+</tr>
+<tr><td>Font
+</td>
+<td>Class for fonts
+</td>
+</tr>
+<tr><td>WinDC
+</td>
+<td>Device context class for windows
+</td>
+</tr>
+<tr><td>WinPrinter
+</td>
+<td>Device context class for printing
+</td>
+</tr>
+</table><p>All old classes are rewritten to use the GDI class library.
+</p><h2>Glossary
+</h2><p><b><code>:class gdiObject &lt;super object
+</code></b><br>gdiObject is the base class for all GDI Object classes.
+</p><p><b><code>:M ZeroHandle: &nbsp;( -- )
+</code></b><br>Clear the handle of the object. <br />
+If the current handle of the object is valid it will not be destroyed.
+</p><p><b><code>:M GetType: &nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Get the type of the object. &nbsp;<br />
+Possible return values are:
+</p><table><tr><th>OBJ_BITMAP
+</th>
+<th>Bitmap
+</th>
+</tr>
+<tr><td>OBJ_BRUSH
+</td>
+<td>Brush
+</td>
+</tr>
+<tr><td>OBJ_COLORSPACE
+</td>
+<td>Color space
+</td>
+</tr>
+<tr><td>OBJ_DC
+</td>
+<td>Device context
+</td>
+</tr>
+<tr><td>OBJ_ENHMETADC
+</td>
+<td>Enhanced metafile DC
+</td>
+</tr>
+<tr><td>OBJ_ENHMETAFILE
+</td>
+<td>Enhanced metafile
+</td>
+</tr>
+<tr><td>OBJ_EXTPEN
+</td>
+<td>Extended pen
+</td>
+</tr>
+<tr><td>OBJ_FONT
+</td>
+<td>Font
+</td>
+</tr>
+<tr><td>OBJ_MEMDC
+</td>
+<td>Memory DC
+</td>
+</tr>
+<tr><td>OBJ_METAFILE
+</td>
+<td>Metafile
+</td>
+</tr>
+<tr><td>OBJ_METADC
+</td>
+<td>Metafile DC
+</td>
+</tr>
+<tr><td>OBJ_PAL
+</td>
+<td>Palette
+</td>
+</tr>
+<tr><td>OBJ_PEN
+</td>
+<td>Pen
+</td>
+</tr>
+<tr><td>OBJ_REGION
+</td>
+<td>Region
+</td>
+</tr>
+</table><p><b><code>:M GetObject: &nbsp;&nbsp;( cbBuffer lpvObject -- n )
+</code></b><br>Get information for the object. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+If the function succeeds, and lpvObject is a valid pointer, the return value is
+the number of bytes stored into the buffer. <br />
+If the function succeeds, and lpvObject is NULL, the return value is the number
+of bytes required to hold the information the function would store into the buffer.
+If the function fails, the return value is zero.
+</p><p><b><code>:M Destroy: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Destroy the object.
+</p><p><b><code>:M GetHandle: &nbsp;&nbsp;( -- hObject )
+</code></b><br>Get the handle of the object.
+</p><p><b><code>:M SetHandle: &nbsp;&nbsp;( hObject -- )
+</code></b><br>Set the handle of the object. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+If the current handle of the object is valid it will be destroyed.
+</p><p><b><code>:M Valid?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>Check if this object is valid.
+</p><p><b><code>;class
+</code></b><br>End of gdiBase class
+</p><h2>Helper words outside the gdiBase class
+</h2><p><b><code>: ?IsGdiObject &nbsp;( a1 -- f ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f
+</code></b><br>Check if a1 is the address of a GdiObject.
+</p><p><b><code>: GetGdiObjectHandle &nbsp;{ GdiObject -- handle } &nbsp;&nbsp;\ w32f
+</code></b><br>Check if GdiObject is the address of a valid GdiObject.
+If so return the handle of the object.
+</p><p><b><code>: .gdi-objects &nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f sys
+</code></b><br>Display GDI objects which are currently defined.
+</p><p><b><code>: (?GdiCheck) &nbsp;&nbsp;( a1 -- a1 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f sys internal
+</code></b><br>Verify if a1 is the address of a GdiObject.
+If a1 isn't the address of a GdiObject the application will be aborted.
+</p><p><b><code>: ?GdiCheck &nbsp;&nbsp;&nbsp;&nbsp;( a1 -- a1 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ w32f
+</code></b><br>Verify if a1 is the address of a GdiObject.
+</p><p>If a1 isn't the address of a GdiObject and the error checking is enabled
+the application will be aborted.
+</p><p>NOTE: <i>&nbsp;?GdiCheck </i>&nbsp;does nothing in turnkey applications, it's for debugging only.
+</p></body></html>

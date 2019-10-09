@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Registers allocation</h2>
+
+<h2> Register Allocation</h2>
+
+<p>Next to the threading technique, the
+usage of the CPU's registers is the most crucial design decision. It's probably
+the most difficult. The availability of CPU registers can determine what
+threading technique can be used and how efficient the Forth will be.&nbsp; </p>
+
+<h3>The Classical Forth Registers</h3>
+
+<p>The classical Forth model has five
+&quot;virtual registers.&quot; These are abstract entities which are used in
+the primitive operations of Forth. NEXT, ENTER (called DOCOL in Win32Forth),
+and EXIT were defined earlier in terms of these abstract registers. </p>
+
+<p>Each of these is one cell wide --
+i.e., in a 32-bit Forth, these are the 32-bit registers. These <b>may not all
+be CPU registers.</b> I'll describe them in the order of their importance;
+i.e., the bottom of this list are the best candidates to be stored in memory. </p>
+
+<p><b>W</b> is the Working register. It is used for many
+things, including memory reference, so it should be an address register; i.e., you
+must be able to fetch and store memory using the contents of W as the address.
+You also need to be able to do arithmetic on W. (In DTC Forths, you must also
+be able to jump indirect using W.) W is used by the interpreter <b>in every
+Forth word</b>. In a CPU having only one register, you would use it for W and
+keep everything else in memory (and the system would be incredibly slow).
+Win32Forth use the <b>EAX register</b> for W.</p>
+
+<p><b>IP</b> is the Interpreter Pointer. This is used by <b>every
+Forth word</b> (through NEXT, ENTER, or EXIT). IP must be an address register.
+You also need to be able to increment IP. In Win32Forth, for reasons closely
+associated with the LODSD instruction and the use of EAX as W, this is the<b>
+ESI register</b>. LODSD is no longer used in Win32Forth; it's too slow.</p>
+
+<p><b>PSP</b> is the Parameter Stack (or &quot;data
+stack&quot;) Pointer, sometimes called simply SP. I prefer PSP because SP is
+frequently the name of a CPU register, and they shouldn't be confused. Most
+CODE words use this. PSP must be a stack pointer, or an address register which
+can be incremented and decremented. It's also a plus if you can do indexed
+addressing from PSP. In Win32Forth, this is the <b>ESP register</b>. It's
+convenient to use this register as data is often passed to Windows. Windows
+uses the Pascal calling convention where parameters are passed on the stack,
+and the callee is responsible for clearing the stack before returning. Using
+ESP reduces the amount of data shuffling required.</p>
+
+<p><b>RSP</b> is the Return Stack Pointer, sometimes called
+simply RP. This is used by colon definitions in ITC a. RSP must be a stack
+pointer, or an address register which can be incremented and decremented.
+Win32Forth uses the<b> EBP register. </b></p>
+
+<p><b>UP</b> is the User Pointer, holding the base address
+of the task's user area. UP is usually added to an offset, and used by
+high-level Forth code, so it can be just stored somewhere. But if the CPU can
+do indexed addressing from the UP register, CODE words can more easily and
+quickly access user variables. If you have a surplus of address registers, use
+one for UP. Single-task Forths don't need UP. Win32Forth supports
+multi-tasking, and uses the <b>EDX register</b> to address the User area.</p>
+
+<p><b>X</b> is a working register, <b>not</b> considered
+one of the &quot;classical&quot; Forth registers, even though the classical ITC
+Forths need it for the second indirection. In ITC you must be able to jump
+indirect using X. X may also be used by a few CODE words to do arithmetic and
+such. Sometimes another working register, Y, is also defined. In Win32Forth,
+the <b>EAX register</b> and the <b>ECX register</b> are available as working
+registers. (Why EAX is available for this task when it's used for W and why the
+EDI register isn't used at all will be explained later.)</p>
+
+<h3Use of the Hardware Stack</h3>
+
+<p>Most CPUs have a stack pointer as
+part of their hardware, used by interrupts and subroutine calls. How does this
+map into the Forth registers? Should it be the PSP or the RSP? </p>
+
+<p>The short answer is, <b>it depends</b>.
+It is said that the PSP is used more than the RSP in ITC and DTC Forths. If
+your CPU has few address registers, and PUSH and POP are faster than explicit
+reference, use the hardware stack as the Parameter Stack. On the other hand, if
+your CPU is rich in addressing modes -- and allows indexed addressing --
+there's a plus in having the PSP as a general-purpose address register. In this
+case, use the hardware stack as the Return Stack. </p>
+
+<p>The decision is simple in
+Win32Forth; there are so many Windows calls it makes sense to keep the data on
+the stack that Windows will use to avoid shifting data from one stack to
+another for a call. Windows parameters are pushed on the stack (it uses the
+Pascal calling convention) and that's addressed by register ESP. So the PSP is
+ESP.</p>
+
+<h3Top-Of-Stack in Register</h3>
+
+<p>Forth's performance can be improved
+considerably by keeping the top element of the Parameter Stack in a register.
+Many Forth words (such as 0=) then don't need to use the stack. Other words
+still do the same number of pushes and pops, only in a different place in the
+code. Only a few Forth words (DROP and 2DROP) become more complicated, since
+you can no longer simply adjust the stack pointer -- you have to update the TOS
+register as well. </p>
+
+<p>There are a few rules when writing CODE words: </p>
+
+<p>A word which <b>removes</b> items
+from the stack must pop the &quot;new&quot; TOS into its register. </p>
+
+<p>A word which <b>adds</b> items to
+the stack must push the &quot;old&quot; TOS onto the stack (unless, of course,
+it's consumed by the word). </p>
+
+<p>What about buffering <b>two</b>
+stack elements in registers? When you keep the top of stack in a register, the
+total number of operations performed remains essentially the same. A push
+remains a push, regardless of whether it is before or after the operation
+you're performing. On the other hand, buffering two stack elements in registers
+<b>adds</b> a large number of instructions -- a push becomes a push followed by
+a move. Only dedicated Forth processors like the RTX2000 and fantastically
+clever optimizing compilers can benefit from buffering two stack elements in
+registers. </p>
+
+<p>Win32Forth keeps TOS in the <b>EBX
+register</b>. (Register EBX is a historical hangover; in 16 bit Forths on 8086
+machines, AX couldn't be used for indexed addressing modes. BX was a natural
+alternative, and this became EBX in Win32Forth.)</p>
+
+
+<hr>
+
+<p>Document : w32f-arch-regs.htm -- 2004/12/12 alex_mcdonald</p>
+
+</body>
+
+</html>

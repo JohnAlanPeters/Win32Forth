@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Simple HTML and CSS commands</h1>
+
+<h2>Paragraphs</h2>
+
+<h3>Standard paragraphs</h3>
+
+<p>This is a standard paragraph. You can use br <br> to break to a new line in the same paragraph</p>
+<p> You can insert code like <code>WORDS</code> in line </p>
+<p><a href='#Addr Glossary'>Link to the Glossary</a></p>
+
+<h4>Code paragraphs</h4>
+
+<p>The following is a preformated paragraph, for code</p>
+<pre>    : ?DUP   ( n -- 0 | n n )
+             DUP 0<> IF DUP THEN ; </pre>
+
+<h2>Glossary entries<a name='Addr Glossary'></a></h2>
+
+<p><b><code>: buffer ( u -- a-addr ) \ ANSI Block
+</code></b><br>a-addr is the address of the first character of the block buffer assigned
+to block u. The contents of the block are unspecified. An ambiguous condition exists if u
+is not an available block number. <br>
+If block u is already in a block buffer, a-addr is the address of that block buffer. <br>
+If block u is not already in memory and there is an unassigned buffer, a-addr is the
+address of that block buffer. <br>
+If block u is not already in memory and there are no unassigned block buffers,
+unassign a block buffer. If the block in that buffer has been UPDATEd, transfer
+the block to mass storage. a-addr is the address of that block buffer.
+At the conclusion of the operation, the block buffer pointed to by a-addr is
+the current block buffer and is assigned to u.</p>
+
+<p><b><code>: empty-buffers ( -- ) \ ANSI Block ext
+</code></b><br>Unassign all block buffers. Do not transfer the contents of any updated
+block buffer to mass storage.</p>
+
+<p><b><code>: empty-buffers ( -- ) \ ANSI Block ext
+</code></b><br>Unassign all block buffers. Do not transfer the contents of any updated
+block buffer to mass storage.</p>
+
+<h2>Bullets</h2>
+<ul>
+  <li>one bullet</li>
+  <li>another one</li>
+  <li>Ans so on</li>
+</ul>
+
+<h2>Numbered lines</h2>
+<ol start=1 type=1>
+ <li>line 1</li>
+ <li>line 2</li>
+ <li>and so on</li>
+</ol>
+
+<h2>Tables</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Symbol</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Meter</td>
+      <td>m</td>
+    </tr>
+    <tr>
+      <td>Kilogramm</td>
+      <td>kg</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<p><hr>Document : anew-w32f.htm -- yyyy/mm/dd -- author<p>
+
+</body>
+</html>

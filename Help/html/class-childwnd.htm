@@ -1,0 +1,41 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+childwnd.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Child-Window -- Base class for all child windows
+</h1><h2>Glossary
+</h2><p><b><code>:CLASS Child-Window &nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Window
+</code></b><br>Child-Window is the base class for all child windows.
+</p><p>The windows has a parent, which is the object address,
+not the window handle. This allows the child to send
+messages to its parent.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M SetParent: &nbsp;&nbsp;( parent -- )
+</code></b><br>Set the object address of the parent window.
+</p><p><b><code>:M GetParent: &nbsp;&nbsp;( -- parent )
+</code></b><br>Get the object address of the parent window.
+</p><p><b><code>:M SetID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Set the ID for this child window.
+</p><p><b><code>:M GetID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Get the ID for this child window.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>User windows should override the WindowStyle: method to
+set the window style. Default is WS_CHILD and WS_VISIBLE.
+</p><p><b><code>:M WindowTitle: ( -- Zstring )
+</code></b><br>User windows should override the WindowTitle: method to
+set the window caption. Default is &quot;&quot;.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create this child window. Parent is the object address of the
+parent window.
+</p><p><b><code>:M AutoSize: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Size the window to fit into the client area of the parent window.
+</p><p><b><code>;Class
+</code></b><br>End of Child-Window class
+</p></body></html>

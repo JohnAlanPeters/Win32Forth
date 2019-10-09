@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>Control -- Class for child controls with subclassing.
+</h1><hr /><a name="Control"></a>
+<h2>Generic Control class
+</h2><pre><b><a name="0">|Class Control &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Generic-Window
+</a></b></pre><p>Generic control class. <br />
+Since Control is a generic class it should not be used to create
+any instances.
+</p><pre><b><a name="1">:M GetParent: &nbsp;&nbsp;( -- parent )
+</a></b></pre><p>Get the parent window of this control.
+</p><pre><b><a name="2">:M GetHandleOfParent: ( -- handleofparent )
+</a></b></pre><p>Get the window handle of the parent window of this control.
+</p><pre><b><a name="3">:M SetID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( id -- )
+</a></b></pre><p>Set the ID of this control. Normaly you don't need to do this, because
+every control get's an unique ID when it's created.
+</p><pre><b><a name="4">:M GetID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- id )
+</a></b></pre><p>Get the ID of this control
+</p><pre><b><a name="5">:M ExWindowStyle: ( -- exstyle )
+</a></b></pre><p>Get the extended window style of this control
+</p><pre><b><a name="6">:M WindowStyle: ( -- style )
+</a></b></pre><p>Get the window style of this control
+</p><pre><b><a name="7">:M AddStyle: &nbsp;&nbsp;&nbsp;( n -- )
+</a></b></pre><p>Set any additional style of the control. Must be done before the control
+is started. Use +Style: to add to a running control.
+</p><pre><b><a name="8">:M StartSize: &nbsp;&nbsp;( -- width height )
+</a></b></pre><p>Get the start size of this control. <br />
+Override this method to change it.
+</p><pre><b><a name="9">:M StartPos: &nbsp;&nbsp;&nbsp;( -- left top )
+</a></b></pre><p>Get the start position of this control. <br />
+Override this method to change it.
+</p><pre><b><a name="10">:M AutoSize: &nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Size the window to fit into the client area of the parent window.
+</p><pre><b><a name="11">:M CreateStruct: ( -- CreateStrucPointer )
+</a></b></pre><p>This pointer to a structure, depends on what kind of window you are
+creating, so we just default it to NULL.
+</p><pre><b><a name="12">:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</a></b></pre><p>Enable the control.
+</p><pre><b><a name="13">:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Disable the control.
+</p><pre><b><a name="14">;Class
+</a></b></pre><p>End of Control class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+bitmapDC.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>bitmap-dc -- Bitmap device context class.
+</h1><h2>Glossary
+</h2><p><b><code>:class bitmap-dc &lt;super ext-windc
+</code></b><br>Bitmap device context class.
+This can be used for buffered drawing.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Init the class
+</p><p><b><code>:M Valid?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>Check if it's save to use this device.
+</p><p><b><code>:M Fill: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ color_object \ -- }
+</code></b><br>Fill the display bitmap with a specified color.
+</p><p><b><code>:m FillArea: &nbsp;&nbsp;&nbsp;( color_object -- )
+</code></b><br>Fill the display bitmap with a specified color.
+</p><p><b><code>:m Destroy: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Destroys the display bitmap.
+</p><p><b><code>:M Init: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ width height RefDC \ -- }
+</code></b><br>Create the display bitmap and select it to our device context.
+Our device context will be compatible to the reference device.
+</p><p><b><code>:m Paint: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ ps_left ps_top ps_right ps_bottom DestDC -- }
+</code></b><br>Draw the display bitmap into the destination device condtext.
+</p><p><b><code>:m ~: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Clean up on dispose.
+</p><p><b><code>;class
+</code></b><br>End of bitmap-dc class
+</p></body></html>

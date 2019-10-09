@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+<h1>Release Notes for version 6.16.00 </h2>
+
+<h2>Contributors (in alphabetical order) </h2>
+<dir>
+  <li>Robert Dudley Ackerman</li>
+  <li>Ezra Boyce</li>
+  <li>Dirk Busch</li>
+  <li>Thomas Dixon</li>
+  <li>Camille Doiteau</li>
+  <li>Brad Eckert</li>
+  <li>Bruno Gauthier</li>
+  <li>George Hubert</li>
+  <li>Alex McDonald</li>
+  <li>Rod Oakford</li>
+  <li>Andrew Stephenson</li>
+  <li>Jos van de Ven</li>
+  <li>and others...</li>
+</dir>
+
+
+<h2>Overview </h2>
+<h3>System Changes</h3>
+<ul>
+ <li>Number of locals increased to 16.</li>
+ <li>200X {: :} locals syntax added.</li>
+ <li>EXECUTE-PARSING added.</li>
+ <li>200X PARSE-NAME added.</li>
+ <li>RECURSE now works correctly with :NONAME</li>
+ <li> EXIT ?EXIT and ; now work the same as EXITM ?EXITM and ;M in methods.</li>
+ <li>RESTORE-INPUT now repositions the file and rereads the line if input source is a file.</li>
+ <li>USER area increased to 8192 bytes</li>
+ <li>USER area moved down closer to parameter stack.</li>
+ <li>New user variable TASK-STATUS added to provide 32 bit flags (8 for applications), plus access words.</li>
+ <li>Assychronous callbacks in multi-media automatically handled.</li>
+ <li>EXIT, ?EXIT and and ; now work with methods as alternatives to EXITM ?EXITM and ;M.</li>
+ <li>Opening source files associated with an editor (WinEd, SciEdit or Win32ForthIDE) when the editor is
+ running causes the file to display in the running instance.</li>
+</ul>
+
+<h3>Bug fixes</h3>
+<p>A large number of bugs have been fixed. Changes can be found at the
+<a href="http://sourceforge.net/mailarchive/forum.php?forum_name=win32forth-cvs">CVS Commit
+List</a>.</p>
+
+
+
+<h2>New Applications</h2>
+<ul>
+</ul>
+
+<h2>New Tools</h2>
+<ul>
+</ul>
+
+<h2>New Controls</h2>
+<ul>
+</ul>
+
+<h2>New classes</h2>
+<ul>
+</ul>
+
+<h2>New Libraries</h2>
+</ul>
+
+<h2>New Demos</h2>
+<ul>
+</ul>
+
+
+<hr>
+<p>Document : w32f-relnotes.6.16.htm -- 2010/02/14 -- </p>
+
+</body>
+
+</html>

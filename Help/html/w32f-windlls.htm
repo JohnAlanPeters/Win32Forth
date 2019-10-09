@@ -1,0 +1,342 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Calling Windows Procedures</h1>
+
+<h2>The Basics</h2>
+
+<p>Making Window’s calls from
+Win32Forth is easy - when you know how. This tutorial introduces the key words
+used to interface with Windows DLLs and provides some simple samples to illustrate. </p>
+
+<p>This assumes that you are using a version of Win32Forth that supports <code>CALL</code>
+and <code>PROC</code> statements from the kernel. To
+check if this is so, type <code>.LIBS</code> . The output should look like the
+output below. (The meaning of each of the columns will be explained
+later, and note that the addresses and the list of libraries may be different
+on your machine, as they vary by operating system and version of Win32Forth.)</p>
+
+
+<pre>    Location Handle   Type Name
+    -------- -------- ---- -----------
+    000450D8 71710000 APP&nbsp; COMCTL32.DLL
+    0002C91C 76B30000 APP&nbsp; COMDLG32.DLL
+    0001794C 10000000 APP&nbsp; WINCON.DLL
+    00017934 782F0000 APP&nbsp; SHELL32.DLL
+    0001791C 7C2D0000 APP&nbsp; ADVAPI32.DLL
+    00017908 77F40000 APP&nbsp; GDI32.DLL
+    00013490 00D20000 APP&nbsp; PRINT.DLL
+    0000E6D8 63180000 APP&nbsp; SHLWAPI.DLL
+    0000BFA0 7C570000 KERN KERNEL32.DLL
+    0000B0FC 77E10000 APP&nbsp; USER32.DLL
+    0000A970 00D40000 APP&nbsp; CONSOLE.DLL</pre>
+
+<h3>Basics of DLLs </h3>
+
+<p>DLLs (Dynamic Link Libraries) are just like other programs run on your PC,
+ with a few key differences. </p>
+
+<ul>
+ <li>DLLs generally don’t have a visible
+     interface; that is, they have no windows. </li>
+ <li>DLLs can be shared amongst different
+     processes; only one copy of the code normally resides in memory,
+     regardless of how many programs use it.</li>
+</ul>
+
+<p>DLLs generally provide
+pre-packaged functions that can be used by other programs, and to use DLLs
+effectively in your programs, you will need the documentation for them. </p>
+
+<h3>Words used in Win32Forth</h3>
+
+<p>There are very few words required to make calls to external DLLs in Win32Forth. They are: </p>
+
+<ul>
+ <li>Debugging words: <code>.PROCS</code> , <code>.LIBS</code> </li>
+ <li>Defining words: <code>PROC</code> , <code>WINLIBRARY</code> </li>
+ <li>Calling words: <code>CALL</code> , <code>REL&gt;ABS</code> (deprecated), <code>ABS&gt;REL</code> (deprecated)</li>
+ <li>Naming words: <code>AS</code></li>
+</ul>
+
+<h3>Step 1. Get the documentation for the DLL</h3>
+
+<p>Without documentation for
+your DLL, it will not be possible to work out the names of the functions that
+the DLL contains, nor their parameters and return values. Valuable
+documentation on the key Window’s DLLs can be found at msdn.microsoft.com, and
+there are a number of third party documents that cover them too. For other
+DLLs, you will need to refer to the documentation that comes with it. </p>
+
+<h3>Step2. Tell Win32Forth about the DLL</h3>
+
+<p>Win32Forth needs to be told
+the name of the DLL so that it can load it. The statement <code>WINLIBRARY KERNEL32.DLL</code>
+allows W32F to load the DLL, ready to call the routines exported within
+it. The search path for DLLs varies by operating system (95/98/ME/NT/2000/XP),
+but in general specifying only the DLL name requires the DLL to be in a system
+directory, or the directory where Win32Forth was started. Most DLLs can be
+found this way, and it’s unusual to see any path name specified. <code>WINLIBRARY</code>
+can be repeated for the same library as often as you wish; only one copy will
+be loaded. The <code>.LIBS</code> command shows the libraries that have been
+specified and loaded. </p>
+
+
+<pre>    Location Handle   Type Name
+    -------- -------- ---- -----------
+    0003EA5C -noload- APP&nbsp; TESTIT.DLL
+    00014C08 10000000 APP&nbsp; WINCON.DLL
+    . . .</pre>
+
+<p>This word is normally only
+typed from the console. This shows TESTIT.DLL has been specified but not yet
+loaded. If you get errors calling routines that W32F can’t find, but you think should
+be found in your library, check the handle address. If it’s still -noload-,
+then W32F couldn’t find the library. See <code>CALL</code> for more details. </p>
+
+<h3>Step 3. Tell Win32Forth about the exported routines </h3>
+
+<p>To define the function in the DLL, use the <code>PROC</code> statement. Here’s a
+sample Windows call from the Windows documentation: </p>
+
+<div align=center>
+<table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width=453
+ style='width:339.75pt;background:silver;border-collapse:collapse;mso-padding-alt:
+ 1.5pt 1.5pt 1.5pt 1.5pt' id=AutoNumber1 height=120>
+ <tr style='mso-yfti-irow:0;mso-yfti-lastrow:yes;height:87.0pt'>
+  <td width=447 style='width:335.25pt;padding:1.5pt 1.5pt 1.5pt 1.5pt;
+  height:87.0pt'>
+  <blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+  <blockquote style='margin-top:5.0pt;margin-bottom:5.0pt'>
+  <p class=MsoNormal><b><br>
+  AllocConsole </b>The
+  AllocConsole function allocates a new console for the calling process. </p>
+  <p><span class=macrochar><span lang=EN-GB style='font-size:10.0pt;mso-ansi-language:
+  EN-GB'>BOOL AllocConsole(void); <span lang=EN-GB
+  style='mso-ansi-language:EN-GB'></p>
+  <p class=MsoNormal><b>Parameters</b><span
+  lang=EN-GB style='mso-ansi-language:EN-GB'> This function has no parameters. </p>
+  <p><b>Return Values</b><span
+  lang=EN-GB style='mso-ansi-language:EN-GB'> If the function succeeds, the
+  return value is nonzero. If <span class=SpellE>the <span
+  class=SpellE>function <span class=SpellE>fails, <span
+  class=SpellE>the return value <span class=SpellE>is <span
+  class=SpellE>zero. </p>
+  </blockquote>
+  </blockquote>
+  </td>
+ </tr>
+</table>
+</div>
+
+<p>This function is declared as </p>
+
+<pre>    0 PROC AllocConsole</pre>
+
+<p>that is, the function takes
+0 parameters and is called AllocConsole. Notice the case, <code>PROC</code>
+and <code>CALL</code> statements are case-sensitive! You MUST spell the name as
+it is shown. However, the number of parameters is currently only for documentation
+purposes right now. Valid values are 0 through 127 (don’t specify negative numbers, as
+they are used to indicate special system procedures). </p>
+
+<p>This step is optional ( you
+don’t need to have a <span class=macrochar>PROC statement, as W32F will dynamically
+define the <code>PROC</code> during a <code>CALL</code> statement. There’s a limit to the
+number of <code>PROC</code>s that can be dynamically defined, currently around 100 to 150.
+Defined procedures can be seen with a <code>.PROCS</code> command. Restrict the output by using a
+substring (case is not important here). </p>
+
+<pre>    .PROCS ALLOC
+    Location  ProcName               Prm  ProcEP    LibName
+    --------  --------               ---  --------  --------
+    0003EA5C  AllocConsole           0   
+    00012814  GlobalLock                  77E977E4  KERNEL32.DLL
+    000127F4  GlobalAlloc                 77E96646  KERNEL32.DLL
+    0000B830  HeapReAlloc            4
+    0000B7F8  HeapAlloc              3    77FCB10F  KERNEL32.DLL
+    Allocated Space:   12,288 bytes
+    Free Space Left:    6,997 bytes
+    Displayed 5 of 184 procedures defined</pre></blockquote>
+
+<h3>Step 4. Call the function</h3>
+
+<p>Now we’ve defined the
+library, and optionally defined the procedure, we can call the function with
+a <code>CALL AllocConsole </code></p>
+
+<p>The case IS important here - and
+must match the documentation. After this call, you should have an open DOS
+console and a 0 on the stack, the return code from the function. </p>
+
+<h2>More advanced features</h2>
+
+<h3>Parameter order </h3>
+
+<p>Parameters to Windows calls
+are passed on the stack IN REVERSE ORDER to the documentation. So, for example,
+if the documentation says <code>BOOL Function (A, B, C)</code>; then we must code
+it as <code>C B A CALL Function</code>. Reversing the parameters is essential to
+getting the call to work.</p>
+
+<h3>Procedure names</h3>
+
+<p>Some functions appear to have as many as 3 names. For example, there’s <code>CharUpperBuff</code>,
+<code>CharUpperBuffA</code> and <code>CharUpperBuffW</code>. In fact, there’s only two. Look at
+this sample output from <code>.PROCS</code> : </p>
+
+<pre>    Location  ProcName                      Prm  ProcEP    LibName
+    --------  --------                      ---  --------  --------
+    0003EA98  CharUpperBuffW                2    77E1236F  USER32.DLL
+    0003EA74  CharUpperBuffA                2    77E1263D  USER32.DLL
+    00003350  CharUpperBuff                 2    77E1263D  USER32.DLL</pre>
+
+<p>The ProcEP column shows the entry point of the function. The <code>CharUpperBuff</code>
+and <code>CharUpperBuffA</code> functions are the same function
+called <code>CharUpperBuffA</code>, and refer to ASCII character functions, where
+a character is a byte (8 bits) wide. </p>
+
+<p>The W function is a
+UNICODE, or 2-byte function. In general, you will want to use the A function as
+W32F is a byte character system. Any W32F <code>PROC</code> or <code>CALL</code> to a
+function with both an A and W variant will automatically load the A version without you
+having to specify it.
+If you REALLY want the W function, you must explicitly refer to it as (for
+example) <code>2 PROC CharUpperBuffW</code>. </p>
+
+<h3>Return values</h3>
+
+<p>Return values from function
+calls generally appear as a single entry on the top of the stack after the
+call. As most functions are written in C or C++ which can’t return multiple
+values, other techniques are used when a function needs to return more than one
+value. </p>
+
+<p>Return values are: </p>
+
+<ul>
+  <li>BOOL (0 for true or OK, 1 for false or not OK). To change these into Forth
+<code>TRUE</code> / <code>FALSE</code> values, follow with a <code>0=</code> or
+<code>ABORT&quot;</code> . For instance </li>
+
+<pre>CALL AllocConsole 0= IF ( all is OK ) </pre>
+<p>Or </p>
+<pre>CALL FreeConsole ABORT&quot; FreeConsole failed&quot; </pre>
+
+  <li>INT, HANDLE, etc; all these are unsigned or signed 32 bit (DWORD) values on the top
+of the stack. Use them as you normally would for Forth words. </li>
+
+  <li>VOID the 32 bit (DWORD) value on top of the stack is of no significance and should be
+discarded <span class=GramE>( using DROP ). </li>
+</ul>
+
+<p>Others: see below. </p>
+
+<h3>Interpreting function parameters</h3>
+
+<p>Function parameters come in various flavours, and they not only need to be in the
+right order, but they must be of the correct type for the call to work. Here’s how to
+specify various parameters. An example: </p>
+
+<pre>    BOOL ReadFile{ HANDLE hFile,      // handle to file LPVOID
+    lpBuffer,                         // data buffer
+    DWORD nNumberOfBytesToRead,       // number of bytes to read
+    LPDWORD lpNumberOfBytesRead,      // number of bytes read
+    LPOVERLAPPED lpOverlapped         // overlapped buffer
+    }; </pre>
+
+<p>becomes </p>
+
+<pre>    0 VALUE HANDLE
+    CREATE BUFFER 255 ALLOT
+    20 VALUE BYTESTOREAD
+    VARIABLE BYTESREAD
+    : MYFUNC
+      0             \ null address for overlapped buffer
+      BYTESREAD     \ bytes read
+      BYTESTOREAD   \ bytes to read
+      BUFFER        \ address of buffer
+      HANDLE        \ value of handle
+      CALL ReadFile ; </pre>
+
+<ul>
+ <li>HANDLE, BYTE, WORD, DWORD: are simple stack
+     values, or <code>VALUE</code> names as in the example above. If the
+     value of HANDLE was 13, then 13 would be on the stack. </li>
+ <li>LPxxx types (except STR): a pointer to a value. Be careful if you use <code>VALUE
+     &lt;name&gt;</code>
+     for LPxxx parameters - they normally don’t work, especially where the
+     function is returning a value, as in the <code>BYTESREAD</code> case. Use a
+     <code>VARIABLE</code> which puts its address on the stack. </li>
+ <li>LPxSTR types: Null (0) terminated strings. The above can be used, as in: </li>
+</ul>
+
+
+<pre>    : UPPERCASE ( caddr -- caddr )
+      DUP COUNT SWAP
+      call CharUpperBuff DROP ; </pre>
+
+<p>This function takes a
+counted string, changes it into (addr len), swaps to (len addr). This is
+needed, as the count is last, the string pointer first, for the call. The
+function returns a value on the stack (in this case n) which we’re not
+interested in. Actually, the above is not really a null terminated string call.
+Here’s one: </p>
+
+<pre>    int lstrlen(LPCTSTR lpString); </pre>
+
+<p>This will count the
+characters in a string. So, <code>Z&quot; ABCDEFG&quot; CALL
+lstrlen</code> returns 7, the length of the string. The following string types
+in W32F are null (0) terminated, and can safely be used in calls: </p>
+
+<ul>
+ <li><code>C&quot;</code>  - as long as the count character is accounted for. That is,
+     <code>C&quot; ABCDEFG&quot; COUNT DROP</code> points at the initial A </li>
+ <li><code>S&quot; ABCDEFG&quot;</code> puts (addr len) on the stack. The addr points at
+     a null terminated string.
+     Either <code>DROP</code> or <code>SWAP</code> depending on your need for the
+     count. </li>
+ <li><code>Z&quot; ABCDEFG&quot;</code> is the same as <code>C&quot;</code> , except there
+     is no count byte, so <code>Z&quot;</code> strings can be used directly. </li>
+</ul>
+
+<p>If you wish to create your
+own string buffer, here’s a technique that creates a null terminated string. </p>
+
+<pre>   CREATE MYSTR 256 ALLOT&nbsp;     \ my string
+    S&quot; ABCDEGF&quot; MYSTR PLACE \ move string to MYSTR
+    MYSTR +NULL                       \ add null on the end
+    MYSTR CALL lstrlen                \ use in call. </pre>
+
+
+<h3>Using ABS&gt;REL and REL&gt;ABS (obsolete feature)</h3>
+
+<p>ABS&gt;REL and REL&gt;ABS are obsolete. Don't use; ignore them if you
+see them in existing code. They do nothing.</p>
+
+<h3>Using AS</h3>
+
+<p>Sometimes it's useful to
+have a Forth word that can be used to obtain the XT of the procedure. Also some
+DLL procedure names can be rather long and obscure, so a more meaningful,
+shorter name would be useful.The following </p>
+
+<pre>    1 PROC ExitThread AS EXIT-TASK</pre>
+
+<p>can be used to add <code>EXIT-TASK</code>
+to the Current Wordlist. <span class=macrochar>AS should follow the procedure
+declaration ( after any comments if necessary ). </p>
+
+<hr>
+
+<p>Document : w32f-windlls.htm -- 2004/12/21 -- alex_mcdonald  </p>
+
+</body>
+
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Chains and how to use them</h1>
+
+<p>Chains are used to perform
+a number of words sequentially. Unlike a normal colon definition you can add
+tasks, either to the end, or the beginning, thus making them suitable for
+things like initialization or de-initialization, where you want to add extra
+words to the chain, depending on which files a particular application needs.</p>
+
+<p>Two words are provided to
+extend chains, <code>CHAIN-ADD</code> and <code>CHAIN-ADD-BEFORE</code>. The former is for forward chains,
+like initialization chains, where the word is added to the end of the chain,
+while the latter is for backward chains such as de-initialization chains, where
+the word is added to the beginning of the chain, so that things are undone in
+reverse order.</p>
+
+
+<h2>Glossary</h2>
+
+<p><code>.CHAIN        ( chain-addr -- ) \ system word</code><br>
+Print out the words that have been added to chain, in the order that they will be
+executed by DO-CHAIN. The output is printed using tabbing and capitalization to
+make the lines stand out. </p>
+
+<p><code>.CHAINS       ( -- ) \ system word</code><br>
+Print out all the chains in the application area and their contents. Each chain name is
+printed in capitals on a new line and then the contents are printed as per
+.CHAIN </p>
+
+<p><code>?SYS-CHAIN    ( chain_addr xt -- chain_addr xt )</code><br>
+Issue a warning if xt is in system space and is being added to a chain that is in
+application space, and we are not transienting. Warnings are suppressed if
+sys-warning? is off.</p>
+
+<p><code>CHAIN-ADD     ( chain_addr &lt;word-to-add&gt; -- )</code><br>
+Add xt of &lt;word-to-add&gt; to the end of chain whose address is chain_addr so that it
+is executed after previously added words in the chain.</p>
+
+<p><code>CHAIN-ADD-BEFORE ( chain_addr &lt;word-to-add&gt; -- )</code><br>
+Add xt of &lt;word-to-add&gt; to the start of chain whose address is chain_addr so that
+it is executed before previously added words in the chain. This is mainly used
+for de-initializing, so that initialization that is done last is de-initialized
+first. </p>
+
+<p><code>CHAIN-LINK    ( -- addr )</code><br>
+Variable pointing to the link of the first chain in the list of chains in the application
+area (or containing Null if no chains exist). Used by .CHAINS and for
+forgetting.</p>
+
+<p><code>DO-CHAIN      ( i*x chain_addr -- j*x )</code><br>
+Execute sequentially all the words of the chain whose address is on the stack, passing i*x
+to the first word and any output down the chain, returning j*x from the last
+word.</p>
+
+<p><code>NEW-CHAIN     ( &lt;name&gt; -- )</code><br>
+Create a new chain &lt;name&gt; in the application area.If currently compiling in the
+system area throw an abort. The chain is linked into the list of chains printed
+out by .CHAINS and any words added to the chain are trimmed when they are in a
+forgotten part of the dictionary. </p>
+
+<p><code>NOOP-CHAIN-ADD  ( chain_addr -- addr )</code><br>
+Add xt of NOOP to the end of chain whose address is chain_addr and return the address of
+the cell containing it. </p>
+
+<p><code>TRANSIENT-PTR   ( -- f )</code><br>
+Value containing true if transienting.</p>
+
+<p><code>SYS-NEW-CHAIN   ( &lt;name&gt; -- )</code><br>
+Create a new chain &lt;name&gt; in the system area.If currently compiling in the
+application area throw an abort. The chain is not linked into the list of
+chains printed out by .CHAINS and any words added to the chain are not trimmed
+when they are in a forgotten part of the dictionary. </p>
+
+
+<h2>Obsolete words</h2>
+
+<p>XDO-CHAIN (in the FORTH
+vocabulary ) and EXIT-DO-CHAIN ( in the HIDDEN vocabulary ) were in ealier
+versions of WIN32FORTH and have since been depreciated. Use <span
+class=SpellE>DO-CHAIN <span class=SpellE>instead.</p>
+
+<h2>Predefined chains in Win32Forth</h2>
+
+<p>Win32Forth is using the following predefined chains: </p>
+
+<p>System chains (defined in Primutil.f): </p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Called by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>initialization-chain</td>
+      <td>chain of things to initialize</td>
+      <td>GENERALBOOT</td>
+    </tr>
+    <tr>
+      <td>unload-chain</td>
+      <td>chain of things to de-initialize</td>
+      <td>UNLOAD-FORTH</td>
+    </tr>
+    <tr>
+      <td>forget-chain</td>
+      <td>chain of types of things to forget</td>
+      <td>FORGET</td>
+    </tr>
+    <tr>
+      <td>post-forget-chain</td>
+      <td>chain of types of things to forget</td>
+      <td>FORGET</td>
+    </tr>
+    <tr>
+      <td>semicolon-chain</td>
+      <td>chain of things to do at end of definition</td>
+      <td>; ;M EXIT-ASSEMBLER DO-;CHAIN</td>
+    </tr>
+    <tr>
+      <td>forth-io-chain</td>
+      <td>chain of things to to to restore forth-io</td>
+      <td>FORTH-IO</td>
+    </tr>
+    <tr>
+      <td>number?-chain</td>
+      <td>chain of number conversion options </td>
+      <td>NUMBER</td>
+    </tr>
+    <tr>
+      <td>msg-chain</td>
+      <td>chain of handlers for Windows messages</td>
+      <td>HandleMessages</td>
+    </tr>
+    <tr>
+      <td>reset-stack-chain</td>
+      <td>chain for resetting the stack</td>
+      <td>RESET-STACKS</td>
+    </tr>
+    <tr>
+      <td>pre-save-image-chain</td>
+      <td>chain of things to do to the new image prior to saving</td>
+      <td>IMAGE-COPY</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Chains used by the debugger (defined in Debug.f):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Called by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>dbg-next-cell</td>
+      <td></td>
+      <td>DBG-NEXT</td>
+    </tr>
+    <tr>
+      <td>dbg-nest-chain</td>
+      <td></td>
+      <td>DBG-NEST</td>
+    </tr>
+    <tr>
+      <td>.word-type-chain</td>
+      <td></td>
+      <td>.WORDTYPE</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Chains used by See (defined
+in See.f): </p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Called by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>.execution-class-chain</td>
+      <td></td>
+      <td>.EXECUTION-CLASS</td>
+    </tr>
+    <tr>
+      <td>.other-class-chain</td>
+      <td></td>
+      <td>.OTHER</td>
+    </tr>
+    <tr>
+      <td>.word-chain</td>
+      <td></td>
+      <td>.WORD</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr>
+
+<p>Document $Id: w32f-chains.htm,v 1.2 2013/02/14 19:07:42 georgeahubert Exp $</p>
+
+</body>
+
+</html>

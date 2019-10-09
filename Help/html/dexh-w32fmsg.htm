@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+w32fmsg.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Inter-process interaction &amp;&nbsp;communication
+</h1><h3><i>Abstract
+</i></h3><p>This module provides a flexible and reasonnably robust way of dealing with
+inter-process interaction and communication.
+</p><h2>Enabling inter-win32forth-process interaction &amp;&nbsp;communication
+</h2><p>In the following, a &quot;win32forth application&quot; is either win32for.exe
+itself or any program saved using <code>SAVE</code> or <code>TURNKEY</code> and
+having its own main window or using the Console window.
+</p><p>Saying that a win32forth application has its &quot;inter-process interaction and
+communication&quot; features enabled means :
+</p><ul><li>It has a unique application identifier
+</li><li>It can exchange messages with other win32forth applications whose
+inter-process features are activated too.
+</li><li>It can run as a single instance if it wants
+</li><li>it can be launched by another win32forth application, ready for communication
+</li></ul><p>Technical note: Internally, these features are implemented through
+&quot;shared memory&quot; or &quot;file memory mapping against paging&quot;.
+</p><p>Example :
+Here is a typical sequence of code you will have at the end of your
+source : a MAIN word for starting your application, which creates your
+main window, and a sequence to create a <code>TURNKEY</code>ed app (<code>SAVE</code> can
+be used too, as well as you can use the Console window instead of a
+window of your own) :
+</p><pre>true/false value Turnkey?
+
+: Main &nbsp;&nbsp;( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start: MyMainWindow
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;turnkeyed? if GetHandle: MyMainWindow EnableW32FMsg then &nbsp;\ line (*3*)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;
+
+
+turnkey? Nostack
+[if] &nbsp;&nbsp;&amp;forthdir count &amp;appdir place
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;9999 to NewAppID &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ line (*1*)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;true to RunUnique &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ line (*2*)
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' Main turnkey MyApp.exe
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 pause-seconds bye
+[else]
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Main
+[then]
+</pre><p>The lines marked (*1*) (*2*) and (*3*) are all you need to set your
+application's inter-process identification &amp;&nbsp;communication capabilities.
+</p><p>The default action is using none of these lines, the result in this case is:
+</p><ul><li>While developping, your program is considered to be win32Forth itself.
+It is able to communicate with Help and IDE, for example for using the debugger.
+</li><li>If you save your program (using either <code>SAVE</code> or <code>TURNKEY</code> )
+its application ID will be set to 0 and its communication features disabled.
+</li></ul><p>For the next options, you have to provide a unique ID for your application.
+For applications added to the win32Forth system, IDs (together with any message
+that could be handled) must be registered in the file w32fMsgList.f. For user
+applications, it is a good idea to consult this file to choose unused IDs for
+application and messages. Then :
+</p><ul><li>Use line (*1*) to give your application a new unique ID (9999 in the example
+above). This will activate shared memory for it, and thus inter-process interaction.
+</li></ul><ul><li>Notice that you MUST NOT use (*1*) in the <code>[else]</code> part following the
+<code>turnkey?</code> test. This means that when you run your application under Forth,
+its ID remains Forth's one (that allows for use of remote debugger, help, etc).
+If you need to test your application under its new ID, simply <code>SAVE</code> it under
+a new name. You will no longer have remote debugging capabilities but all the
+interpreter facilities will still be there for debugging. This allows to test 2
+applications of yours that need communicating. When everything is ok you can
+<code>TURNKEY</code> your applications.
+</li></ul><ul><li>If you want your application to run as a single instance, add the line (*2*).
+</li></ul><ul><li>Once shared memory is enabled for each application, you can enable communication
+between them by providing the handles of windows that will receive messages. Do
+this with the line (*3*) command. Now the applications are ready to exchange messages.
+<br /><b>Notice that it may be better to put this line in the On_Init method of your
+main window in order to set it sooner</b>.
+</li></ul><p><b><code>\ 0 value MyAppID
+</code></b><br>My unique current win32forth application identifier <br />
+A value of 0 means I don't share memory <br />
+READ-ONLY : DON'T change this value directly, set <code>NewAppID</code> instead.
+</p><p><b><code>\ 0 value NewAppID
+</code></b><br>Set this value to change the ID of your application <br />
+Change will be effective after either <code>SAVE</code> or <code>TURNKEY</code> .
+A value of 0 (which is the default) means I don't share memory <br />
+Used to configurate your application
+</p><p><b><code>\ 0 value RunUnique
+</code></b><br>Set this value to true if you want your application to run as a unique instance <br />
+Change will be effective after either <code>SAVE</code> or <code>TURNKEY</code> . <br />
+Used to configurate your application
+</p><p><b><code>: IsRunning? &nbsp;&nbsp;&nbsp;( AppID -- flag )
+</code></b><br>true if an instance of AppID is already running
+</p><p><b><code>: EnableW32FMsg ( hwnd -- )
+</code></b><br>Set the window handle of your application for inter-process communication <br />
+Used to configurate your application
+</p><p><b><code>: .Shared &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Show current contents of win32forth applications shared memory
+</p><h2>Exchanging messages between win32forth applications
+</h2><p>Once two win32Forth applications are running with inter-process communication
+enabled, they can implement win32forth-specific message handling.
+</p><p>Technical note: internally, Win32Forth use the Windows' special message
+WM_COPYDATA, that can send any block of data to another window.
+</p><p>Each application can create a set of win32forth-specific messages, identified
+by custom messages numbers. These message identifiers must be loaded in both
+applications so that they understand each other.
+</p><p>The contents of a win32forth
+message is a data area represented by its address and size. This data must be
+considered as <b>read-only</b> and remains <b>valid only in the receiver's message
+handler</b>. You should make a local copy if you want to override this rule.
+</p><h4>How to send a win32forth message :
+</h4><p></p><p>This is simple : use <code>Sendw32fMsg</code> if you want to send a message to a
+particular application, or <code>BroadCastw32fMsg</code> if you want to broadcast a message
+to all running applications.
+</p><p><b><code>: Sendw32fMsg &nbsp;&nbsp;( addr siz w32fmsg w32fappIDto -- result )
+</code></b><br>Send an inter-process win32forth-specific message <br />
+w32fAppIDTo is the destination application ID <br />
+w32fmsg is the win32forth-specific message number <br />
+addr siz is the data area passed with the message <br />
+result: &lt;&gt;0 (the message has been processed) or false<br />
+Note: it is supposed to be harmless to use this word
+without the shared memory nor hwnd set.
+</p><p><b><code>: BroadCastw32fMsg { addr siz w32fmsg \ -- }
+</code></b><br>Send an inter-process win32forth-specific message to all running processes
+in a pool of win32forth applications, including myself. See Sendw32fMsg
+</p><h4>How to receive a message :
+</h4><p></p><p>You just have to add a method in your window class to handle
+the WM_COPYDATA message. The word <code>Decodew32fMsg</code> converts the window's message
+parameters into win32forth-specific message data :
+</p><pre>:M WM_COPYDATA &nbsp;( hwnd msg wparam lparam -- result )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ Result must be -1 if the message has been processed, 0 if not
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Decodew32fMsg ( hwnd msg wparam lparam -- addr siz w32fmsg w32fAppIDSender )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CASE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app1 OF CASE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;msg1 OF ... handle message 1 ... set result ... ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;msg2 OF ... handle message 2 ... set result ... ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2DROP 0 SWAP
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDCASE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;app2 OF CASE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;msg5 OF ... handle message 5 ... set result ... ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;msg6 OF ... handle message 6 ... set result ... ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2DROP 0 SWAP
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDCASE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3DROP 0 SWAP &nbsp;&nbsp;\ here, you can handle other WM_COPYDATA messages
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDCASE ;M
+</pre><p><b><code>: Decodew32fMsg ( hwnd msg wparam lparam -- addr siz w32fmsg w32fAppIDsender )
+</code></b><br>decode a WM_COPYDATA message received from a win32forth application
+in a form ready for a CASE statement in a window message handler. <br />
+w32fAppIDSender will be 0 if any problem with shared memory
+</p><h2>Launching Win32Forth processes
+</h2><p>Launching a win32forth application from another one can be done <b>only when both
+applications share memory</b>. About win32for.exe itself, only one instance is
+currently sharing memory. Thus it is possible, for example, that you want to
+launch Help from an instance of Forth not currently sharing memory : this will
+not work.
+</p><p>You can however consider a win32forth application which doesn't share memory
+as a &quot;foreign&quot; application and use different tools to launch it.
+</p><p>To launch a win32forth application from another one use :
+</p><p><b><code>: ExecW32FApp &nbsp;&nbsp;( addr len w32fappID -- flag )
+</code></b><br>Execute a win32forth application, whose communication features are enabled,
+with a command line whose first token is the filename. If no path is given the
+file will be searched in the current directory. You may specify a path. <br />
+Example: (cf setup.f) <br />
+s&quot; WIN32FOR.EXE CHDIR HELP FLOAD HELPMAIN.F BYE&quot; w32fHelp ExecW32FApp
+Return -1 if failed, 0 if success
+</p><p>Specialized words to launch an application of the win32forth pool :
+</p><p><b><code>: ExecForth &nbsp;&nbsp;&nbsp;&nbsp;( addr len -- flag )
+</code></b><br>Launch win32Forth or use an existing instance who shares memory <br />
+Automatically builds filename and prepends home <br />
+addr len (len may be 0) is a commandline that will be appended
+to the filename if the application is actually launched
+Return -1 if failed, 0 if success
+</p><p><b><code>: ExecIDE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- flag )
+</code></b><br>Launch IDE if not already running <br />
+Automatically builds filename and prepends home <br />
+addr len (len may be 0) is a commandline that will be appended
+to the filename if the application is actually launched
+Return -1 if failed, 0 if success
+</p><p><b><code>: ExecHelp &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- flag )
+</code></b><br>Launch Help if not already running <br />
+Automatically builds filename and prepends home <br />
+addr len (len may be 0) is a commandline that will be appended
+to the filename if the application is actually launched
+Return -1 if failed, 0 if success
+</p><p><b><code>: ExecWinEd &nbsp;&nbsp;&nbsp;&nbsp;( addr len -- flag )
+</code></b><br>Launch IDE if not already running <br />
+Automatically builds filename and prepends home <br />
+addr len (len may be 0) is a commandline that will be appended
+to the filename if the application is actually launched
+Return -1 if failed, 0 if success
+</p><p><b><code>: ExecEditor &nbsp;&nbsp;&nbsp;( addr len -- flag )
+</code></b><br>Launch or put in front if already present, the current editor,
+either IDE or WinEd
+</p><hr>Document : Dexh-w32fMsg.htm -- 2008/05/23 -- Camille Doiteau
+</body></html>

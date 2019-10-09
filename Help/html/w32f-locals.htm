@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Local variables (or named input parameters)</h2>
+
+<p>Though including the ANS
+standard LOCALS word set, W32F also implement a more useful set (originally ported from
+the Macintosh Forth system Yerkes, formerly Neon). The ANSI Standard
+&quot;Local&quot; is similar to what are called &quot;args&quot; in this
+documentation, except for reversed order. W32F also supports (since V6.15.01)
+ the proposed new 200X  standard locals extension, which is similar to the Yerkes
+system except {: and :} replace { and }. </p>
+
+<h2>Syntax</h2>
+
+<pre>    : wordname  { arg1 arg2 \ loc1 loc2 loc3$ -- result }
+            arg1            \ returns value of 1st argument
+            0  TO loc1      \ stores a value to local 1
+            35 TO arg1      \ ok to change value of an arg
+            1  +TO loc2     \ increment local 2
+            &amp;ampOF loc1     \ address of the local following
+            ... ;</pre>
+
+
+<p>You can have 0 or more args or
+locals up to a total of 12. The  <code>}</code> or <code>:}</code> is a required part of the syntax.
+Anything between <code>--</code> and <code>}</code> is treated as a comment and does
+not do anything. The following are all valid argument declarations: </p>
+
+<pre>    { }                         \ does nothing
+    { -- }                      \ does nothing
+    { arg -- }                  \ one input argument
+    { | local -- }              \ one local (not initialized!)
+    { arg | local -- }          \ one arg and one local
+    { arg1 arg2 -- result }     \ two args
+    {: :}                       \ does nothing
+    {: -- :}                    \ does nothing
+    {: arg -- :}                \ one input argument
+    {: | local -- :}            \ one local (not initialized!)
+    {: arg | local -- :}        \ one arg and one local
+    {: arg1 arg2 -- result :}   \ two args
+    { \ local -- }              \ one local (not initialized!)
+    { arg \ local -- }          \ one arg and one local
+</pre></blockquote>
+
+<p>The args and locals are similar to
+&quot;values&quot;, in the sense that the value of the current arg or local is
+pushed on the stack during execution of a definition when the name is
+encountered. The content of an arg or local may be changed by using <code>TO</code> or <code>+TO</code> . The older <code>\</code> seperator cannot be used with <code>{:</code> and <code>:}</code> which only accepts <code>|</code> . Also <code>{</code> must be terminated with <code>}</code> , while <code>{:</code> must be temrninated with <code>:}</code></p>
+
+<h2>Restrictions</h2>
+
+<ol start=1 type=1>
+ <li>Left brace '<code>{</code>' or '<code>{:</code>' must be the first word if used in a <code>:M</code> method definition. </li>
+ <li>Total numbor of args and locals is limited to 16. </li>
+ <li>Only ordinary (single cell) numbers are supported. Neither Double numbers nor
+     floating point numbers are supported. <code>LOCALALLOC:</code>
+     can be used for Doubles, Floats and strings. </li>
+ <li>Locals are not initialized. </li>
+ <li>A definition may have only one occurrence
+     of the use of any of <code>{</code> , <code>{:</code>  or <code>LOCALS|</code> .
+     If one is used in a definition, the others may NOT be used! </li>
+ <li>Locals can't be declared inside of control structures. </li>
+ <li>Only the return address should be on the
+     return stack when locals are declared. Matching <code>&gt;R</code>'s
+     and <code>R&gt;</code>'s or <code>DO</code> loops may precede usage of
+     locals (except in methods see 1) as long the return stack is cleared prior
+     to locals being declared. </li>
+</ol>
+
+<h2>Implementation</h2>
+
+<p>At the start of the word, locals are
+allocated and arguments are popped from the data stack and pushed onto the
+return stack. They are referenced relative to the user variable <code>LP</code> . When you
+use exit or ; the arguments are deallocated. It is ok to use <code>DO ... LOOP</code>
+and <code>&gt;R R&gt;</code> at the same time as locals. </p>
+
+<p>Since there is some runtime
+overhead, you should only use args and locals when it would clear up the code
+or when you find yourself doing a lot of stack juggling. Do not abuse this
+feature! </p>
+
+<h2 align=center style='text-align:center'>
+<img border=0 width=500 height=400 src=w32f-locals-stack.gif></h2>
+
+<h2>Additional notes:</h2>
+
+<p>The <code>LOCALS|</code> word, as specified in the LOCAL-EXT
+extension in the ANS Standard has now been implemented. The following is an
+example: </p>
+
+<pre>    : FOO
+                LOCALS|  A1 A2 |
+                2 +TO A2
+                A1 A2 ;</pre>
+
+<p>The sequence&nbsp; <code>7 8 FOO&nbsp;</code> will return 8 and 9 on the stack, with
+the 9 on top. </p>
+
+<h2>Using LOCALALLOC:</h2>
+
+<p><code>LOCALALLOC:</code> can be used to reference arbitary sized data such as strings, floats,
+doubles, and arrays. A local is used to hold the address and the space reserved
+as follows </p>
+
+<pre>    : wordname { \ 2var -- }
+      2 cells localalloc: 2var      \ reserve 2 cells and store base address in 2var
+      0. 2var 2!                    \ store double number 0 in 2 var</pre><pre>  .... ;</pre>
+
+
+<hr>
+
+<p>Document : w32f-locals.htm -- 2004/12/21 -- alex_mcdonald</p>
+
+</body>
+
+</html>

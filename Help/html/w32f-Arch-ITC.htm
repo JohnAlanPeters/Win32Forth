@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>The threading technique : ITC</h2>
+
+<h2>The Threading Technique </h2>
+
+<p>One of the best
+descriptions of Forth on the web that explained the architecture of Forth
+systems (in terms even I could understand) was Brad Rodriguez'&nbsp;<a
+href="http://www.zetetics.com/bj/papers/">&quot;Moving Forth&quot;</a>
+<img border=0 width=16 height=16 id="_x0000_i1026" src=ONWEB.gif> which first appeared in&nbsp;<a
+href="http://www.psyber.com/~tcj">The Computer Journal</a> <img
+border=0 width=16 height=16 id="_x0000_i1027" src=ONWEB.gif> #59
+(January/February 1993). I'm immensely grateful for his permission to modify
+his original work and publish this set of articles on the internals of
+Win32Forth. Please take the time to read the originals; they contain much more
+in-depth information on building Forth systems than is contained here. I've
+been very selective in the sections that I've used.</p>
+
+<p>I lay claim to little
+originality. The diagrams I have recreated to add some colour and to allow them
+to be printed with better resolution. I am also no wordsmith; any errors in
+here are probably all mine. Be as good to click on the top left icon on these
+pages if there's anything you spot that's misspelled (British spelling
+excepted; I'll have no other), technically wrong, unclear or just plain
+incomprehensible. I really want to know. </p>
+
+<p>&quot;Threaded code&quot;
+is the hallmark of Forth. A Forth &quot;thread&quot; is just a list of
+addresses of routines to be executed. You can think of this as a list of
+subroutine calls, with the CALL instructions removed. Over the years many
+threading variations have been devised, and which one is best depends upon the
+CPU and the application. To make a decision, you need to understand how they
+work, and their tradeoffs. </p>
+
+<h3>Indirect Threaded Code (ITC) </h3>
+
+<p>This is the classical Forth
+threading technique, used in fig-Forth, F83 and Win32Forth, and described in
+most books on Forth. All the other threading schemes are &quot;variations&quot;
+on this, so you need to understand ITC to appreciate the others. </p>
+
+<p>Let's look at the definition of a Forth word <code>SQUARE</code> : </p>
+
+<pre>    : SQUARE  DUP * ;</pre>
+
+<p>In a typical ITC Forth this would
+appear in memory as shown in Figure 1. (The yellow header will be discussed in
+a future article; it holds housekeeping information used for compilation, and
+isn't involved in threading. Brown is code; blue and cyan are CFA pointers,
+explained below). </p>
+
+<p><img border=0 width=833 height=425
+id="_x0000_i1028" src=w32f-arch-ITC.gif></p>
+
+<p>Assume <code>SQUARE</code> is encountered while
+executing some other Forth word. Forth's Interpreter Pointer (IP) will be
+pointing to a cell in memory -- contained within that &quot;other&quot; word --
+which contains the address of the word <code>SQUARE</code> . To be precise, that cell
+contains the address of <code>SQUARE</code>'s Code Field, referred to in Win32Forth as the '<b>cfa</b>'
+(code field address) or the '<b>xt</b>' (execution token). The interpreter
+fetches that address, and then uses it to fetch the contents of <code>SQUARE</code>'s Code
+Field. These contents are yet another address -- the address of a machine
+language subroutine which performs the word <code>SQUARE</code> . In <span
+class=SpellE>pseudo-code, <span class=SpellE>this <span
+class=SpellE>is: </p>
+
+
+<table>
+ <tr>
+  <td><pre>(IP) -&gt; W</pre></td>
+  <td>fetch memory pointed by IP into
+  &quot;W&quot; register; W now holds address of the Code Field (the cfa)</p>
+  </td>
+ </tr>
+ <tr>
+  <td><pre>IP+4 -&gt; IP</pre></td>
+  <td>advance IP, just like a program counter
+  (assuming 4-byte addresses in the thread)</p>
+  </td>
+ </tr>
+ <tr>
+  <td><pre>(W) -&gt;  X</pre></td>
+  <td>fetch memory pointed by W into
+  &quot;X&quot; register; X now holds address of the machine code </p>
+  </td>
+ </tr>
+ <tr>
+  <td><pre>JP (X)</pre></td>
+  <td>jump to the address in the X register</p>
+  </td>
+ </tr>
+</table>
+
+
+<p>This illustrates an important but rarely-elucidated
+principle: <b>the address of the Forth word just entered is kept in W.</b> CODE
+words don't need this information, but all other kinds of Forth words do. </p>
+
+<p>If <code>SQUARE</code> were written in machine code,
+this would be the end of the story: that bit of machine code would be executed,
+and then jump back to the Forth interpreter -- which, since IP was incremented,
+is pointing to the <b>next</b> word to be executed. This is why the Forth
+interpreter is usually called NEXT. </p>
+
+<p>But, <code>SQUARE</code> is a high-level
+&quot;colon&quot; definition -- it holds a &quot;thread&quot;, a list of
+addresses. In order to perform this definition, the Forth interpreter must be
+re-started at a new location: the Parameter Field of <code>SQUARE</code> . Of course, the
+interpreter's old location must be saved, to resume the &quot;other&quot; Forth
+word once <code>SQUARE</code> is finished. This is just like a subroutine call! The machine
+language action of <code>SQUARE</code> is simply to push the old IP, set IP to a new
+location, run the interpreter, and when <code>SQUARE</code> is done pop the IP. (As you can
+see, the IP is the &quot;program counter&quot; of high-level Forth.) In
+W32F, <span class=SpellE>this <span class=SpellE>is <span
+class=SpellE>called DOCOL: </p>
+
+<table>
+ <tr>
+  <td><pre>PUSH IP</pre></td>
+  <td>onto the &quot;return address stack&quot;</p>
+  </td>
+ </tr>
+ <tr>
+  <td><pre>W+4 -&gt; IP</pre></td>
+  <td>W still points to the Code Field, so W+4 is the address of the Body</p>
+  </td>
+ </tr>
+ <tr>
+  <td><pre>JUMP </pre></td>
+  <td>to interpreter (&quot;NEXT&quot;)</p>
+  </td>
+ </tr>
+</table>
+
+
+<p>This identical code fragment is used
+by all high-level (i.e., threaded) Forth definitions! That's why a pointer to
+this code fragment, not the fragment itself, is included in the Forth definition.
+Over hundreds of definitions, the savings add up! And this is why it's called
+Indirect Threading. </p>
+
+<p>The &quot;return from
+subroutine&quot; is the word EXIT, which gets compiled when Forth sees ';'.
+EXIT just executes a machine language routine which does the following: </p>
+
+<table>
+ <tr>
+  <td><pre>POP IP</pre></td>
+  <td>from the &quot;return address stack&quot;</p>
+  </td>
+ </tr>
+ <tr>
+  <td><pre>JUMP </pre></td>
+  <td>to interpreter</p>
+  </td>
+ </tr>
+</table>
+
+
+<p>Walk through a couple of nested
+Forth definitions, just to assure yourself that this works. </p>
+
+<p>Note the characteristics of ITC: <b>every</b>
+Forth word has a one-cell Code Field. Colon definitions compile one cell for
+each word used in the definition. And the Forth interpreter must actually
+perform a <b>double</b> indirection to get the address of the next machine code
+to run (first through IP, then through W). </p>
+
+<p>ITC is neither the smallest nor the
+fastest threading technique. It may be the simplest; although DTC (see Brad
+Rodriguez papers) is really no more complex. So why are so many Forths
+indirect-threaded? Mainly because previous Forths, used as models, were
+indirect-threaded. These days, DTC is becoming more popular. </p>
+
+<p>So when should ITC be used? Of the
+various techniques, ITC produces the cleanest and most elegant definitions --
+nothing but addresses. If you're attuned to such considerations, ITC may appeal
+to you. If your code fiddles around with the insides of definitions, the
+simplicity and uniformity of the ITC representation may enhance portability.
+ITC is the classical Forth model, so it may be preferred for education.
+Finally, on the x86 family, CALL and RET are more expensive than the double
+indirection. </p>
+
+<p>There are other techniques; DTC and
+STC are the common alternatives. For details, please see Brad Rodriguez' paper.
+.</p>
+
+<hr>
+
+
+<p>Document : w32f-arch-itc.htm -- Dec 12 2004 -- alex_mcdonald</p>
+
+</body>
+
+</html>

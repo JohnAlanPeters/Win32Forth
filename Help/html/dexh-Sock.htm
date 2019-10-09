@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+Sock.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Simple Socket Library
+</h1><h3><i>Tom Dixon
+</i></h3><p></p><p>This is intended to be a simple wordset for sockets in forth.
+The words do not match the standard socket api. &nbsp;It has been adapted to
+be easier to use in Forth.
+It's simplicity should make it easy to port network apps to other
+forth systems.
+</p><h2>Network Formatting Words
+</h2>These words are for converting 16-bit and 32-bit values to the right
+format so any machine should be able to convert them back into their
+values.
+<p><b><code>1 PROC htonl ( hostlong -- u_long )
+</code></b><br>Convert a 32-bit number on the stack to a network acceptable
+byte-ordered value.
+</p><p><b><code>1 PROC htons ( hostshort -- u_short )
+</code></b><br>Convert a 16-bit number on the stack to a network acceptable
+byte-ordered value.
+</p><p><b><code>1 PROC ntohl ( netlong -- u_long )
+</code></b><br>Convert a network compatible 32-bit number on the stack to the
+correct 32-bit integer
+</p><p><b><code>1 PROC ntohs ( netshort -- u_short )
+</code></b><br>Convert a network compatible 16-bit number on the stack to the
+correct 16-bit integer
+</p><h2>Socket Library and Initialization Words
+</h2>These words are for initializing and unloading the windows socket
+dll. &nbsp;They are automatically called when the console is initialized
+and right before it closes, so normally a developer would never need
+to use these.
+<p><b><code>: wsocket2-init ( -- ) 
+</code></b><br>Initializes the windows socket dll <br />
+called in initialization-chain
+</p><p><b><code>: wsocket2-cleanup ( -- )
+</code></b><br>Initializes the windows socket dll <br />
+called in initialization-chain
+</p><h2>Main Socket Words
+</h2>These words represent the core of the socket library.
+They have been written to be thread-safe.
+<p><b><code>: host&gt;iaddr ( str len -- iaddr )
+</code></b><br>This function converts a host string to an ip address <br />
+The host string could be anything from a domain name to ip address. <br />
+Returns 0 if the host is unable to be looked up.
+</p><p><b><code>: iaddr&gt;str ( iaddr -- str len ) 
+</code></b><br>This converts an ip address to a readable string.
+It does not look up the host name, the string is in the &quot;255.255.255.255&quot; format
+</p><br><br><U>Example:</U> simple host lookup.<br>
+<pre>s&quot; www.win32forth.org&quot; host&gt;iaddr
+dup . \ should be anything other than 0
+iaddr&gt;str type \ should return ip address of win32forth.org
+</pre><p><b><code>: sock-open ( addr len port -- sock )
+</code></b><br>This opens up a new socket to a host name on a given port number <br />
+the host name will be looked up and the port number is converted implicitly <br />
+If the socket cannot be opened, a exception will be thrown.
+</p><p><b><code>: sock-read ( addr len sock -- len ) 
+</code></b><br>Reads data from the socket to a buffer. <br />
+It works very similarly to 'read-file', but has different return parameters <br />
+a returned 'len' of -1 means there was a socket error (SOCKET_ERROR) <br />
+If the provided 'len' is larger than the amount of data ready to be read from the socket,
+the socket will block until it has revceived the full amount of data.<br />
+If the socket is a non-blocking socket, it will read what it can and return
+right away.
+</p><p><b><code>: sock-write ( addr len sock -- len ) 
+</code></b><br>Write data from a buffer to the socket. <br />
+It works very similarly to 'write-file' <br />
+a returned 'len' of -1 means there was a socket error (SOCKET_ERROR) <br />
+If the socket is currently unable to take any data,
+the socket will block until it has room in it's internal buffer to send the data.<br />
+If the socket is a non-blocking socket, it will write what it can and return
+right away. (amount actually written is returned as 'len')
+</p><p><b><code>: sock-close ( sock -- ior )
+</code></b><br>Closes socket - very similar to close-file<br />
+ior is 0 if the close was successful
+</p><br><br><U>Example:</U> Get data from a socket.<br>
+This will dump the html data from google's homepage through the use of sockets.<br>
+<pre>create tbuf 256 allot
+0 value sock
+: sdump ( sock -- )
+&nbsp;&nbsp;begin
+&nbsp;&nbsp;&nbsp;&nbsp;dup sock-read? if dup tbuf 256 rot sock-read tbuf swap type then
+&nbsp;&nbsp;&nbsp;&nbsp;dup sock-closed? key? or until
+&nbsp;&nbsp;sock-close drop ;
+
+s&quot; www.google.com&quot; 80 sock-open value sock
+s&quot; GET / HTTP/1.0&quot; sock sock-write .
+crlf$ count sock sock-write .
+crlf$ count sock sock-write .
+sock sdump
+</pre><h2>Socket Listening Words
+</h2>These words are for writting the serving-end of network applications.<br />
+They have also been written to be thread-safe.
+<p><b><code>: sock-create ( p -- sock )
+</code></b><br>Make a new socket for listening on port 'p'
+Used only for server-side sockets
+</p><p><b><code>: sock-listen ( n sock -- ) &nbsp;
+</code></b><br>This tells a socket to start queuing sockets that want to connect.<br />
+'n' is the size of the queue that should be created to listen.
+after 'n' sockets have tried to connect and have yet to be accepted,
+further sockets will be refused until waiting sockets are accepted.
+(standard queue size is 5)
+</p><p><b><code>: sock-accept ( sock -- sock iaddr ) 
+</code></b><br>This will accept a socket that is in the listening queue. <br />
+'iaddr' is the ip address of the connecting socket and can be converted
+into an easy-to-read number through the 'iaddr&gt;str' word. <br />
+If no sockets are in queue to be accepted, this function will block
+until one tries to connect. <br />
+If the socket is a non-blocking socket, then the function will fail
+and return immediately if the queue has no sockets to accept. <br />
+If the function fails, it will return '0' as the iaddr and '-1'
+(or INVALID_SOCKET) as the socket.
+</p><h2>Asyncronous Socket Words
+</h2>These words are for the ability to use the sockets without having them block.<br />
+Very useful for apps that need to do many things at once.
+<p><b><code>: sock-read? ( sock -- n )
+</code></b><br>This function returns the amount of data that the socket can read
+without blocking. &nbsp;It is useful for working with socket asyncronously.<br />
+It will return -1 if the socket has no data to read (will block, or socket closed).
+</p><p><b><code>: sock-write? ( sock -- flag )
+</code></b><br>This function returns true if the socket can write data without blocking.<br />
+You can send 0-1024 bytes to the socket asyncronously without blocking if
+the flag is true.
+</p><p><b><code>: sock-accept? ( sock -- flag )
+</code></b><br>This function returns true if the socket has other sockets in queue that
+want to be connected. &nbsp;It is to be used in conjunction with 'sock-accept'
+so you can call sock-accept without blocking.
+</p><p><b><code>: sock-closed? ( sock -- flag ) 
+</code></b><br>This function tests to see if the socket has been closed at the other end
+or broken at any point.
+</p><p><b><code>: sock-err? ( sock -- n )
+</code></b><br>This function tests to see if there are any errors on the socket.
+</p><p><b><code>: sock-blocked ( flag sock -- )
+</code></b><br>This function sets a socket to blocked or unblocked mode.<br />
+If the flag is false, the socket will be set to 'unblocked'.<br />
+If the flag is true, the socket will be set to 'blocked'.<br />
+</p></body></html>

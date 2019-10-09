@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>bitmap-dc -- Bitmap device context class.
+</h1><hr /><h2>Glossary
+</h2><pre><b><a name="0">:class bitmap-dc &lt;super ext-windc
+</a></b></pre><p>Bitmap device context class.
+This can be used for buffered drawing.
+</p><pre><b><a name="1">:M ClassInit: &nbsp;&nbsp;( -- )
+</a></b></pre><p>Init the class
+</p><pre><b><a name="2">:M Valid?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</a></b></pre><p>Check if it's save to use this device.
+</p><pre><b><a name="3">:M Fill: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ color_object \ -- }
+</a></b></pre><p>Fill the display bitmap with a specified color.
+</p><pre><b><a name="4">:m FillArea: &nbsp;&nbsp;&nbsp;( color_object -- )
+</a></b></pre><p>Fill the display bitmap with a specified color.
+</p><pre><b><a name="5">:m Destroy: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Destroys the display bitmap.
+</p><pre><b><a name="6">:M Init: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ width height RefDC \ -- }
+</a></b></pre><p>Create the display bitmap and select it to our device context.
+Our device context will be compatible to the reference device.
+</p><pre><b><a name="7">:m Paint: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ ps_left ps_top ps_right ps_bottom DestDC -- }
+</a></b></pre><p>Draw the display bitmap into the destination device condtext.
+</p><pre><b><a name="8">:m ~: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Clean up on dispose.
+</p><pre><b><a name="9">;class
+</a></b></pre><p>End of bitmap-dc class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

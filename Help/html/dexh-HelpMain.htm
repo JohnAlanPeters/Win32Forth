@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+HelpMain.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>HELP
+</h1><h3><i>Version 1.0
+</i></h3><p>2008/04/15 By Camille Doiteau <br />
+Todo: see Help\HelpBugFix.txt
+</p><h3><i>Abstract
+</i></h3><p>This is the help system you are currently using. It includes html documentation and
+fast access to thousands of win32forth words, with either displaying a quick info
+about each word or viewing its source file.
+</p><h2>How to use the help ?
+</h2><p>Simply read the &quot;help on Help&quot; ! <br />
+(This document describes how to <b>maintain</b> the help system and database).
+</p><h2>Notation convention for enhancing help quick info
+</h2><p>The quick info used by this help system is parsed from the sources : for each
+word definition, all the subsequent comments are gathered as the quick info.
+To get the best result, Win32Forth developpers are encouraged to follow this
+convention : on a first line, you put the word definition, its stack effect,
+maybe with locals, and the beginning of comments. Comments can continue on
+any number of following lines (maximum 8K). The only comment words allowed
+are : <code>(...) { ... }</code> and <code>\</code>&nbsp;they may include Dexh commands. Example :
+</p><pre>: AWORD &nbsp;( n1 -- n2 ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ what does this word, in short
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ n1 / local1 -- n2 } &nbsp;\ a locals stack effect
+\&nbsp;*G This is a Dexh auto-documentation glossary entry, explaining what the word does.
+\&nbsp;It could be a simple comment too.
+</pre><p>The comments scan will stop as soon as any Forth word is encountered. For the
+case where comments unrelated to the word immediately follow the end of its comments,
+you can insert the Forth word <code>NOOP</code> to force scanning to stop.
+</p><h2>Compiling the help program
+</h2><p>Compile <b>Help\HelpMain.f</b> to create Help.exe.
+</p><p>Help.exe need not be recompiled when the help database is rebuilt. However,
+the help database must exist before Help.exe can be run. This database comes
+ready with the Win32Forth distribution but you may modify it if needed. The
+following explains how to do it.
+</p><h2>What is the help database ?
+</h2><p>The help database is made of 2 main parts: <br />
+</p><ul><li>the html help pages<br />
+</li><li>the words database (words' index and quickinfo)
+</li></ul><h2>Expanding the html help database
+</h2><p>The html help database is made of 3 parts: <br />
+</p><ul><li>a set of hand-written html pages (names beginning with &quot;<b>w32f-</b>&quot;)<br /> plus htm
+files in the help\html subdirs forthform, dpans and guides
+</li><li>a set of dexh-generated help pages (names beginning with &quot;<b>dexh-</b>&quot; or &quot;<b>class-</b>&quot;)<br />
+(please have a look at the dexh documentation next to this page)
+</li><li>a help summary, describing, for each html page, its hierarchy and link.
+</li></ul><h3>Maintaining the hand-written help pages :
+</h3><p>Theese are basic-html pages. We suggest you use a simple text editor to edit
+them as some html editors add a lot of useless styling code (eg, never
+use Microsoft Words).
+</p><p>To create a new help page from scratch :<br />
+</p><ul><li>Use the file <b>help\html\anew-w32f.htm</b> as a template (make a copy and rename
+it). It contains all you need to create a win32Forth help page. Moreover, it
+follows the general win32Forth presentation rules (thanks to the CSS style
+sheet help\html\style.css).
+</li><li>Insert the newly created page in the help summary (see below)
+</li></ul><h3>Maintaining the dexh help pages :
+</h3><p>As this documentation is written inside source files, just edit them to update
+their dexh contents.
+</p><p>If you want to document a new file, then there is a little more to do :
+</p><ul><li>Check that your dexh code is ok by running <code>DEXF</code> as standalone and looking at the result.
+</li><li>Edit the file <b>Help\HelpCreateDexhDocs.f</b> to add your file in the list of
+files whose dexh documentation must be generated and run it.
+</li><li>Insert the newly created page in the help summary (see below)
+</li></ul><h3>Maintaining the html help summary :
+</h3><p>The file <b>help\hdb\HelpSummary.tv</b> contains all the information about html pages
+organization and links, in a treeview-like structure.
+HelpSummary.tv contains comments explaining how to fill it. To modify or add a
+new help page, follow this procedure :
+</p><ul><li>Make a backup copy of the file help\hdb\HelpSummary.tv
+</li><li>Open it with the IDE (use: files all *.*) and search the right place to insert
+your page (ie your line in HelpSummary.tv).
+</li><li>Edit the line to give it a treeview depth, a treeview name and the link to your
+html page. (*** check syntax ! *** especially for character &quot;|&quot; )
+</li><li>Save HelpSummary.tv
+</li><li>Relaunch Help.exe, so that it uses this new version
+</li></ul><p>The tool <b>Help\HelpTestTV.f</b> allows you to test HelpSummary.tv before launching the
+help itself.
+</p><h2>Configurating and building the words help database
+</h2><p>The words help database is built in two steps :
+</p><ul><li>Select all the words to be included to the word database :<br />
+Edit the file <b>Help\HelpScope.f</b> in order to select sources files and vocabularies
+whoose words must be included in the words'index. (Browse HelpScope.f for details).
+You should run HelpScope.f as a stand alone until everything goes well.
+</li><li>Once this is ok, run <b>Help\HelpBuildhdb.f</b> to actually create the words database.
+</li></ul><p>As building the words database needs loading and parsing a great number of files, it
+is a somewhat risky process. Always make a backup of HelpScope.f before.
+</p><h3>Caution
+</h3><p>A great deal of files are used by Help.exe to run. Don't modify the directory
+layout of the Help directory. Some files are pre-built and needed, even for the
+databases building, they are :
+</p><ul><li>help\hdb\HelpFct.txt
+</li><li>help\hdb\HelpSummary.tv
+</li><li>help\hdb\HelpAns.txt
+</li><li>help\hdb\Help.cfg
+</li><li>help\html\style.css
+</li><li>all the w32f-???.htm files and help\html subdirs forthform, dpans and guides
+</li></ul><hr>Document : Dexh-HelpMain.htm -- 2008/04/15 -- Camille Doiteau
+</body></html>

@@ -1,0 +1,11 @@
+BANNER.BLK is a block file.
+The use of F12 or fload is not possible.
+
+Steps to run BANNER.BLK
+( Replace E: in the location where your Win32Forth is located. )
+
+1) FLOAD E:\win32forth\src\lib\BLOCK.F
+2) OPEN-BLOCKFILE E:\win32forth\DEMOS\BANNER.BLK
+3) 1 7 thru
+
+Enter the word demo to run the demo again.

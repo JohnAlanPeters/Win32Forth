@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+TimerWindow.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Timer-Window -- Timer-Window class.
+</h1><h2>Glossary
+</h2><p><b><code>:class timer-window &nbsp;&lt;super window
+</code></b><br>Timer-Window class.
+This class can be used for windows that should handle timer events.
+Only one timer per window can be used with this class.
+</p><p><b><code>:m ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Init the class
+</p><p><b><code>:m KillTimer: &nbsp;&nbsp;( -- )
+</code></b><br>Destroy the timer for this window.
+</p><p><b><code>:M CreateTimer: ( ms -- )
+</code></b><br>Create the timer for this window.
+</p><p><b><code>:M On_Done: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Things to do before program termination
+</p><p><b><code>:M On_Timer: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Thing's to do when the window recives a timer event. Default does nothing.
+</p><p><b><code>;class
+</code></b><br>End of timer-window class.
+</p></body></html>

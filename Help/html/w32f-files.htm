@@ -1,0 +1,65 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>ANS files</span></h1>
+
+
+
+
+<h2>Other files handling word set</h2>
+
+<p>The library offers some object oriented file handling words. They are in
+file.f</p>
+
+
+
+<h2>ANS files handling</h2>
+<pre>
+R/O     ( -- fmode ) read/only mode for OPEN-FILE and CREATE-FILE
+W/O     ( -- fmode ) write/only mode for OPEN-FILE and CREATE-FILE
+R/W     ( -- fmode ) read/write mode for OPEN-FILE and CREATE-FILE
+</pre>
+<p>"fileid" is a file identifier given by the Operating System when the file is
+opened or created, then used for file operation, and finally used to close the
+file. You should store it in a safe place until the file has been closed.</p>
+
+<p>Most of the file handling words give a result flag "ior". This flag is 0 if the
+operation was successful.</p>
+
+<pre>
+OPEN-FILE     ( adr slen fmode -- fileid ior ) opens a file - error if it doesn't exist -
+CREATE-FILE   ( adr slen fmode -- fileid ior ) create a file - always overwrite any pre-existing file -
+CLOSE-FILE    ( fileid -- ior ) close a file
+</pre>
+<pre>
+FILE-POSITION ( fileid -- len-ud ior ) get current file position
+ADVANCE-FILE  ( len-ud fileid -- ior ) set file position RELATIVE to current position, not ANS
+REPOSITION-FILE ( len-ud fileid -- ior ) set file position, absolute from beginning of file
+FILE-APPEND   ( fileid -- ior ) set file position to end of file, not ANS
+</pre>
+<pre>
+FLUSH-FILE    ( fileid -- ior ) force write to disc of file's OS buffers
+READ-FILE     ( b-adr b-len fileid -- len ior ) read binary data from a file.
+WRITE-FILE    ( adr slen fileid -- ior ) write to a file. ior = 0 = success
+READ-LINE     ( adr len fileid -- len eof ior ) read a line from file, delimited by cr+lf
+WRITE-LINE    ( adr len fileid -- ior )  write a line to file - automatically append cr+lf
+</pre>
+<pre>
+FILE-SIZE     ( fileid -- len-ud ior ) get file total size
+RESIZE-FILE   ( len-ud fileid -- ior ) resize a file
+</pre>
+<pre>
+FILE-STATUS   ( adr len -- x ior ) get current status flags of a file
+DELETE-FILE   ( adr len -- ior ) delete a file - must be closed -
+RENAME-FILE   ( adr1 len adr2 len -- ior ) rename file from name1 to name2
+</pre>
+
+
+<p><hr>Document : w32f-files -- 2008/05/15 -- Camille Doiteau</p>
+</body>
+</html>

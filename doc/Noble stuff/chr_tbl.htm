@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/xml; charset=iso-8859-1" />
+<meta name="GENERATOR" content="Forth2HTML 0.6" />
+<style type="text/css">
+body {background: #FFFFEE;}
+h1 {color: #000000;}
+h4 {color: #000000;}
+p {font-family: monospace;}
+a {text-decoration:none;}
+</style>
+<title>
+g:\chr_tbl.f</title></head><body><hr /><h1><a href="chr_tbl.f">chr_tbl.f
+</a></h1><hr /><p><span style="color:#008000">\&nbsp;Automatic character encoding tables</span><br />
+<br />
+<span style="color:#008000">\&nbsp;---------------------------------------------------</span><br />
+<span style="color:#008000">\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(c) Copyright 2001 &nbsp;Julian V. Noble. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\</span><br />
+<span style="color:#008000">\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Permission is granted by the author to &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\</span><br />
+<span style="color:#008000">\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use this software for any application pro- &nbsp;\</span><br />
+<span style="color:#008000">\&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vided this copyright notice is preserved. &nbsp;&nbsp;\</span><br />
+<span style="color:#008000">\&nbsp;---------------------------------------------------</span><br />
+<br />
+<span style="color:#008000">\&nbsp;This is an ANS Forth program using the CORE wordset</span><br />
+<br />
+<br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xchar_table:"><span style="color:#000000">&nbsp;char_table:</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;( #chars &quot;table_name&quot; -- )</span><br />
+<a href="../dpans6.htm#6.1.1000"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;CREATE</span></a><a href="../dpans6.htm#6.1.1650"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;HERE</span></a><a href="../dpans6.htm#6.1.1990"><span style="color:#0000FF">&nbsp;&nbsp;OVER</span></a><a href="../dpans6.htm#6.1.0898"><span style="color:#0000FF">&nbsp;&nbsp;CHARS</span></a><a href="../dpans6.htm#6.1.0710"><span style="color:#0000FF">&nbsp;&nbsp;ALLOT</span></a><a href="../dpans6.htm#6.1.2260"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;SWAP</span></a><span style="color:#990000">&nbsp;&nbsp;0</span><a href="../dpans6.htm#6.1.1540"><span style="color:#0000FF">&nbsp;FILL</span></a><br />
+<a href="../dpans6.htm#6.1.1250"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;DOES&gt;</span></a><span style="color:#008000">&nbsp;&nbsp;( char -- code[c])</span><br />
+<a href="../dpans6.htm#6.1.0898"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CHARS</span></a><a href="../dpans6.htm#6.1.0120"><span style="color:#0000FF">&nbsp;+</span></a><a href="../dpans6.htm#6.1.0870"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;C@</span></a><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;;</span></a><br />
+<br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xinstall"><span style="color:#000000">&nbsp;install</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( &nbsp;adr char.n char.1 -- )</span><span style="color:#008000">&nbsp;&nbsp;&nbsp;\&nbsp;fast fill</span><br />
+<a href="../dpans6.htm#6.1.2260"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;SWAP</span></a><a href="../dpans6.htm#6.1.0290"><span style="color:#0000FF">&nbsp;1+</span></a><a href="../dpans6.htm#6.1.2260"><span style="color:#0000FF">&nbsp;SWAP</span></a><a href="../dpans6.htm#6.1.1240"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;DO</span></a><a href="../dpans6.htm#6.1.0380"><span style="color:#0000FF">&nbsp;&nbsp;2DUP</span></a><a href="../dpans6.htm#6.1.1680"><span style="color:#0000FF">&nbsp;&nbsp;I</span></a><a href="../dpans6.htm#6.1.0898"><span style="color:#0000FF">&nbsp;&nbsp;CHARS</span></a><a href="../dpans6.htm#6.1.0120"><span style="color:#0000FF">&nbsp;+</span></a><a href="../dpans6.htm#6.1.0850"><span style="color:#0000FF">&nbsp;&nbsp;C!</span></a><a href="../dpans6.htm#6.1.1800"><span style="color:#0000FF">&nbsp;&nbsp;LOOP</span></a><a href="../dpans6.htm#6.1.0370"><span style="color:#0000FF">&nbsp;&nbsp;2DROP</span></a><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;;</span></a><br />
+<span style="color:#008000">\&nbsp;end automatic conversion tables</span><br />
+</p></body></html>

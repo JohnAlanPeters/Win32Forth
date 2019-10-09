@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/xml; charset=iso-8859-1" />
+<meta name="GENERATOR" content="Forth2HTML 0.6" />
+<style type="text/css">
+body {background: #FFFFEE;}
+h1 {color: #000000;}
+h4 {color: #000000;}
+p {font-family: monospace;}
+a {text-decoration:none;}
+</style>
+<title>
+g:\fsm2.f</title></head><body><hr /><h1><a href="fsm2.f">fsm2.f
+</a></h1><hr /><p><a href="../dpans6.htm#6.2.1485"><span style="color:#990000">FALSE</span></a><a href="../dpans15.htm#15.6.2.2532"><span style="color:#0000FF">&nbsp;[IF]</span></a><span style="color:#008000"><br />
+<br />
+Code to create state machines from tabular representations<br />
+<br />
+\ ---------------------------------------------------<br />
+\ &nbsp;&nbsp;&nbsp;&nbsp;(c) Copyright 2001 &nbsp;Julian V. Noble. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\<br />
+\ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Permission is granted by the author to &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\<br />
+\ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use this software for any application pro- &nbsp;\<br />
+\ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vided this copyright notice is preserved. &nbsp;&nbsp;\<br />
+\ ---------------------------------------------------<br />
+<br />
+This is an ANS Forth program requiring the<br />
+&nbsp;&nbsp;&nbsp;&nbsp;CORE<br />
+<br />
+<br />
+</span><a href="../dpans15.htm#15.6.2.2533"><span style="color:#0000FF">[THEN]</span></a><br />
+<br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xbarbar"><span style="color:#000000">&nbsp;||</span></a><a href="../dpans6.htm#6.1.0070"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;'</span></a><a href="../dpans6.htm#6.1.0150"><span style="color:#0000FF">&nbsp;,</span></a><a href="../dpans6.htm#6.1.0070"><span style="color:#0000FF">&nbsp;&nbsp;'</span></a><a href="../dpans6.htm#6.1.0150"><span style="color:#0000FF">&nbsp;,</span></a><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;;</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;add two xt's to data field</span><br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xwide"><span style="color:#000000">&nbsp;wide</span></a><span style="color:#990000">&nbsp;&nbsp;&nbsp;0</span><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;;</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;aesthetic, initial state = 0</span><br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xfsm:"><span style="color:#000000">&nbsp;fsm:</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;( width state --)</span><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;define fsm</span><br />
+<a href="../dpans6.htm#6.1.1000"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;CREATE</span></a><a href="../dpans6.htm#6.1.0150"><span style="color:#0000FF">&nbsp;&nbsp;,</span></a><span style="color:#008000">&nbsp;( state)</span><a href="../dpans6.htm#6.1.0150"><span style="color:#0000FF">&nbsp;,</span></a><span style="color:#008000">&nbsp;&nbsp;( width in double-cells)</span><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;;</span></a><br />
+<br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xsemifsm"><span style="color:#000000">&nbsp;;fsm</span></a><a href="../dpans6.htm#6.1.1250"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;DOES&gt;</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x col# adr -- x' )</span><br />
+<a href="../dpans6.htm#6.1.1290"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DUP</span></a><a href="../dpans6.htm#6.1.0580"><span style="color:#0000FF">&nbsp;&gt;R</span></a><a href="../dpans6.htm#6.1.0350"><span style="color:#0000FF">&nbsp;&nbsp;2@</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x col# width state)</span><br />
+<a href="../dpans6.htm#6.1.0090"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></a><a href="../dpans6.htm#6.1.0120"><span style="color:#0000FF">&nbsp;&nbsp;+</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x col#+width*state )</span><br />
+<a href="../dpans6.htm#6.1.0320"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2*</span></a><span style="color:#990000">&nbsp;&nbsp;2</span><a href="../dpans6.htm#6.1.0120"><span style="color:#0000FF">&nbsp;+</span></a><a href="../dpans6.htm#6.1.0890"><span style="color:#0000FF">&nbsp;&nbsp;CELLS</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x relative_offset )</span><br />
+<a href="../dpans6.htm#6.1.2070"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R@</span></a><a href="../dpans6.htm#6.1.0120"><span style="color:#0000FF">&nbsp;&nbsp;+</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x adr[action] )</span><br />
+<a href="../dpans6.htm#6.1.1290"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DUP</span></a><a href="../dpans6.htm#6.1.0580"><span style="color:#0000FF">&nbsp;&gt;R</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x adr[action] )</span><br />
+<a href="../dpans6.htm#6.1.0650"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@</span></a><a href="../dpans6.htm#6.1.1370"><span style="color:#0000FF">&nbsp;&nbsp;EXECUTE</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x' )</span><br />
+<a href="../dpans6.htm#6.1.2060"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R&gt;</span></a><a href="../dpans6.htm#6.1.0880"><span style="color:#0000FF">&nbsp;CELL+</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x' adr[update] )</span><br />
+<a href="../dpans6.htm#6.1.0650"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@</span></a><a href="../dpans6.htm#6.1.1370"><span style="color:#0000FF">&nbsp;&nbsp;EXECUTE</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x' state')</span><br />
+<a href="../dpans6.htm#6.1.2060"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;R&gt;</span></a><a href="../dpans6.htm#6.1.0010"><span style="color:#0000FF">&nbsp;!</span></a><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;;</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x' )</span><span style="color:#008000">&nbsp;&nbsp;\&nbsp;update state</span><br />
+<br />
+<span style="color:#008000">\&nbsp;set fsm's state, as in: &nbsp;0 &gt;state fsm-name</span><br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xgtstate"><span style="color:#000000">&nbsp;&gt;state</span></a><a href="../dpans6.htm#6.1.2033"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;POSTPONE</span></a><span style="color:#808080">&nbsp;defines</span><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;;</span></a><a href="../dpans6.htm#6.1.1710"><span style="color:#0000FF">&nbsp;IMMEDIATE</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;( state &quot;fsm-name&quot; --)</span><br />
+<br />
+<span style="color:#008000">\&nbsp;query current state, as in: &nbsp;state: fsm-name</span><br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xstate:"><span style="color:#000000">&nbsp;state:</span></a><span style="color:#008000">&nbsp;( &quot;fsm-name&quot; -- state)</span><br />
+<a href="../dpans6.htm#6.1.0070"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;'</span></a><a href="../dpans6.htm#6.1.0550"><span style="color:#0000FF">&nbsp;&gt;BODY</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;get dfa</span><br />
+<a href="../dpans6.htm#6.1.2033"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;POSTPONE</span></a><a href="../dpans6.htm#6.1.1780"><span style="color:#0000FF">&nbsp;LITERAL</span></a><a href="../dpans6.htm#6.1.2033"><span style="color:#0000FF">&nbsp;&nbsp;POSTPONE</span></a><a href="../dpans6.htm#6.1.0650"><span style="color:#0000FF">&nbsp;@</span></a><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;;</span></a><a href="../dpans6.htm#6.1.1710"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;IMMEDIATE</span></a><br />
+<br />
+<span style="color:#990000">0</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&gt;0</span><a name="xgt0"></a><span style="color:#990000">&nbsp;&nbsp;&nbsp;3</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&gt;3</span><a name="xgt3"></a><span style="color:#990000">&nbsp;&nbsp;&nbsp;6</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&gt;6</span><a name="xgt6"></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;these indicate state</span><br />
+<span style="color:#990000">1</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&gt;1</span><a name="xgt1"></a><span style="color:#990000">&nbsp;&nbsp;&nbsp;4</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&gt;4</span><a name="xgt4"></a><span style="color:#990000">&nbsp;&nbsp;&nbsp;7</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&gt;7</span><a name="xgt7"></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;transitions in tabular</span><br />
+<span style="color:#990000">2</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&gt;2</span><a name="xgt2"></a><span style="color:#990000">&nbsp;&nbsp;&nbsp;5</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&gt;5</span><a name="xgt5"></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;representations</span><br />
+<span style="color:#008000">\&nbsp;end fsm code</span><br />
+</p></body></html>

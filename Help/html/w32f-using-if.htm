@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Using -IF</h1>
+
+<p>Traditionally Forth uses IF
+to execute conditional code, however there are times when the value or flag
+that is being tested is needed later. Of course one can simply DUP it for later
+use, but that involves adding an extra XT ( one CELL ) to the code, plus an extra
+instruction to execute: -IF is a non-destructive version of IF that overcomes
+this problem since it preserves the value being tested without adding an extra
+instruction ( in fact since IF executes code to drop the value -IF is slightly
+faster ). The most obvious use of -IF is eliminating a DUP preceding an IF,
+however there are other situations where it can provide more optimal code:</p>
+
+<p>1)  ?DUP IF can be replaced by -IF where there is an ELSE part like so: </p>
+
+<pre>    ... ?DUP IF ... ELSE ... THEN ... </pre>
+
+<p>as</p>
+
+<pre>    ... -IF ... ELSE DROP ... THEN ... </pre>
+
+<p>which is faster ( especially for TRUE ) and which can allow further optimization if the
+DROP can be incorporated into the following code ( since it's always FALSE (
+i.e. 0 ) we may be able to use it ) </p>
+
+<p>2)  When the ELSE part of a conditional serves
+     only to put FALSE on the stack and the drop can be incorporated into the
+     following code as in: </li>
+</ol>
+
+<pre>    : IsWinConstant ( str -- str FALSE | val TRUE )
+                     { \ WinVal }
+                     &LOCAL WinVal over
+                     count swap Call wcFindWin32Constant
+                     if      drop
+                             WinVal TRUE
+                     else    FALSE
+                     then    ;</pre>
+
+<p>then </p>
+
+<pre>    : IsWinConstant ( str -- str FALSE | val TRUE )
+                    { \ WinVal -- }
+                    &LOCAL WinVal over
+                    count swap Call wcFindWin32Constant
+                    -if     2drop
+                            WinVal TRUE
+                    then    ;</pre>
+
+<p>is both shorter ( 3 CELLS ) and faster ( especially when the condition
+is FALSE ) </p>
+
+<hr>
+
+<p>Document : w32f-using-if.htm -- 2004/12/21 -- alex_mcdonald</p>
+
+</body>
+
+</html>

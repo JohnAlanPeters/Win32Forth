@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+webserver.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>WebServer -- Webserver
+</h1><h2>Glossary
+</h2><p><b><code>80 httpserver http
+</code></b><br>our http-server instance
+</p><p><b><code>: server-set-title ( -- )
+</code></b><br>set title of the console window
+</p><p><b><code>s&quot; Help\html\" Prepend&lt;home&gt;\ webpath place
+</code></b><br>the path to the web content
+</p><p><b><code>: server-choose-path &nbsp;&nbsp;{ \ $path -- }
+</code></b><br>choose the path for the folder with the web content
+</p><p><b><code>: server-init &nbsp;&nbsp;( -- )
+</code></b><br>init the server
+</p><p><b><code>: server-run &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>run the server
+</p><p><b><code>: server-exit &nbsp;&nbsp;( -- )
+</code></b><br>close the server
+</p><p><b><code>: www-server &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Starts the server.
+Tell your firewall that Win32Forth is allowed to use port 80. <br />
+Then you should able to see the server in your browser by using: <br />
+http://localhost/DPANSE.HTM <br />
+Assuming that the file p-index.htm is in your webpath. <br />
+When you would like to use the websever over the internet. <br />
+you must replace &quot;localhost&quot; by your IP-adress. <br />
+The IP-adress can be seen at http://checkip.dyndns.org <br />
+</p></body></html>

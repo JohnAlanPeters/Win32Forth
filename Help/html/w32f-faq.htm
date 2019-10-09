@@ -1,0 +1,489 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Frequently Asked Questions</h2>
+
+<h2>Win32Forth FAQ </h2>
+
+<p>This needs to be completely
+re-written to be more &quot;frequently&quot; asked questions; some of these are
+no longer relevant or correct.</p>
+
+<h3>Many of the demo files
+start with the incantation &quot;only forth also definitions&quot;. There is an
+archaic word &quot;forget&quot; that I think this may somehow be related to.
+Where can I find an explanation of these words? </h3>
+
+<p>You will want to look at
+the <a href="dpans/DPANSF.HTM">ANS documentation</a> for details on vocabularies.
+Look under the help menu on the Forth
+console. There is an entry that will open the ANS document for your perusal. </p>
+
+<h3>WinDemo includes a file
+Windemo.bmp, which implements the toolbar. Are there tools for constructing
+such a toolbar from scratch? </h3>
+
+<p>No special tools, I used
+Windows Paint, and edited them up. I would recommend that you copy the file
+WINDEMO.BMP to another name, then edit the icons in it with Paint, and then
+include that new file in your application for its toolbar. </p>
+
+<h3>&nbsp;I believe that I've
+found a parsing flaw. If you are in decimal and incorrectly enter a number that
+contains a single character 'd or 'e', it will not flag it as not found.
+Win32Forth just returns an OK and nothing is left on the stack. </h3>
+
+<p>That is correct, using the
+letters 'd' and 'e' alone, or in combination with legal numbers, does not
+produce an error. These are floating point numbers, per the IEEE floating point
+number format. If you use the floating point stack display word
+&quot;F.S&quot;, then you will see that a number has been put on the floating
+point stack.</p>
+
+<h3>How can I debug the words
+define within object or class. Mdebug can only work on methods while I am
+trying. How can I debug the methods such as WM_COMMAND, and WM_TIMER with debug
+or mdebug? I will help me a lot. Thanks. </h3>
+
+<p>There is an empty colon
+definition called BREAKER that is defined as follows; </p>
+
+<pre>: BREAKER NOOP ; </pre>
+
+<p>If you use it like this; </p>
+
+<pre>:M WM_TIMER ( --- ) BREAKER ....the definition of WM_TIMER.... ;M </pre>
+
+<p>Then say this at the Forth
+command line before running your program; </p>
+
+<pre>DEBUG BREAKER </pre>
+
+<p>Then the Forth debugger
+will be invoked when the break point is encountered in BREAKER. Then use the
+'U' command to debug UP to the definition of WM_TIMER. Not elegant perhaps, but
+functional. </p>
+
+<h3>Although I can use
+&quot;methods&quot; and &quot;ivars&quot; just fine, I can not make
+&quot;privates&quot; work. Did I miss something? I almost go though all the
+documents available. </h3>
+
+<p>Instance variables created
+with &quot;int&quot; are, or were private until I added the dot notation syntax
+to allow access to them. So I guess there really are no privates now. They are
+local however, since you can define a variable with the same name in multiple
+classes and objects. </p>
+
+<h3>I am spending hours and
+hours trying to understand the principle of using objects in Win32forth
+studying the examples There is some success if I make small changes But doing
+new stuff like answering the callback of a MouseMove to display the coordinates
+( following a tutorial book written in C++ ) -- no chance at all. I cannot figure
+out the overall concept ! Where are hidden all the case statements of HELLO.f
+in WINHELLO.f ? This question may sound silly to you but if I get one or two
+points clear perhaps I can cut the Gordian knot. </h3>
+
+<p>This is an understandable
+confusion point. Andrew's example (HELLO.F) was implemented without using
+classes, so it had to do everything brute force. </p>
+
+<p>WINHELLO.F on the other
+hand was implemented using the WINDOW class, which will automatically scan the
+HelloWindow class and object looking for windows messages as identified by the
+WM_ prefix and their existence in the WINCON vocabulary. These constants are
+then treated as window messages and when a window message of that type is
+received, it is passed to the appropriate WM_ method. Methods not defined are
+handled by a default windows message handler. </p>
+
+<p>Here is an extract from
+WINDOW.F. (WndProc) is the window callback procedure that is called whenever
+windows wants to send a message to a Win32Forth window. The first part of this
+definition just deals with a special case having to do with window creation. I
+don't fully understand the details, so I won't explain it to you. </p>
+
+<pre>    : (WndProc)   ( hwnd msg wparam lparam -- res )
+            [ also classes ]
+            GWL_USERDATA 4 pick Call GetWindowLong  ( object address )
+            ?dup 0=
+            if
+                    2 pick WM_CREATE &lt;&gt;
+                    if
+                            DefaultWindowProc exit
+                    then
+                    dup abs&gt;rel @   \ window object pointer from
+                                    \ first cell of CREATEPARMS
+                    4 pick ( obj hwnd )
+                    2dup GWL_USERDATA swap Call SetWindowLong drop
+                                    \ save pointer
+                    over !          \ set hWnd parameter of window struc
+            then</pre>
+
+<p>Here we look for window
+messages that we have defined. If it isn't, defined then we pass control off
+the &quot;DefWindowProc: [[ ]]&quot; which allows the user to redefine for each
+window a new default window procedure if needed. If the WM_ message is defined,
+then it is executed by the &quot;catch&quot; and if no error occurs, then the
+callback just returns to window. </p>
+
+<pre>    3 pick ( msg ) over &gt;class MFA ((findm))
+            if      sp0 @ &gt;r sp@ 4 cells+ sp0 !
+                    dup&gt;r catch
+                    ?dup
+                    if      r@ WndProcError
+                    then    r&gt;drop
+                    r&gt; sp0 !
+            else    \ -- a1                                 \ the object address
+                    DefWindowProc: [[ ( a1 -- ) ]]          \ gets used here
+            then
+            [ previous ] ;
+    ' (wndproc) WndProc TheWndProc</pre>
+
+<p>DefWindowProc: is defined
+here, to allow any window to recognize a WM_WIN32FORTH message if one is
+defined. Otherwise control is passed to &quot;DefaultWindowProc&quot; </p>
+
+<pre>    :M DefWindowProc: ( h m w l -- res )
+                    2 pick WM_WIN32FORTH =
+                    if      Win32Forth: [[ self ]]
+                            0
+                    else    DefaultWindowProc
+                    then
+                    ;M</pre>
+
+<p>If you don't understand all
+this, don't feel bad. There is much that I don't understand either. Andrew did
+all the really hard work, in figuring out how to get it to work the first time.
+The primary thing you need to know, is that if you define a window message (one
+starting with WM_) in a window, then your method will get called if windows
+sends your window that message. The details are messy, but the way it works in
+Win32Forth, covers much of those details. </p>
+
+<h3>In your file getting
+started (F1) you state that Forth is case insensitive. This isn't true for
+calls like &quot; call GetStockObject&quot; It must be typed in like the
+template It is case sensitive but after same tries I can even write GSO and it
+is loading?? </h3>
+
+<p>Win32Forth is case
+insensitive, except when using the CALL word to call a Windows procedure. The
+procedure names &quot;as you enter&quot; them in the source, are used to access
+the names right out of the DLL, and as such are case sensitive. </p>
+
+<h3>I have been trying to use
+the WinDirect DLL's from SciTech Software with Win32Forth. No success. Has
+anybody information on the correct way to use DLL's with Win32Forth or perhaps
+even tried WinDirect. </h3>
+
+<p>If you are running
+Win32Forth 3.0 or higher and the DLL you are trying to access is a 32bit DLL,
+then you should be able to simply add a WinLibrary statement like this to your
+application: </p>
+
+<pre>WinLibrary MYDLL.DLL </pre>
+
+<p>Then you just call the dll
+functions within your application with something like; </p>
+
+<pre>CALL MyDllFunction </pre>
+
+<p>Be sure to put all its
+arguments on the stack in reverse order, that is the argument nearest the word
+CALL is the argument that appears first in the C call description. </p>
+
+<p>NOTE: Win32Forth searches
+all the DLL's for a particular function name, and compiles a reference to which
+ever library it first finds the function in. So if you have conflicting
+function names, you will have a problem. </p>
+
+<h3>I've been trying to run
+two windows in an application, each with its own menu bar. It seems that both
+windows want to use the last loaded menu bar definition. I have a nice binary
+editor that gets its own vocabulary, window and menu bar. So far, I haven't
+been able to use it inside other apps because of the menu bar conflict. </h3>
+
+<p>Starting with Win32Forth
+verson 3.2, each window can have its own menubar. Look at the example program
+WINMULTI.F for an illustration of how to create a multiple window application. </p>
+
+<h3>&nbsp;Is there any written
+documentation on the details and philosophy behind the use of Objects the
+&lt;Super command, etc in this Forth. I have tried out some of the examples,
+and it makes me want to learn more about object oriented programming with
+Win32forth. I like being able to try out different methods from the command
+line, but unless I can find some written documentation I always suspect that I
+may be missing something.&nbsp; Would it be worthwhile obtaining the
+documentation for Yerkes, or whatever that Object Oriented Forth for the Mac is
+called? I have read that there is a certain amount of similarity between the
+Object models used. </h3>
+
+<p>Begin by looking at <a
+href="w32f-objects.htm">here</a>. You'll find a brief description
+and a couple of examples of how to use Object Oriented Programming in
+Win32Forth. </p>
+
+<p>In addition, since Andrew
+McKewan ported the NEON (yerks/MOPS) model of object oriented programming to
+Win32Forth, the MOPS manual is very similar in usage and concept to the OOP
+model used in Win32Forth. </p>
+
+<h3>I'd sure like to be able
+to make custom dialog boxes without having to rebuild the system, since I don't
+have Visual C++.</h3>
+
+<p>Versions 3.0 and later
+include some reworked Controls code that makes it at least possible to create
+dialogs (really modal windows) without having a dialog editor. Look at the
+example WINDILOG.F for an example of how to do this. </p>
+
+<p>Versions 6.08 and later
+include a GUI Form Designer, ForthForm the manual for which is <a
+href="ForthForm/ForthForm.htm">here</a></p>
+
+<p>If you're using Win9x then
+Michael Hilleström's DiaEdit ( available <a
+href="http://users.cybercity.dk/~ccc27382/">here</a><span style='mso-ansi-language:EN-GB'> <img
+border=0 width=16 height=16 id="_x0000_i1026" src=ONWEB.gif><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>) can be used to create dialog resource ( .RES
+) files and source code files ( for DialogRC.f ) </p>
+
+<p>Dialog resource ( .RES )
+files can also be created with the dialog editor which is included with the
+Free LCC compiler available <a
+href="http://www.cs.virginia.edu/~lcc-win32/index.html"><span lang=EN-GB
+style='mso-ansi-language:EN-GB'>here</a><span style='mso-ansi-language:
+EN-GB'> <img border=0 width=16 height=16 id="_x0000_i1027"
+src=ONWEB.gif></p>
+
+<h3>I am confusing with
+clearing of stack parameters. For example, there are two methods in Window.f
+source:</h3>
+
+<pre>    :M On_Init:  ( -- ) ;M
+    :M WM_CREATE ( h m w l -- res )
+                 On_Init: [[ self ]] 0 ;M</pre>
+
+<h3>Why does stack parameters,
+hwnd msg wparam lparam, vanish in On_Init: method? Actually, stack parameters
+of On_Init:, On_Size: are different in Window.f, Windemo.f and WinEd.f</h3>
+
+<p>In the above example,
+&quot;On_Init:&quot; is a method that does nothing special, in fact it does
+nothing at all, except become a place holder for the use of
+&quot;On_Init:&quot; in the following method WM_CREATE. All of the WM_ methods
+n Win32Forth are called during a callback from Windows, when it wants to send,
+in this case, a window create message (WM_CREATE). When this happens, then the
+WM_CREATE method will call the On_Init: method. The double brackets &quot;[[
+self ]]&quot; signify a runtime specified reference to On_Init:, so if you have
+redefined On_Init:, then your definition of On_Init: will get called instead of
+the default no operation shown above. is sort of an automatic re-definition
+linkage for methods defined with [[ self ]]. </p>
+
+<p>Your second question
+relates to the fact that the stack seems to be left in a odd state. Well, you
+are right, it isn't cleaned up before returning from the WM_CREATE method, but
+it doesn't need to be. You see the WM methods are called only from a windows
+callback, which means that windows calls Forth, and during that process, stacks
+are created for the method to use during execution, and they are destroyed when
+the method returns to window, so it doesn't make any difference that things are
+left on the stack. Each WM_ method should return a zero if message processing
+was completed without errors. In fact, it is better to leave extra things on
+the stack, than to have a stack underflow. </p>
+
+<h3>We have been thinking
+about converting our industrial control product (currently based on FPC) to
+Windows. Do you have comments on how difficult it might be to convert an existing
+application to Win32Forth - excluding the user interface? </h3>
+
+<p>Well, excluding user
+interface, Forth is pretty much Forth, though Win32Forth is a linear addressed
+32bit Forth versus F-PC's 16bit, which leads to the normal 2+ versus 4+ (or
+CELL + for ANSI) problems. The biggest problem you will have in using
+Win32Forth, is it is ANSI compatible, not F-PC compatible, so the file words
+are different. Win32Forth also adds full object oriented support (ala NEON or
+MOPS) which is a whole new way of thinking about programming. </p>
+
+<p>I must warn you that
+excluding the user interface in Windows, or even F-PC, is to discard a large
+part of the application. </p>
+
+<p>The other problem you will
+run into, is that Win32Forth only has access to hardware as it is made
+available through the Windows operating system, so access to hardware is
+extreamly restricted. Primarily you can access serial ports and the printer
+port. </p>
+
+<h3>I'm trying to get some
+EDIT-WINDOWS on the screen, to read in some numbers. I don't wont to use POPUPs
+build with the resourcecompiler. Can you tell me some tricks how to realize
+this ? </h3>
+
+<p>Win32Forth includes several
+demonstration programs, these are the only examples available. Note that
+WINEDIT does popup a generic edit box that is built into Win32Forth to accept
+input from the user for the simpleest form of text search while in browse mode.
+You could copy that method and avoid creating your own windows. if you want to
+get simple single parameter input. </p>
+
+<h3>I was wondering either it
+was possible to get colors in the win32forth console, and in a way so it will
+affect string following (not the whole console like &gt;BOLD and &gt;NORM do).</h3>
+
+<p>That's not possible. You
+can only set the foreground and/or background color for the complete console
+with <b>FGBG!</b>.</p>
+
+<p>Ok, you can alway's use
+some windows API functions to set the console font and type some text like
+this:</p>
+
+<pre>    Font vFont
+    WinDC CurrentDC
+    : texttest
+         cls GETCOLROW gotoxy cr
+         CONDC PutHandle: currentDC    \ initialize DC to the console
+         ltred  SetTextColor: currentDC
+         10 Width: vFont
+         18 Height: vFont
+         0 Escapement: vFont
+         Create: vFont
+         s&quot; Arial Black&quot; SetFaceName: vFont  \ default to Courier
+         Handle: vFont SetFont: currentDC
+         120 160 ( x y ) s&quot; Win32Forth &quot; textout: currentDC
+         0 35 gotoxy
+     ;
+    texttest</pre>
+
+<p>But every time the console
+window receives a WM_PAINT message (e.g. if you resize the window) your output
+in the console window will be lost because the WM_PAINT handler of the console
+window (in TERM.CPP) repaint's the complete client area of the window with it's
+own data. </p>
+
+<h3>I'm trying to set the
+foreground and background color of the console window with the words FOREGROUND
+and BACKGROUND (defined in 'COLOR.f') but it doesn't show any effect at all.</h3>
+
+<p><b>FOREGROUND</b> and <b>BACKGROUND</b> doesn't work
+for the console window. The only way to set the foreground and/or background
+color for the console window is using the word <b>FGBG!</b> like this:</p>
+
+<pre>    Color: red BG@ FGBG!  \ set red foreground color
+    FG@ Color: blue FGBG! \ set blue background color</pre>
+
+<p>To work with the console
+window FOREGROUND and BACKGROUND should be replaced with:</p>
+
+<pre>    : FG!    { color_object -- }
+             color_object ?ColorCheck drop
+             Color: color_object BG@ FGBG! ;
+    : BG!    { color_object -- }
+             color_object ?ColorCheck drop
+             FG@ Color: color_object FGBG! ;</pre>
+
+<h3>When you view a word that
+is a synonym, view goes to the wrong location.</h3>
+
+<p>Example If you VIEW FLOAD
+it takes you to line 59 of PRIMUTIL.F where the synonym INCLUDE is declared to
+be a synonym of fload. <br>
+It should take you to the source for fload which is actually on line 4,811 of
+KERNEL.F <br>
+Some times this is not so big a problem when the synonym is declared with in a
+few lines of the original work. But it is a bug. </p>
+
+<p>Well, it's a problem,
+admittedly, but its not a bug; just the way SYSNONYMs and ALIASes work. They're
+identical to the words they shadow, and the vocabulary can't tell the
+difference.</p>
+
+<pre>    .. c&quot; FLOAD&quot; find .s [2] 5285076 -1  ok..
+    .. c&quot; INCLUDE&quot; find .s [2] 5285076 -1  ok..</pre>
+
+<p>As you can see, the same entry
+is returned for both. VIEW INCLUDE takes you to the same place but in this case
+it is good. <br>
+Some times this is not so big a problem when the synonym is declared with in a
+few lines of the original work. But it is a bug. </p>
+
+<h3>SELF and [ SELF ]</h3>
+
+<p>in some classes I have seen something like:</p>
+
+<pre>   :M Foo:
+      ;M
+   :M Foo1:
+      Foo: [ self ] ;M</pre>
+
+<p>can someone tell my what's the differece beetween this and:</p>
+
+<pre>   :M Foo:
+      ;M
+   :M Foo2:
+      Foo: self ;M</pre>
+
+<p>is?</p>
+
+<p>[ SELF ] is a late bound call to SELF whereas SELF is early bound so </p>
+
+<pre>    :CLASS myclass &lt;SUPER OBJECT
+    :M Foo: .&quot; Foo: from myclass&quot; ;M
+    :M Foo1: Foo: SELF ;M
+    :M Foo2: Foo: [ SELF ] ;M
+    ;CLASS
+
+    :CLASS myclass2 &lt;SUPER MYCLASS
+    :M Foo: .&quot; Foo: from myclass2&quot; ;M
+    ;CLASS
+    myclass myobj1
+    myclass2 myobj2</pre>
+
+<p>would produce the same
+message for both objects for Foo1: but different ones for Foo2: since Foo2:
+myobj2 would find the second Foo: in myclass2 whereas Foo1: was bound to the
+original Foo: when it was compiled. </p>
+
+<p>The Foo: [ self ] notation
+is used to enforce late binding, so for example, if you redefine a new method
+Foo:, in a subclass, then it will get used instead of the original Foo:, but
+only if you late bind (runtime bind). <br>
+Essentially it allows forward references, or redefinitions, and is often used in
+the way you describe, with self, so a particular method doesn't have to be
+fully functional at the time the class is created. </p>
+
+<h3>Calling Forth words within assembler code?</h3>
+
+<p>You can use FCALL to call a Forth word within assembler code. </p>
+
+<pre>code x
+        fcall DUP
+        push ebx
+        mov ebx, # 10
+        fcall DUP
+        next c;</pre>
+<p>is the equiavlent of : X DUP 10 DUP ;</p>
+
+<h3>Calling the Win32 API
+within assembler code?</h3>
+
+<p>You can use FCALL to call a
+Win32 API function within assembler code. </p>
+
+<pre>code x
+        fcall AllocConsole
+        next c;</pre>
+<p>is the equivalent of : X call AllocConsole ;</p>
+
+
+<hr>
+
+<p>Document : w32f-faq.htm -- 2004/12/21 -- alex_mcdonald</p>
+
+</body>
+
+</html>

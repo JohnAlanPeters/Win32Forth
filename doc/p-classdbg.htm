@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+ W32F classdbg</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>Class Debugging Words
+</h1><hr /><p>Win32Forth contains some miscellaneous words to help with developing Classes and Objects.
+</p><h2>Glossary
+</h2><pre><b><a name="0">: cmethods &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( 'class' -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</a></b></pre><p>Print out all the methods of a class.
+</p><pre><b><a name="1">: methods &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( object-address -- ) &nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</a></b></pre><p>Print out all the methods of an object.
+</p><pre><b><a name="2">: ivars &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( object-address -- ) &nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</a></b></pre><p>Print out all the object IVARs of an object.
+</p><pre><b><a name="3">: matches &nbsp;&nbsp;( -&quot;name&quot;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</a></b></pre><p>Print out all the method selectors and IVAR names that have the same hash value as
+-&quot;name&quot;- will be assigned. If -&quot;name&quot;- is already in use as a selector or an IVAR name
+then it will appear in the list.
+</p><pre><b><a name="4">: objects &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( 'class' -- ) &nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</a></b></pre><p>Display all of the instances of 'class'.
+</p><pre><b><a name="5">: msee &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;method object&gt;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</a></b></pre><p>Display the source code of the method. Either a Class or Object can be supplied.
+</p><pre><b><a name="6">: mdebug &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;method object&gt;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</a></b></pre><p>Set debugging of the method. An Object must be supplied (Classes aren't allowed).
+NOTE the method will be debugged for all objects that respond to it.
+</p><pre><b><a name="7">: mdbg &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;method object&gt;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Class debug
+</a></b></pre><p>Set debugging of the method and then execute it.
+An Object must be supplied (Classes aren't allowed).
+NOTE the method will be debugged for all objects that respond to it.
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

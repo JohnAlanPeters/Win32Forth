@@ -1,0 +1,718 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+<h1>Release Notes</h1>
+
+<p>Latest at the top</p>
+
+<ul>
+ <li><a href="#6.08.00">Notes for version 6.08.00 </a></li>
+ <li><a href="#6.06">Notes for version 6.06</a></li>
+ <li><a href="#6.05">Notes for version 6.05</a></li>
+ <li><a href="#4.9C">Notes for version 4.9C</a></li>
+ <li><a href="#3.9K">Notes for version 3.9K</a></li>
+ <li><a href="#3.9J">Notes for version 3.9J</a></li>
+ <li><a href="#3.3D">Notes for version 3.3D</a></li>
+ <li><a href="#3.1B">Notes for version 3.0A thru 3.1B</a></li>
+ <li><a href="#2.9G">Notes for version 2.9G</a></li>
+</ul>
+
+
+<h2><a name=6.08.00></a>Notes for version 6.08.00 </h2>
+
+<p>CONTRIBUTORS <br>
+&nbsp;&nbsp;&nbsp;&nbsp;Developers: Alex McDonald, Dirk Busch, Ezra Boyce, George Hubert and others<br> 
+&nbsp;&nbsp;&nbsp;&nbsp;CVS: provided by Ron Aaron  <br>
+&nbsp;&nbsp;&nbsp;&nbsp;Library: John Peters</p>
+<p>VERSIONING <br>
+&nbsp;&nbsp;W32F now uses versions of the form<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Version numbers: v.ww.rr<br>      
+&nbsp;&nbsp;&nbsp;&nbsp;v  Major version<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ww Minor version<br>  
+&nbsp;&nbsp;&nbsp;&nbsp;rr Release </p>         
+<p>Odd minor version numbers are possibly unstable beta test code
+(for example, 6.07.12). Even minor versions are &quot;production&quot; releases;
+  the release number will increment if there are fixes. For &quot;  
+production&quot; releases, ONLY MINOR FIXES FOR BUGS WILL BE APPLIED.
+Major bug fixes, enhancements and other feature will be added to the
+next odd-numbered release.</p>
+
+<h4>New install programm</h4>  
+
+<p>A new install program is driven from SETUP.BAT. Several batch files have been
+modified to simplify the build process.</p>
+<ul>
+   <li>SETUP.BAT     -- runs the setup program, rebuilds the entire system from scratch</li>
+   <li>_MAKEALL.BAT  -- remakes the entire system, but doesn't do a full install</li>
+   <li>META.BAT      -- meta compiles a new kernel</li>
+   <li>MAKEWINED.BAT -- rebuilds WINED</li>
+   <li>MAKEINDEX.BAT -- rebuilds the word indices used by WINED</li>
+   <li>MAKEFORTHFORM.BAT -- rebuilds the W32F Forms Generator</li>
+</ul>
+
+<h4>New application ForthForm.f</h4>
+  
+<p>See SRC\FORTHFORM for the application and instructions.    
+ForthForm.F is a Free Form Designer for Win32Forth by Ezra Boyce. Written to simplify
+the design of forms with user design classes of controls. The generated file can be saved as
+a forth file (.f) or pasted into one's program and modified as needed.</p>
+
+<h4>Code-only section</h4>
+
+<p>Extensive changes were made to most of the files that built assembler code words. There
+are now three sections built in an image; </p> 
+<ul>
+   <li> A CODE section that contains all the assembler code words</li>
+   <li> A DATA (or APP) section that constains colon defs and data</li>  
+   <li>A SYSTEM (or DICTIONARY) section that contains dictionary entries</li>
+</ul>
+<p>This has improved the performance of W32F by separating out code and data. The
+word .FREE shows these sections:</p>
+<pre>   .free        
+   Section   Address     Total    Used       Free
+   ------- --------- --------- --------- ---------        
+   CODE    00000000h    40,960    15,410    25,550  
+   APP     0000A000h   761,856   247,584   514,272
+   SYSTEM  000C4000h   512,000   205,440<  306,560    
+   Malloc/Pointer:      21,704 ok       
+</pre>
+
+<h4>Generalised folder support</h4>
+
+<p>Extensive chnages made to the way that W32F holds information about loaded files.
+During an EXTEND, the W32F source files used during the build are now held as absolute
+file names. This simplifies the  movement of applications that might refer
+to the source via VIEW or EDIT words.</p>
+
+<h4>Changes to headers</h4>
+<p>Internal changes were made to the headers built in the dictionary. This has no effect
+on application programs (except for the bugs noted below).</p>
+
+<h4>Meta compiler generalisation</h4>  
+<p>Some work has begun on generalising the META compiler so that other images, apart
+from the current FKERNEL.IMG, can be generated in meta-compile mode. Work will
+continue to make this more flexible.</p>
+
+<h4>Bug fixes</h4>
+<p>For detailed information on bugs fixed, please see SRC\VERSION.F for details.</p>
+
+<h4>Bugs & temporary fixes</h4>
+<p>There are two temporary fixes to known bugs in this version.</p>
+
+<p>1.[ NFORGET.F doesn't forget properly. Due to changes in the dictionary structure
+with 6.06.xx, the link field is now at a lower address than the NFA; this causes the
+dictionary to be incorrectly trimmed and potentially corrupted when it is added to
+after ANEW, MARKER or FORGET has been executed. ]<br>
+The code has been modified to  work without corruption; there may be the occasional
+spurious &quot;XXX is isn't unique&quot; message after ANEW, FORGET or MARKER. It can
+safely be ignored, as XXX doesn't in fact exist. You are advised NOT to TURNKEY or
+APPLICATION if you have used ANEW, MARKER or FORGET.</p>
+
+<p>2.[ OPTIMIZE.F does NOT work, and generates incorrect code. Cause by the changes
+to a CODE ony section; some debugging will be required to work out how to best get
+the optimiser working again. ]</p>  
+  
+<p>The code has been modified to work correctly; however, the code is built into the APP
+section, not the new CODE section, so there may be occasional performance  hits caused
+by optimising. There are several unknown bugs. They have not been found yet.</p>
+
+<h4>Words removed</h4>
+<p>The following words have been REMOVED from the system:</p>
+<pre>
+CD      ( a synonym of CHDIR)<br>    
+E       ( "    "    " EDIT)<br> 
+B       ( "    "    " BROWSE)</pre>
+<p>due to conflicts with hex numbers of the same &quot;name&quot;. To restore these words,
+please FLOAD COMPAT.F</p>
+
+
+
+
+
+<h2><a name=6.06></a>Notes for version 6.06</h2>
+
+<p>Several minor changes to improve the performance of the kernel, and to tidy up the code.</p>
+
+
+
+
+
+<h2><a name=6.05></a>Notes for version 6.05 </h2>
+
+<h4>501B Kernel</h4>
+
+<p>Change of numbering. VRRF where V is version of the kernel, RR is a release and F is a
+fix version (or something pretty small) from the previous release.</p>
+
+<h4>Task support</h4>
+<p>Changes were made to the following files:
+ASMWIN32.F, FKERNEL.F, FLOAT.F, PRIMHASH.F and CALLBACK.F</p>
+<p>A new file TASK.F was added. MULTITHR.F is now obsolete. Changes to support better
+handling of stacks and user-words was made that do not affect any code except those that
+use the now obsolete MULTITHR.F. As TASK.F is not yet complete, accurate discussion of
+it is deferred until it stabilises.</p>  
+
+<p>Please note that the kernel is thread-aware, not thread safe. The following kernel
+words are all thread-safe:</p>
+<ul>
+   <li>file i/o</li>  
+   <li>dynamic memory allocation</li>
+   <li>words (allocate, free etc)</li>
+   <li>most standard forth words</li>
+</ul>
+
+<p>The following are NOT thread-safe:</p>  
+<ul>
+   <li>console i/o (but see the demos for a primitive console locking mechanism)</li>  
+   <li>any forth word that allocates space in the data space (for instance, if the words
+  invoked use , allot etc)</li>
+   <li>any forth word that allocates space in the dictionary (for instance, if the words
+  invoked use create value variable etc)</li>
+</ul>
+
+<p>Basically, compile time words are out. Other than that, tasks are just ordinary words
+that take a parameter. Example:</p>
+<pre>
+   : foo ( parm -- flag )
+     ...  \ do something tasky with parm
+     1  \ return a flag
+   ;  
+   0 value new-task
+   10 ' foo task-block to new-task   \ create a new task block for foo  
+   new-task run-task                 \ and run it  
+</pre>
+<p>or, if you're not interested managing in the task once you've started it:</p>  
+<pre>
+   10 ' foo task-block run-task  
+</pre>
+<p>New task words: create-task run-task suspend-task resume-task stop-task task-sleep
+task-block task-stop? TCB </p> 
+
+  
+<p>New lock words (process specific): lock unlock trylock make-lock</p>
+
+
+<h4>LOCALS support</h4>
+
+<p>Some changes in FKERNEL.F, PRIMHASH.F to more quickly initialise locals. Further  
+changes will be made to speed up further.</p>  
+
+
+<h4>Windows Version</h4>
+
+<p>New words WIN95 WIN98 WINME WINNT351 WINNT4 WIN2K WINXP and WINVER. These can be used to
+check for a version, say Win2K or greater;</p>
+<pre>
+     WINVER WIN2K &gt;=    
+</pre>
+
+<h4>FLOAD and other file words</h4>
+
+<p>Most (not all) have been changed to use PARSE-S$ rather than BL WORD. This allows
+file names with imbedded blanks to be handled if they are delimeted by &quot; (double)
+or ' (single) quotes. Further work required here.</p>
+
+
+<h4>Other changes</h4>
+<ul>
+   <li>CALLBACK.F -- all callback routines have been moved out of the kernel. The word WNDPROC is
+              no longer supported (it was just a 4 CALLBACK).</li>
+   <li>CLASS.F    -- FIND has a bug (in MSGFIND) that returns found for any variable x.y if x exists, regardless of whether it is an object. An attempt has
+              been made at a temporary fix that checks X is an object (but as yet
+              it does not check that Y is a variable or method).</li>
+   <li>CONTROL.F  -- all subclassing moved here out of the kernel.</li>  
+   <li>DIALOG.F   -- WNDPROC changed to a callback - see callback.f</li>  
+   <li>ENVIRON.F  -- bug fix, spotted by Leo Wong that LOCALS support was incorrectly reported.</li>
+   <li>FKERNEL.F  -- changes to the deferred call mechanism, and a bug fix when loading
+              libraries that were not available. The call mechanism was modified           
+              to make it easier to call routines from assembler.</li>  
+   <li>WINLIB.F   -- very minor performance enhancements</li>
+   <li>META.F and FKERNEL.F -- changes to use the word CFA-CODE instead of LABEL, or
+              CREATE x INIT-ASSEMBLER. Cleaner and more easily maintained.</li>
+   <li>NFORGET.F   -- was forgetting too much, especially about vocabularies when ANEW
+               was executed. RBS change in marker removed.</li>  
+   <li>PRIMUTIL.F  -- new word .. to RESET-STACKS.</li>
+   <li>VCALL.F     -- optimised.</li>
+</ul>
+
+
+
+<h2><a name=4.9C></a>Notes for version 4.9C </h2>
+
+<p>Consolidation release.
+Changes here include 4.0A, 4.1B, and 4.1B patches, and various changes contributed by RBS,
+JvdVen, Ron Aaron, JAP.</p>  
+
+<ul>
+   <li>DIS486.F  Major reworking of disassembler. If you don't like the new version you can
+revert to the old disassembler by replacing with 486ASM.OLD</li>  
+   <li>FKERNEL.F Major changes to remove the following : TIB, CUR-FILE, TEMP$, FIND-BUFFER,
+POCKET, SPCS, PARMLIST .These were ALLOTed as up to 256 byte strings. Now they are allocated
+on the stack at initialisation time, and reduce the total size of the image by around 1.5K.
+See : COLD for details.Also major changes to support better callbacks. See CALLBACK.F</li>  
+   <li>META.BAT Now always asks during compile of Win32For.exe whether a FIXED LOADPOINT or
+RELATIVE LOADPOINT should be built. Requested by Jos vd Ven.</li>
+   <li>CALLBACK.F &amp; FKERNEL.F .Some of the CALLBACK functionality has been incorporated
+into the kernel. This reduces the number of pieces of code that create callback type code,
+and simplifies debugging.</li>
+   <li>EXCEPTIO.F Exception handling now uses a process wide exception handler to trap all
+OS generated errors in Win32Forth. This has required disabling the _try code in FKERNEL.EXE.
+See EXCEPTIO.F for how to use this feature.</li>        
+   <li>EXTEND.F Minor changes to the fload order.</li>        
+   <li>FKERNEXT.F Minor changes to improve the doc and the messages produced for FIXED and RELATIVE loadpoint
+code.</li>       
+   <li>FLOAT.F Removed all FWAITs. These haven't been needed since 386 coprocessors!</li>  
+   <li>FORTHDLG.F Improved versioning, Win32For.exe now shows message with an explicit origin.</li>
+Version: 6.03 Build: 0001 Experimental Build Kernel V4.9C at origin 0x00000000</li>  
+   <li>UTILS.F Clears the MALLOC links during FSVAE and TURNKEY to prevent errors in allocation. Clears the
+exception record. </li>
+   <li>NFORGET.F Support trim on PROCs and LIBs. Added POSSIBLY and new version of ANEW.</li>       
+   <li>MENU.F Support multiple windows for a single menu</li>  
+   <li>PRIMUTILS.F Added deferred CRTAB, new chain for NFORGET.F</li>    
+</ul>
+
+
+
+
+
+
+
+<h2><a name=3.9K></a>Notes for version 3.9K </h2>
+
+
+<h4>META.F</h4>  
+
+<p>Real mistake -- had compiled kernel via several versions, and introduced 2 major changes  
+which don't compile from raw -- only from an intermediate -- version.</p>       
+
+<p>1. Added NALIGNED to kernel, but this stops META which uses it. Added</p>
+<pre>
+      [UNDEFINED] NALIGNED [IF]    
+      CODE NALIGNED     ( addr n -- addr2 )                           
+           mov   eax, ebx           \ n                     
+           dec   eax                \ n-1                   
+           neg   ebx                \ -n             
+           pop   ecx                \ addr                       
+           add   eax, ecx           \ addr+n-1           
+           and   ebx, eax           \ addr+n-1 and -n        
+           next  c;
+      [THEN]             
+</pre>
+<p>which can be removed once this becomes the base.</p>
+
+<p>2. In DIALOG.F changed load-dialog to load from subdirectory RES. Again, meta uses     
+old version, so it doesn't get loaded. Bypass - copy metadlg.res and metadlg.h     
+to the &lt;forth&gt; directory. Delete once compiled.</p>  
+
+<h4>DEBUG.F</h4>  
+
+<p>Lost a change here in 3.3D, don't know why, reinstated. Same as last time with SEE.F</p>    
+
+
+
+
+
+
+<h2><a name=3.9J></a>Notes for version 3.9J&nbsp;  </h2>
+
+<p>Objective of this set of changes:</p>  
+
+<p>1. New META build dialog to accomodate future enhancements.<br>  
+2. Corrected some minor bugs in previous beta releases <br> 
+  Version 3.9J is a release candidate.<br>       
+Note: 3.3D existed in two forms, one bust, one not.</p>
+
+
+
+
+<h2>3.3E to 3.9J</h2>
+
+
+<h4>FKERNEL.F</h4>  
+
+_INTERPRET changes:  
+             
+<p>3.3D INTERPRET changes removed, too experimental at this point. These will be added
+back in once some improvements to the handling of options set by meta compile have        
+been completed. If you want the enhancements, add them back in from 3.3D</p>               
+
+<p>BUG: Reinstaled TIB, removed in error from FORTH dictionary, noticed by RBS. Fixed.    
+Added function NALIGNED, like ALIGNED except aligns to any 2^n boundary.</p>
+
+<h4>METADLG.F</h4>    -- NEW FILE! (3.4E) --  
+
+<p>File to support new META dialog. See META for details.</p>       
+
+<h4>META.F</h4>  
+
+<p>New dialog using METADLG.F, all non-operable features are disabled. Allows:</p>           
+<ul>
+   <li>Build EXE file at relocatable loadpoint (default). This will not have the NEXT/EXEC       
+optimisations.</li>    
+   <li>Build EXE at fixed loadpoint. This WILL have the NEXT/EXEC optimisations (see 3.1B
+   changes under ASMWIN.F for details)</li>              
+</ul>
+<p>Other minor changes in support of this feature, including slightly clearer output from
+the build process.</p>         
+
+<h4>SEE.F</h4>  
+
+<p>Lost a change here in 3.3D, don't know why, reinstated.</p>         
+
+<h4>VERSION.F</h4>  
+<pre>
+    390000 value version#    
+    C&quot; 3.9J&quot; CHAR+ @ CONSTANT KVER           
+</pre>
+<p>Updated as above to allow the version printed from the kernel to be built automatically    
+rather than by updating the source. Note the slightly odd construct, can be typed with</p>      
+<pre>
+&amp;KVER SP@ 4 TYPE DROP 3.9J      
+&amp;KVER in the kernel is an alias of KVER in VERSION.F          
+</pre>
+
+<h4>DIALOG.F</h4>  
+
+<p>Modified to read from &lt;forth&gt;\res directory. All .RES, .H files moved here. </p>
+
+
+
+
+
+
+<h2><a name=3.3D></a>Notes for version 3.3D </h2>
+
+<p>Objective of this set of changes:</p>
+<ul> 
+   <li>Restore some of the wrapper! Print stuff now back in. </li> 
+   <li>Modified FORTH.C and TERM.C junked -- using originals for the moment. This has no overall
+effect EXCEPT that the code is now no longer thread safe.  RBS addmods.bat now works OK.
+Use w32Forth_rbs_v6r0512.exe as a base.</li>  
+   <li>Performance enhancements -- new technique gets another 1 to 3% improvement in speed.</li>  
+</ul>
+<p>Version 3.3D is a consolidation release, with a few minor enhancements.</p>
+
+<h4>UTILS.F &amp; FKERNEL.F</h4>  
+
+<p>Bug: term-alloc was being called at the wrong time, and malloc-link (the head       
+of allocated memory) was not being set to zero when building an image, causing
+all sorts of errors.</p>  
+
+<h4>FKERNEL.EXE and KERNEL.BIN</h4>  
+
+<p>3.1B changes removed, now uses original files.  
+ XPRTDLG.F    &lt;=== NEW FILE! (3.1B)  
+Now no longer in EXTEND.F, code uses original print features</p>  
+
+<p>Notes for version 3.1B 04/10/2002 15:50:52 (Read in conjunction with 1.9G, 2.9G)</p>       
+
+<p>Objective of this set of changes:</p>  
+<ul>
+   <li>Remove more of the wrapper. Now only terminal I/O is left to do.</li>  
+   <li>Support building of EXE using PE header - some misc changes, particularly building
+fixed loadpoint images (see below for specifics)</li>  
+   <li>Performance enhancements -- up to 30% improvements on CPU intensive code without
+requiring the optimiser. See How to Use at the bottom.</li>  
+</ul>
+<p>Version 3.1B is the most experimental yet, but appears to be very stable and does not  
+cause any problems with the demo programs and in particular WINED. I'm managing to keep  
+to my program goals of not requiring any changes in developed apps while these enhancements  
+to the underlying Win32Forth system take place. BUT:</p>       
+
+<p>NOTE    *3.1B is a testing release, not a release candidate*</p>  
+
+<p>Specifically, ALL PRINTING FUNCTIONS ARE EFFECTIVELY &quot;NOOPs&quot;. I have yet to
+work out how all the kernel XCALLS work, and have made an attempt to rewrite the printing
+stuff in forth, but it is truly horrible to duplicate.    
+Looking at the MS doc, I think there are several problem areas that need addressed;    
+for instance, there's no ABORTPROC to allow the user to cancel printing. Work will
+continue on adding this to the 3.9 release candidate. Attempting to print won't do you any harm --
+it just won't do anything.</p>
+
+
+
+
+
+
+
+<h2><a name=3.1B></a>Notes for version 3.0A thru 3.1B</h2>
+
+<p>FKERNEL.EXE and KERNEL.BIN (same file, copies of each other, optional this build)</p>  
+<ul>
+   <li>Recompiled to remove redundant XCALLs.</li>  
+   <li>Recompiled to use thread safe libraries, as the new kernel will include thread support.
+This is optional, and old FKERNEL.EXE/KERNEL.BIN will work with this code. Source changes not
+included yet.</li>
+</ul>
+
+  
+
+<p>OPTIMIZE.F had a couple of bugs.</p>  
+<ul>
+   <li>The optimiser was bombing out when the kernel was built with a non-zero origin in META     
+compile. OPT-LAST was pointing to 0 address, OK when origin=0, but pointed at absolute     
+0 when origin&lt;&gt;0. This was causing exception C0000005. Fixed.</li>  
+   <li>The length of the NEXT macro was hardcoded. Changes to NEXT were causing the optimiser     
+to generate invalid code. Fixed.</li>
+</ul>
+
+<p>FKERNEL.F</p>  
+<ul>
+   <li>Took out MACRO NEXT and MACRO EXEC and placed in SRC\FKERNEXT.F, a new file.
+See below in ASMWIN32.F for reasons. Included from META.F, again see below. </li> 
+   <li>Minor changes to tidy up code</li>  
+   <li>Removal of file open dialog XCALLS and print XCALLS. Print stuff still bust.</li>  
+   <li>Took out XCALL jump table and ripped out the code in FORTH.C/TERM.C instead.</li>       
+</ul>
+
+<p>ASMWIN32.F</p>  
+<ul>
+   <li>Took out macro: exec and macro: next and and placed in SRC\FKERNEXT.F, a new file.    
+This new file allows the NEXT and EXEC code to be changed in the one place, rather than     
+have separate files (FKERNEL.F and ASMWIN32.F) possibly build different code.</li>          
+</ul>
+
+<p>FORTHDLG.F</p>
+<ul>
+   <li>Bug: ORIGIN set as decimal, rather than hex, on the SAVE-MEMORY-DIALOG dialog. Fixed.</li>  
+   <li>Bug: NOT FIXED -- when &quot;Don't Save&quot; pressed, saves anyway! NOT FIXED</li>       
+</ul>
+
+<p>META.F</p>  
+<ul>
+   <li>Now loads SRC\FKERNEXT.F before FKERNEL.F. Taken out of FKERNEL.F as the line numbers     
+get all screwed up if there's an FLOAD inside FKERNEL.F, and none of the code in     
+FKERNEXT.F defines any words anyway.</li>  
+   <li>Additions to allow seperate CODE, DATA and DICTIONARY areas in the image we are       
+building. Reasons for this will be clearer when next phase is complete...
+Right now they do nothing and aren't used.</li>  
+   <li>Added the following words that will work in the kernel only:       
+|: |CODE |NCODE     
+These are the same as : CODE and NCODE but they don't build entries in the FORTH vocabulary.
+An attempt to stop &quot;word pollution&quot; from kernel functions.</li>  
+   <li>Bug: META was miscounting the size of the generated image. Fixed.</li>
+</ul>
+
+<p>WINDOW.F</p>  
+<p>Minor change: _win32forth-message changed to use SendMessageTimeout rather than     
+SendMessage, which was locking up when there was a slow or dead window during the     
+broadcast of the message.</p>          
+
+<p>XFILEDLG.F &lt;=== NEW FILE!</p>  
+<p>All of the Open/Save/New file dialog functions here. Replacement for XCALLS.</p>       
+
+<p>XPRTDLG.F    &lt;=== NEW FILE!</p>  
+<p>All of the print dialog functions here. Replacement for XCALLS. SERIOUSLY BUST!
+Won't cause any failures if you try to print, but DOES NOTHING.</p>       
+
+<p>FKERNEXT.F &lt;=== NEW FILE!</p>   
+<p>Code moved out of ASMWIN32.F and FKERNEL.F so that definitions of NEXT and     
+EXEC are next to each other for ease of edit. There are two definitions,
+one for use in ASMWIN32.F, that builds NEXT and EXEC as macro: for use in assembled
+code; and one for META.F that builds NEXT and EXEC as macro definition for use in CODE
+and NCODE sections of FKERNEL.F.</p>  
+
+           
+<h4>Relocatable definitions</h4>     
+
+<pre>
+Relocatable EXEC is                        
+          mov ecx , [eax] [edi]                          
+          add ecx , edi                          
+          jmp ecx            
+
+Relocatable NEXT is                 
+          mov       eax, 0 [esi]                       
+          mov       ecx, 0 [eax] [edi]                       
+          add       esi, # 4               
+          add       ecx, edi                   
+          jmp       ecx          
+</pre>
+<p>Relocation uses register EDI that contains the load address of the image.       
+ORIGIN (in META) and &amp;ORIGIN @ (in other code) will both contain 0 (zero)       
+and NEXT and EXEC are built using EDI. (Note that the NEXT now has a slightly optimised
+EXEC at its tail to prevent register stall).</p>               
+
+<h4>Fixed Loadpoint</h4>     
+
+<pre>
+Fixed EXEC is                         
+          jmp     [eax]                                    
+
+Fixed NEXT is                        
+          mov       eax, 0 [esi]  
+          add       esi, # 4                      
+          jmp       [eax]                       
+</pre>
+<p>Fixed does NOT use EDI, as ORIGIN (or @ORIGIN @) of non-zero means that this has been
+built to load at that, AND ONLY THAT, address. It's much faster (25-30%)       
+but cannot be moved in memory, and must be loaded at a specific address. EDI will
+contain 0, but NOTE -- other code will use EDI, and it is ESSENTIAL that it is         
+not changed elsewhere in the code.</p>       
+
+
+<h4>EXE vs DLL</h4>     
+
+<p>EXE files are loaded at specific addresses, and do not require relocation sections.
+Under all opsys except NT, this address is 0x00400000 (NT 0x00010000). Currently, because     
+the C wrapper occupies that address, to build a FIXED loadpoint image requires that it     
+is built elsewhere (for instance 0x00800000).</p>             
+
+<p>DLLs require relocatability. Win32Forth doesn't build relocation sections for addresses     
+so the relocatable code MUST be used, as the loadpoint can be anywhere.</p>             
+
+<h4>Advantages of this technique:</h4>     
+<ul>
+   <li>Old code works fine with an origin of 0 (i.e. relocatable at run-time, use EDI).          
+EXE and DLL both supported, no change at all.</li>     
+   <li>New code with FIXED loadpoint (origin &lt;&gt;0) can build EXE files that run much        
+faster, especially compute intensive, without requring optimisation. Can't build        
+DLLs that do this however.</li>
+   <li>Code is also shorter -- so kernel is smaller.</li>
+</ul>         
+<p>No attempt has been made to optimise other code. For instance, @ is</p>
+<pre>
+    CODE @    ( a1 -- n1 )   get the cell n1 from address a1            
+         mov       ebx, 0 [ebx] [edi]          
+         next c;          
+</pre>
+<p>There's not much to be gained by changing to &lt;mov ebx, 0 [ebx]&gt;.</p>             
+
+
+<h4>How to use</h4>     
+
+<p>1. Recompile the kernel;</p>
+<pre>
+       win32for fload src\meta.f SETSIZE BYE  
+</pre>      
+<p>When prompted, change the ORIGIN to something like 0x00800000. During compile,          
+you should see this:</p>      
+<pre>             
+       Loading Meta Compiler...              
+       -- BETA META.F V3.1A --            
+       Metacompiler Loaded              
+       Loading FKERNEXT.F V3.1A Beta kernel extensions...
+           
+       --- Compiling FIXED LOADPOINT at 0x00800000
+       Compiling the KERNEL...                    
+       Unresolved references:                            
+       *** No words Unresolved ***      
+       Target origin:                 800000h          
+       Header origin:                 8C0000h         
+       Header size:                   18384          
+       54285 bytes written to file FKERNEL.IMG  
+       Delaying: 5 seconds, press a key to HOLD   
+</pre>
+<p>Note the messages and origin addresses. </p>               
+
+<p>2. Recompile WIN32FOr.EXE;</p>
+<pre>           
+  fkernel fload src\extend.f          
+</pre>
+If you look at the top of the screen, you will see:      
+<pre>
+       Loading 486ASM/Win32Forth Interface File...          
+       -- BETA ASMWIN32.F V3.1A --        
+       Loading FKERNEXT.F V3.1A Beta kernel extensions...   
+       --- Compiling FIXED LOADPOINT at 0x00800000
+</pre>
+
+<p>3. Recompile any other programs you might want, such as WINED.</p>
+
+
+
+
+
+
+<h2><a name=2.9G></a>Notes for version 2.9G </h2>
+
+<h4>ANS File Words</h4>
+
+<p>Added the following ANS file words to the kernel: open-file create-file close-file
+read-file write-file delete-file rename-file file-position reposition-file file-append
+file-size flush-file read-line write-line resize-file file-status plus supporting words.</p>
+
+<p>The following XCALL based words are now OBSOLETE and will cause a compile time error if
+used: FOPEN-FILE FMAKE-FILE FCLOSE-FILE FREAD-LINE FREAD-FILE FSEEK-FILE FREPOSITION-FILE
+FSAVE-FILE FFILE-POSITION The corresponding n XCALL function will cause a runtime error:  
+Error: XCALL for unallocated function</p>
+
+<p>ANSFILE reduced to non-key words, some changes to REGISTRY.F, UTILS.F and DC.F to
+remove obsolete words.</p>
+
+<p>Other future changes: file-status can cause errors, and needs to be rewritten.</p>
+
+<h4>Memory words</h4>
+
+<p>Added the following words to the kernel: allocate malloc free release realloc resize
+init-malloc term-malloc plus supporting words.</p>
+
+<p>Changes to the memory structure have been made to permit future enhancements for stand-alone
+PE header. Does not affect application code that sticks to the words above.</p>
+
+<p>All functions now use heap storage. All LocalAlloc etc calls which are a hangover from
+Win32S and 16 bit windows removed.</p>
+
+<p>PRIMUTIL.F changes to .mallocs word to produce more explanatory output. </p>
+<pre> 
+      Abs-Addr    Rel-Addr      Bytes       HeapAddr    Type  
+      --------    --------      --------    --------    ----     
+      0013B638    FF86B644       8,192      00130000   
+      001396A0    FF8696AC       8,060      00130000        
+      00135060    FF86506C         260      00130000       
+      00136D70    FF866D7C      10,000      00130000    
+      --------    --------      --------    --------    ----       
+      Total allocated         26,512    
+</pre>
+<p>Type field (1 cell) is for later use, and currently only the default process heap is in use.</p>  
+
+
+<h4>Cosmetic changes</h4>
+
+<p>Some cosmetic changes to FKERNEL.F so I can find my way around a bit more easily:    
+Moved up the 486ASM.F in EXTEND.F so that the assembler is available much earlier. Some
+code sections will be moved out of the kernel into a separate file to ease size of FKERNEL.F.
+One or two other cosmetic changes that I can't remember now. Not important.</p>    
+
+
+<h4>XCALLs removed</h4>
+
+<p>The following xcalls are now OBSOLETE and will cause run-time error:</p>         
+<pre>
+      XCALL     Old function       New function      
+      -----     ------------       ------------     
+         10     malloc_x           malloc         
+         11     free_x             free       
+         12     open_file_x        open-file     
+         13     close_file_x       close-file   
+         14     read_line_x        read-line    
+         15     save_x             fsave-file   
+        +16     load_library_x     *winlibrary   
+        +17     freelibrary_x      *free-library   
+        +18     get_proc_x         *proc, *call   
+         24     getstartup_x       ( none )    
+         33     reposition_x       reposition-file  
+         47     realloc_x          realloc   
+         63     seek_file_x        file-position
+         64     make_file_x        create-file   
+         65     read_file_x        read-file   
+         68     uppercase_x        upper, uppercase  
+         69     lowercase_x        lower, lowercase  
+         70     file_position_x    file-position
+</pre>
+<p>Those marked with an *asterisk are not direct replacements, but provide    
+similar functionality. Functions 16, 17, 18 should NOT be used, as they  
+will be replaced shortly. In general, XCALLs should be avoided in app code.</p>    
+
+
+<p>Document: w32f-relnotes.htm 2004/12/21 alex_mcdonald</p>
+
+</body>
+
+</html>

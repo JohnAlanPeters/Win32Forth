@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+window.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Window -- Class for window objects.
+</h1><h2>Glossary
+</h2><p><b><code>:CLASS Window &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SUPER Generic-Window
+</code></b><br>Base class for window objects.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><h3>Window sizing
+</h3><p><b><code>:M GetSize: &nbsp;&nbsp;&nbsp;&nbsp;( --width height )
+</code></b><br>Get the size (width and height) of the window.
+</p><p><b><code>:M Width: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- width )
+</code></b><br>Get the width of the window.
+</p><p><b><code>:M Height: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- height )
+</code></b><br>Get the height of the window.
+</p><p><b><code>:M SetSize: &nbsp;&nbsp;&nbsp;&nbsp;( width height -- )
+</code></b><br>Set the size of the window. <br />
+Note: The window itself will not be resized.
+</p><p><b><code>:M On_Size: &nbsp;&nbsp;&nbsp;&nbsp;( hndl msg wParam -- )
+</code></b><br>User windows should override the On_Size: method. When this method is
+called, the variables Width and Height will have already been set. <br />
+Default does nothing
+</p><p><b><code>:M MinSize: &nbsp;&nbsp;&nbsp;&nbsp;( -- width height )
+</code></b><br>To change the minimum window size, override the MinSize: method. Default is 10 by 10.
+</p><p><b><code>:M MaxSize: &nbsp;&nbsp;&nbsp;&nbsp;( -- width height )
+</code></b><br>To change the maximum window size, override the MaxSize: method. Default is 8192 by 8192.
+</p><p><b><code>:M StartSize: &nbsp;&nbsp;( -- width height )
+</code></b><br>To change the size of the window when it's created, override the StartSize: method
+or call the SetSize: method before you create the window.
+</p><p><b><code>:M SetOrigin: &nbsp;&nbsp;( x y -- )
+</code></b><br>To set the upper left corner of the window when it's created
+call the SetOrigin: method before you create the window.
+</p><p><b><code>:M StartPos: &nbsp;&nbsp;&nbsp;( -- left top )
+</code></b><br>User windows should override the StartPos: method to set
+the upper left corner of the window when it's created.
+</p><h3>Window creation
+</h3><p><b><code>:M SetClassLong: ( long offset -- )
+</code></b><br>The SetClassLong method replaces the specified 32-bit (long) value at the
+specified offset into the extra class memory or the WNDCLASS structure for
+the class to which the window belongs.
+</p><p><b><code>:M GetClassLong: ( offset -- long )
+</code></b><br>The GetClassLong function retrieves the specified 32-bit (long) value from
+the WNDCLASS structure associated with the window.
+</p><p><b><code>:M WndClassStyle: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- style )
+</code></b><br>User windows should override the WndClassStyle: method to
+set the style member of the the WNDCLASS structure associated with the window.
+Default style is CS_DBLCLKS, CS_HREDRAW and CS_VREDRAW.
+</p><p>To prevent flicker on sizing of the window your method should return CS_DBLCLKS
+only.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Create the window.
+</p><p>Before the window is created a default window class name for this window will
+be set. Every window will become it's own class name and it's own window class.
+Note: If the window class name is set with SetClassName: before the Start: method
+is called no default class name will be set.
+</p><p>On_Init: and On_Done were moved to Generic-Window.
+</p><pre>Your On_Init: and On_Done: methods should look like this:
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:M On_Init: &nbsp;( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Init: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... other initialization ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:M On_Done: &nbsp;( -- )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;... other cleanup ...
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Done: super
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;M
+
+
+The main application window will need the following methods, which cause the
+program to terminate when the user closes the main application window.
+Don't uncomment these out here, copy them into your application window
+Object or Class, and then uncomment them out.
+
+:M WM_CLOSE &nbsp;( h m w l -- res )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bye
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 ;M
+
+:M On_Done: &nbsp;( h m w l -- res )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 call PostQuitMessage drop &nbsp;&nbsp;&nbsp;&nbsp;\ terminate application
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Done: super &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ cleanup the super class
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 ;M
+
+For multi-tasking applications the main window of each task should define
+the following method, to quit the message loop and exit the task.
+
+:M On_Done: &nbsp;( h m w l -- res )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 call PostQuitMessage drop &nbsp;&nbsp;&nbsp;&nbsp;\ terminate application
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On_Done: super &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ cleanup the super class
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 ;M
+</pre><p><b><code>:M SetClassName: ( addr len -- )
+</code></b><br>Set the window class name.
+</p><p><b><code>:M GetClassName: ( -- addr len )
+</code></b><br>Get the window class name.
+</p><p><b><code>:M SetParentWindow: ( hWndParent -- )
+</code></b><br>Set handle of the owner window (0 if no parent).
+</p><p><b><code>:M GetParentWindow: ( -- hWndParent )
+</code></b><br>Get the handle of the owner window (0 if no parent).
+</p><p><b><code>:M SetParent: &nbsp;&nbsp;( hWndParent -- )
+</code></b><br>Set handle of the owner window (0 if no parent).
+</p><p>NOTE: This method is deprecated. Use SetParentWindow: instead.
+</p><p><b><code>:M ParentWindow: ( -- hWndParent )
+</code></b><br>Get the handle of the owner window (0 if no parent).
+</p><p>NOTE: This method is deprecated. Use GetParentWindow: instead.
+</p><p><b><code>:M DefaultCursor: ( -- cursor-id )
+</code></b><br>User windows should override the DefaultCursor: method to
+set the default cursor for window. Default is IDC_ARROW.
+</p><p><b><code>:M DefaultIcon: ( -- hIcon )
+</code></b><br>User windows should override the WindowStyle: method to
+set the default icon handle for window. Default is the W32F icon.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>User windows should override the WindowStyle: method to
+set the window style. Default is WS_OVERLAPPEDWINDOW.
+</p><p><b><code>:M ExWindowStyle: ( -- extended_style )
+</code></b><br>User windows should override the ExWindowStyle: method to
+set the extended window style. Default is NULL.
+</p><p><b><code>:M WindowTitle: ( -- Zstring )
+</code></b><br>User windows should override the WindowTitle: method to
+set the window caption. Default is &quot;Window&quot;.
+</p><h3>Painting
+</h3><p><b><code>WinDC dc
+</code></b><br>The window's device context. <br />
+It will be valid only when handling the WM_PAINT message
+(see On_Paint: method)
+</p><p><b><code>Record: &amp;ps
+</code></b><br>The PAINTSTRUCT for Begin- and EndPaint <br />
+It will be valid only when handling the WM_PAINT message
+(see On_Paint: method)
+</p><p><b><code>:M On_EraseBackground: ( hwnd msg wparam lparam -- res )
+</code></b><br>User windows should override the On_EraseBackground: method to handle
+WM_ERASEBKGND messages. <br />
+Default does nothing.
+</p><p><b><code>:M On_Paint: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>User windows should override the On_Paint: method to handle WM_PAINT messages. <br />
+Before this method is called BeginPaint will be called so that the PAINTSTRUCT
+(&amp;PS ivar) and the window device context (DC ivar) are initialized. <br />
+Check ps_fErase in your method to see if the background of the window should
+be drawn and use ps_left, ps_top, ps_right and ps_bottom to see which part of
+the window should be painted. <br />
+Default does nothing.
+</p><h3>Menu support
+</h3><p><b><code>:M WindowHasMenu: ( -- flag )
+</code></b><br>Flag is true if the window has a menu. Override this method if your window has a
+menu. Default is false.
+</p><h3>Cursor (caret) support
+</h3><p><b><code>:M MoveCursor: &nbsp;( gx gy -- )
+</code></b><br>Move the caret.
+</p><p><b><code>:M MakeCursor: &nbsp;( gx gy width height -- )
+</code></b><br>Create the caret.
+</p><p><b><code>:M DestroyCursor: ( -- )
+</code></b><br>Destroy the caret.
+</p><p><b><code>:M ShowCursor: &nbsp;( -- )
+</code></b><br>Show the caret.
+</p><p><b><code>:M HideCursor: &nbsp;( -- )
+</code></b><br>Hide the caret.
+</p><p><b><code>:M On_SetFocus: ( h m w l -- )
+</code></b><br>Override the method to handle the WM_SETFOCUS message. <br />
+Example: When cursor is used, you will need something like the following
+to control the position of the cursor in the window:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor-col char-width &nbsp;*
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cursor-row char-height *
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;char-width char-height MakeCursor: self
+</pre><p><b><code>:M On_KillFocus: ( h m w l -- )
+</code></b><br>Override the method to handle the WM_KILLFOCUS message. <br />
+Example: Use only when you are displaying a cursor in the window:
+</p><pre>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DestroyCursor: self
+</pre><h3>Keyboard and mouse handling
+</h3><p><b><code>:M PushKey: &nbsp;&nbsp;&nbsp;&nbsp;( c1 -- )
+</code></b><br>override to process keys yourself.
+</p><h3>Message handling
+</h3><p><b><code>:M DefWindowProc: ( h m w l -- res )
+</code></b><br>Call the DefaultWindowProc for the window.
+</p><h3>everything else...
+</h3><p><b><code>:M CenterWindow: ( -- x y )
+</code></b><br>Calculate the position of the window to center it in the middle of it's parent window.
+When the windows has no parent it will be placed in the middle of the primary display
+monitor.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f1 -- )
+</code></b><br>Enable or disable the window.
+</p><p><b><code>:M SetTitle: &nbsp;&nbsp;&nbsp;{ adr len \ temp$ -- }
+</code></b><br>Set the window title.
+</p><p><b><code>;CLASS
+</code></b><br>End of window class.
+</p><h2>Helper words outside the class
+</h2><p><b><code>: find-window &nbsp;&nbsp;( z&quot;a1 -- hWnd ) \ w32f
+</code></b><br>Find a window.
+</p><p><b><code>: send-window &nbsp;&nbsp;( lParam wParam Message_ID hWnd -- ) \ w32f
+</code></b><br>Send a message to a window.
+</p><p><b><code>: LoadIconFile &nbsp;( adr len -- hIcon ) \ w32f
+</code></b><br>Load an icon from an icon file.
+</p></body></html>

@@ -1,0 +1,22 @@
+ProjectName= Solipon
+BuildFile= apps\Solipon2\SOLIPION.F
+SearchPath= 
+Solipon,0
+Modules,10
+apps\Solipon2\SOLIPION.F
+SRC\CONSOLE\NoConsole.f
+SRC\LIB\Resources.f
+SRC\LIB\BitmapDC.f
+apps\Solipon2\menu.f
+apps\Solipon2\sound.f
+apps\Solipon2\About.f
+apps\Solipon2\FileIO.f
+apps\Solipon2\solidial.F
+apps\Solipon2\Print.f
+DLLs,0
+Forms,0
+Auxiliary Files,0
+Resources,2
+apps\Solipon2\SOLIPION.BMP
+src\res\Win32For.ico
+Docs,0

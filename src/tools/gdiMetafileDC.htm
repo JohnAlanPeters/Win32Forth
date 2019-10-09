@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>gdiMetafileDC -- Metafile device context class
+</h1><hr /><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><h2>Glossary
+</h2><pre><b><a name="0">:class gdiMetafileDC &lt;super gdiDC
+</a></b></pre><p>Metafile device context class
+</p><pre><b><a name="1">:M SetRect: &nbsp;&nbsp;&nbsp;&nbsp;( left top right bottom -- )
+</a></b></pre><p>Specify the dimensions (in .01-millimeter units) of the picture to be
+stored in the enhanced metafile.
+</p><pre><b><a name="2">:M CalcMetaRect: { left top right bottom hDC \ iWidthMM iHeightMM iWidthPels iHeightPels -- }
+</a></b></pre><p>Calc the dimensions (in .01-millimeter units) of the picture to be
+stored in the enhanced metafile.
+</p><pre><b><a name="3">:M StartRecording: ( hRefDC -- f )
+</a></b></pre><p>Start recording of a Metafile
+</p><pre><b><a name="4">:M StopRecording: &nbsp;( -- f )
+</a></b></pre><p>Stop recording of a Metafile
+</p><pre><b><a name="5">:M Load: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f )
+</a></b></pre><p>Load a metafile from a file
+</p><pre><b><a name="6">:M Save: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f )
+</a></b></pre><p>Save the metafile in a file
+</p><pre><b><a name="7">:M Destroy: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Destroy the metafile.
+</p><pre><b><a name="8">:M Draw: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( left top right bottom hDestDC -- )
+</a></b></pre><p>Play the metafile in a rectangle
+</p><pre><b><a name="9">:M GetMetafile: ( -- MetafileObject )
+</a></b></pre><p>Return the address of the metafile object used by this class
+</p><pre><b><a name="10">;class
+</a></b></pre><p>End of gdiMetafileDC class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

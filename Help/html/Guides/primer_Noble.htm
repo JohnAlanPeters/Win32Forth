@@ -1,0 +1,1946 @@
+<HTML>
+<BODY>
+
+                             <CENTER><H2>A Beginner's Guide to Forth</H2></CENTER>
+
+<!--&#169;2002, 2003 Julian V. Noble. <BR>
+Permission is granted by the author to 
+use this Primer for any non-commercial application
+provided this copyright notice is preserved. -->
+
+                                          <CENTER>by</CENTER> <BR>                                 
+
+                                      <CENTER>J.V. Noble </CENTER> <BR><BR>                            
+
+      <H3><A NAME="contents">Contents</A> </H3>
+
+<OL>
+       <LI><A HREF="#intro">Preliminaries</A> <BR><BR>
+
+      <LI><A HREF="#start">Getting started</A> <BR><BR>
+
+       <LI><A HREF="#struct">The structure of Forth</A><BR> <BR>
+
+       <LI><A HREF="#dict">Extending the dictionary</A> <BR><BR>
+
+       <LI><A HREF="#stacks">Stacks and reverse Polish notation (RPN)</A>
+             <OL> 
+                 <LI type=a><A HREF="#param">Manipulating the parameter stack</A> 
+                 <LI><A HREF="#return">The return stack and its uses</A>
+                 <LI><A HREF="#locals">Local variables and VALUEs</A>
+             </OL> <BR>
+
+       <LI><A HREF="#memory">Using memory</A> <BR><BR>
+
+       <LI><A HREF="#branch">Comparing and branching</A> <BR><BR>
+
+       <LI><A HREF="#comment">Documenting and commenting Forth code</A>
+             <OL type=a>
+                 <LI><A HREF="#parens">Parenthesized remarks</A>
+                 <LI><A HREF="#stk_com">Stack comments</A>
+                 <LI><A HREF="#backslash">Drop line (\)</A>
+                 <LI><A HREF="#comblok">Comment blocks</A> 
+                 <LI><A HREF="#selfdoc">Self-documenting code</A>
+             </OL><BR>
+
+       <LI><A HREF="#arith">Integer arithmetic operations</A> <BR><BR>
+
+       <LI><A HREF="#loops">Looping and structured programming</A>
+             <OL type=a>
+                 <LI><A HREF="#indef">Indefinite loops </A>
+                 <LI><A HREF="#definite">Definite loops</A>
+                 <LI><A HREF="#struc_prog">Structured programming</A>
+                 <LI><A HREF="#topdown">&#147;Top-down&#148; design</A>
+              </OL><BR>
+
+      <LI><A HREF="#create">CREATE ... DOES> (the pearl of Forth)</A> 
+            <OL type=a>
+                <LI><A HREF="#def_wds">Defining &#147;defining&#148; words </A>
+                <LI><A HREF="#runtime">Run-time <I>vs.</I> compile-time actions</A> 
+                <LI><A HREF="#dimdata">Dimensioned data (intrinsic units) </A>
+                <LI><A HREF="#advanced">Advanced uses of the compiler</A>
+            </OL><BR>
+
+       <LI><A HREF="#fp">Floating point arithmetic</A><BR><BR>
+
+       <LI><A HREF="#bin_root">Non-trivial programming example</A><BR><BR>
+
+      <LI><A HREF="#strings">Some remarks about strings</A>
+              <OL>
+                    <LI><A HREF="#alph_num_str">Alphanumeric strings</A>
+                    <LI><A HREF="#num_out">Pictured Numeric Output</A>
+              </OL><BR>
+
+       <LI><A HREF="#refs">Some useful references</A>
+</OL>
+
+<PRE>
+
+       1. <A NAME="intro"><B>Preliminaries</B></A>
+
+       Forth is an unusual computer language that has probably been applied 
+       to more varied projects than any other. It is the obvious choice when 
+       the project is exceptionally demanding in terms of completion sched- 
+       ule, speed of execution, compactness of code, or any combination of 
+       the above. 
+
+       It has also been called &#147;...one of the best-kept secrets in the com- 
+       puting world.&#148; This is no exaggeration: large corporations have pur-
+       chased professional Forth development systems from vendors such as 
+       Laboratory Microsystems, Inc., Forth, Inc. or MicroProcessor Engineer- 
+       ing, Ltd. and sworn them to secrecy. 
+
+       Some speculate (unkindly) that corporate giants prefer to hide their 
+       shame at using Forth; but I believe they are actually concealing a 
+       secret weapon from their rivals. Whenever Forth has competed directly 
+       with a more conventional language like C it has won hands down, pro- 
+       ducing smaller, faster, more reliable code in far less time. I have 
+       searched for examples with the opposite outcome but have been unable 
+       to find a single instance. 
+
+
+<P ALIGN=RIGHT>
+Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#start"><img src=right.gif  width=26 height=26></A></P>
+
+       
+       2. <A NAME="start"><B>Getting started</B></A> 
+
+       We will use Win32Forth for these illustrations. Download the file
+
+           <A HREF="http://Galileo.phys.Virginia.EDU/classes/551.jvn.fall01/w32for42.exe">w32for42.exe</A>
+
+       and double-click on it to install on any Windows 95, -98, -NT, -ME 
+       or -XP &#150;equipped machine.
+
+
+       The compressed files will then decompress themselves. They should also
+       install a program group on your desktop.
+
+       Now start Win32Forth by opening the program group and clicking on the
+       appropriate icon, probably something like this: <IMG SRC="win32for.gif"> 
+
+
+       It should respond by opening a window and writing something like
+
+           32bit Forth for Windows 95, and NT
+           Compiled: July 23rd, 1997, 5:11pm
+           Version: 3.5  Build: 0008  Release Build
+           Platform: Windows 95 Version: 4.0  Build: 16384
+           491k bytes free
+           2,719 Words in Application dictionary
+           1,466 Words in System dictionary
+           4,185 Words total in dictionaries
+           8,293 Windows Constants available
+
+           Loading Win32For.CFG
+
+           *** DON'T PANIC, Press: F1 NOW! ***
+
+
+       You can use UPPER or lower-case to type commands and data. Win32Forth
+       is case-insensitive.
+
+       You can also start the <FONT color=red>WinView</FONT> editor by clicking on <I>its</I> icon in the program
+       group. The features of the editor are fairly standard and self-explanatory. Make
+       sure to set the preferences (Ctl-Shift-P or use the Edit drop-down menu) to
+       your own liking. Among other things, WinView is written in Forth (the complete
+       source is included) and is integrated with Win32Forth so that compiling errors
+       pop up in the editor.
+
+      
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#struct"><img src=right.gif  width=26 height=26></A>
+</P>
+
+
+
+
+       3. <A NAME="struct"><B>The structure of Forth</B></A>
+
+       In the Win32Forth window, now type 
+
+          <FONT color=red> BYE</FONT>  &lt;cr&gt;
+
+       The Win32Forth window immediately closes.
+
+
+       What just happened? Forth is an <FONT color=red>interactive</FONT> programming language con- 
+       sisting entirely of subroutines, called <I>words</I> in Forth jargon.
+
+       <I>Interactive</I> means you type things in at the keyboard and the machine
+       responds. We will see some details of how it does this below. 
+
+       A word is executed (interactively) by naming it. We have just seen 
+       this happen: <B>BYE</B> is a Forth subroutine meaning &#147;exit to the operating 
+       system&#148;. So when we typed <B>BYE</B> &lt;cr&gt; <B>BYE</B> was executed, and the system re- 
+       turned control to Windows.
+
+
+       Click on the Win32Forth icon again to re-start Forth.
+       Now we will try something a little more complicated. Enter
+
+           <font color=red>2 17  +  .</font>  &lt;cr&gt; 19  ok 
+
+       What happened? Forth is <FONT color=red>interpretive</FONT>. A small program called the &#147;outer 
+       interpreter&#148; continually loops, waiting for input from the keyboard or from 
+       a mass storage device. The input is a sequence of text strings (words or numbers) 
+       separated from each other by the standard Forth delimiter: one or more ASCII blank 
+       (32decimal = 20hex) characters.
+
+       The text strings can be interpreted in only three ways: words (subroutine names),
+       numbers, or &#147;not defined&#148;.
+
+
+       The outer interpreter tries first to look for an incoming word in the <FONT color=red>dictionary</FONT>
+       (a list of already-defined subroutine names). If it finds that word, the inter-
+       preter executes the corresponding code.
+
+       If no dictionary entry exists, the interpreter tries to read the input as a number.
+       If the string satisfies the rules defining a number, it is converted to a number 
+       in the machine's internal representation, and stored in a special memory location,
+       called &#147;the top of the stack&#148; (<B><FONT color=red>TOS</FONT></B>).
+
+
+       In the above example, Forth interpreted 2 and 17 as numbers, and 
+       pushed them both onto the stack. 
+
+       "+" is a pre-defined word as is ".", so they were looked up and exe- 
+       cuted. 
+
+       "+" added 2 to 17 and left 19 on the stack. 
+
+       The word "." (called "dot") removed 19 from the stack and displayed 
+       it on the standard output device (in this case, CRT).
+
+
+       The diagram below is a <I>flow chart</I> representing the actions performed
+       by the Forth outer interpreter during interpretation.<BR>
+<IMG SRC="frth_int.gif" hspace=100>
+
+
+
+       We might also have said
+
+           <FONT color=red>HEX    0A  14  * .</FONT> &lt;cr&gt;  C8 ok
+
+       (Do you understand this? Hint: <B>DECIMAL</B> means &#147;switch to decimal arith-
+       metic&#148;, whereas <B>HEX</B> stands for &#147;switch to hexadecimal arithmetic&#148;.)
+
+
+       If the incoming text can neither be located in the dictionary nor in- 
+       terpreted as a number, Forth issues an error message. Try it: type <B>X</B> &lt;cr&gt;
+       and see 
+
+           <FONT color=red>X</FONT>
+           Error: X is undefined
+
+       or type <B>THING</B> &lt;cr&gt; and see 
+
+           <FONT color=red>THING</FONT>
+           Error: THING is undefined
+
+
+       Finally, here is the obligatory "Hello, World!" program. Forth lets you
+       output text using the word <B><FONT color=red>."</FONT></B> as follows (we will explain in <A HREF="#dict">&#167;4</A> below 
+       what <B><FONT color=red>:</FONT></B> and <B><FONT color=red>;</FONT></B> mean):
+
+           <FONT color=red>: hi     ." Hello, World!"  ;</FONT>  ok
+
+       Now type in <B>hi</B> and see what happens:
+
+           <FONT color=red>hi</FONT> Hello, World! ok
+
+       This can be elaborated with words that tab, emit carriage returns,
+       display in colors, <I>etc.</I> but that would take us too far afield.
+
+       (The word <FONT color=red><B>."</B></FONT> means &#147;Display the string, following the obligatory blank space
+       and terminated by the close-quote <FONT color=red>"</FONT> on the standard output device.&#148;)
+
+
+       Forth belongs to the class of <U>T</U>hreaded <U>I</U>nterpretive <U>L</U>anguages. This
+       means it can interpret commands (subroutines or programs) typed in
+       at the console, as well as create (compile) new subroutines and pro-
+       grams. The compiler in a traditional language has the structure shown
+       below:
+<IMG SRC="compiler.gif" hspace=50>
+       To compile and test a program in a traditional language such 
+       as Fortran, C or Pascal, one prepares an input (source) file, submits it
+       to a black box that someone else created (the compiler) and then
+       runs the resulting executable file (which is generally in machine 
+       language). This process can be so tedious that most program 
+       development in traditional languages must be supported by
+       an elaborate set of programs called the &#147;environment&#148;,
+       consisting of integrated editors, debuggers, version control
+       catalogues and the like.
+
+       The outer interpreter/compiler of a Forth system looks like this: 
+<IMG SRC="frth_int.gif" hspace=100>
+
+       Forth has little in common with the traditional compilation method.
+       Although the Forth interpreter/compiler diagrammed above looks
+       complicated, it is simplicity itself compared with the contents of
+       the <IMG SRC="blob.gif" ALIGN=middle> representing a traditional black-box compiler. 
+<!--<IMG SRC="compiler.gif" hspace=50>-->
+
+       A continuous loop waits for input&#151;from the keyboard, a disk file or
+       whatever&#151; and acts on it according to its nature. Input consists
+       of a sequence of words and numbers. If a name is recognized it is
+       executed; if it is not in the <FONT color=red>dictionary</FONT> (where else would you keep
+       a list of words?) Forth tries to convert it to a number and push it
+       on the stack. If this is impossible, Forth aborts execution, issues an
+       error message and waits for more input.
+
+       As we shall see below, what makes Forth a compiler as well as an
+       interpreter is the set of words (Forth subroutines) that, when they are
+       typed in and executed, create new Forth subroutines.
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#dict"><img src=right.gif  width=26 height=26></A>
+</P>
+
+
+
+       4. <A NAME="dict"><B>Extending the dictionary</B></A>
+
+       The compiler is one of Forth's most endearing features. Unlike
+       most other high-level languages, the Forth compiler is part of the
+       language. (LISP and its dialects also make components of the com-
+       pilation mechanism available to the programmer.) That is, its com-
+       ponents are Forth words available to the programmer, that can be
+       used to solve his problems.
+
+       In this section we discuss how the compiler extends the
+       dictionary. As noted above, normally a Forth system awaits
+       input, and interprets (and executes it). We say the system is
+       normally in <B><FONT color=violet>interpret</FONT></B> mode.
+
+       Forth uses special words to create new dictionary entries, <I>i.e.</I>,
+       new words. The most important are "<FONT color=red><B>:</B></FONT>" (&#147;start a new definition&#148;)
+       and "<B><FONT color=red>;</FONT></B>" (&#147;terminate the definition&#148;).
+
+       Let's try this out: enter
+
+          <FONT color=red> : *+    *  +  ;</FONT>  &lt;cr&gt;  ok
+
+       What happened? The word "<B><FONT color=red>:</FONT></B>" was executed because it was already
+       in the dictionary. The action of "<B><FONT color=red>:</FONT></B>" is
+
+         > Create a new dictionary entry named <B><FONT color=red>*+</FONT></B> and switch from
+           <B><FONT color=violet>interpret</FONT></B> to <B><FONT color=brown>compile</FONT></B> mode.
+
+         > In <B><FONT color=brown>compile</FONT></B> mode, the interpreter looks up words and
+           &#151;rather than executing them&#151; installs pointers to
+           their code. (If the text is a number, instead of
+           pushing it on the stack, Forth builds the number
+           into the dictionary space allotted for the new word,
+           following special code that puts the stored number
+           on the stack whenever that word is executed.)
+
+         > The action of "<B><FONT color=red>*+</FONT></B>" is thus to execute sequentially
+           the previously-defined words "<B><FONT color=red>*</FONT></B>" and "<B><FONT color=red>+</FONT></B>".
+
+         > The word "<B><FONT color=red>;</FONT></B>" is special: when it was defined a bit
+           was turned on in its dictionary entry to mark it as
+           <B>IMMEDIATE</B>. Thus, rather than writing down the address
+           of "<B><FONT color=red>;</FONT></B>", the compiler executes "<B><FONT color=red>;</FONT></B>" immediately.
+           (That is, an <B>IMMEDIATE</B> word is <I>always</I> executed, even 
+           if the system is in <B><FONT color=brown>compile</FONT></B> mode.) 
+
+           What "<B><FONT color=red>;</FONT></B>" does is twofold: first, it installs the code
+           that returns control to the next outer level of the
+           interpreter; and second, it switches back from <B><FONT color=brown>compile</FONT></B>
+           mode to <B><FONT color=violet>interpret</FONT></B> mode.
+
+       Now try out <B><FONT color=red>*+</FONT></B> :
+
+           <FONT color=red>DECIMAL   5 6 7 *+ .</FONT>  &lt;cr&gt;  47  ok
+
+       This example illustrated two principles of Forth: adding a new word to
+       the dictionary, and trying it out as soon as it was defined.
+
+
+       The diagram below is a flow chart representing the actions performed
+       by the Forth inner interpreter during compilation.       
+<IMG SRC="inner.gif" hspace=100>
+
+
+       Any word you have added to the dictionary can be <I>decompiled</I> using
+       the Forth word <B><FONT color=red>SEE</FONT></B>. Say
+
+              <FONT color=red>SEE *+</FONT>  &lt;cr&gt;
+
+       and get
+
+              SEE *+
+              : *+    * + ;  ok
+
+       This can be useful when trying to understand how something works.
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#stacks"><img src=right.gif  width=26 height=26></A>
+</P>
+
+
+
+       5. <A NAME="stacks"><B>Stacks and reverse Polish notation (RPN)</B></A>
+
+       We now discuss the stack and the &#147;reverse Polish&#148; or &#147;postfix&#148; arith-
+       metic based on it. (Anyone who has used a Hewlett-Packard calculator
+       should be familiar with the concept.)
+
+       Virtually all modern CPU's are designed around stacks. Forth effi-
+       ciently uses its CPU by reflecting this underlying stack architecture
+       in its syntax.
+
+
+       But what <I>is</I> a stack?  As the name implies, a stack is the machine ana-
+       log of a pile of cards with numbers written on them. Numbers are
+       always added to the top of the pile, and removed from the top of the
+       pile. The Forth input line 
+
+           <FONT color=red>2 5 73 -16</FONT> &lt;cr&gt; ok 
+
+       leaves the stack in the state 
+
+             cell #   contents 
+
+
+               0       -16        (TOS) 
+               1        73        (NOS) 
+               2         5 
+               3         2 
+
+
+       where TOS stands for &#147;top-of-stack&#148;, NOS for &#147;next-on-stack&#148;, etc. 
+
+
+       We usually employ zero-based relative numbering in Forth data struct- 
+       ures (such as stacks, arrays, tables, etc.) so TOS is given relative 
+       #0, NOS #1, etc. 
+
+       Suppose we followed the above input line with the line 
+
+           <B><FONT size=+1 color=red>+ - * .</FONT></B> &lt;cr&gt; <FONT color=blue>xxx</FONT> ok 
+
+       what would <FONT color=blue>xxx</FONT> be? The operations would produce the successive stacks 
+
+            cell#  initial     <B><FONT size =+1 color=red>+      -       *      .</FONT></B> 
+
+              0      -16      57      -52       -104 
+              1       73       5        2
+              2        5       2 
+              3        2                                empty 
+                                                        stack 
+
+       The operation "<B><FONT color=red>.</FONT></B>" (TOS->display) displays -104 to the screen, leaving the 
+       stack empty. That is, <FONT color=blue>xxx</FONT> is -104. 
+
+
+       a. <A NAME="param"><B>Manipulating the parameter stack</B></A> 
+
+       Forth systems incorporate (at least) two stacks: the parameter stack 
+       and the return stack. 
+
+       A stack-based system must provide ways to put numbers on the stack, to 
+       remove them, and to rearrange their order. Forth includes standard 
+       words for this purpose.  
+
+       Putting numbers on the stack is easy: simply type the number (or in- 
+       corporate it in the definition of a Forth word). 
+
+       The word <B><FONT color=red>DROP</FONT></B> removes the number from TOS and moves up all the other 
+       numbers. (Since the stack usually grows downward in memory, <B>DROP</B> mere- 
+       ly increments the pointer to TOS by 1 cell.) 
+
+       <B><FONT color=red>SWAP</FONT></B> exchanges the top 2 numbers.
+
+       <B><FONT color=red>DUP</FONT></B> duplicates the TOS into NOS. 
+
+       <B><FONT color=red>ROT</FONT></B> rotates the top 3 numbers. 
+
+
+       These actions are shown below (we show what each word does to the ini- 
+       tial stack) 
+
+             cell | initial | <B><FONT color=red>DROP    SWAP     ROT      DUP</FONT></B>
+
+               0  |   -16   |  73      73        5      -16 
+               1  |    73   |   5     -16      -16      -16 
+               2  |     5   |   2       5       73       73 
+               3  |     2   |           2        2        5 
+               4  |         |                             2 
+
+
+       Forth includes the words <B>OVER</B>, <B>TUCK</B>, <B>PICK</B> and <B>ROLL</B> that act as shown 
+       below (note <B>PICK</B> and <B>ROLL</B> must be preceded by an integer that says 
+       where on the stack an element gets <B>PICK</B>'ed or <B>ROLL</B>'ed): 
+
+             cell | initial | <B><FONT color=red>OVER    TUCK    3 PICK    3 ROLL</FONT></B> 
+
+               0  |   -16   |  73      -16        2        2
+               1  |    73   | -16       73      -16      -16 
+               2  |     5   |  73      -16       73       73 
+               3  |     2   |   5        5        5        5 
+               4  |         |   2        2        2 
+
+       Clearly, <B><FONT color=red>0 PICK</FONT></B> is the same as <B>DUP</B>, <B><FONT color=red>1 PICK</FONT></B> is a synonym for <B>OVER</B>, <B><FONT color=red>1 ROLL</FONT></B> 
+       means <B>SWAP</B> and <B><FONT color=red>2 ROLL</FONT></B> means <B>ROT</B>. 
+
+
+
+       b. <A NAME="return"><B>The return stack and its uses</B></A>
+
+       We have remarked above that compilation establishes links from the 
+       calling word to the previously-defined word being invoked. The linkage 
+       mechanism --during execution-- uses the return stack (rstack):  the 
+       address of the next word to be invoked is placed on the rstack, so 
+       that when the current word is done executing, the system knows to jump 
+       to the next word. (This is so in most, but not all Forth implement-
+       ations. But all have a return stack, whether or not they use them for
+       linking subroutines.)
+
+       In addition to serving as a reservoir of return addresses (since words
+       can be nested, the return addresses need a stack to be put on) the
+       rstack is where the limits of a DO...LOOP construct are placed.
+
+       The user can also store/retrieve to/from the rstack. This is an ex-
+       ample of using a component for a purpose other than the one it was 
+       designed for. Such use is discouraged for novices since it adds the 
+       spice of danger to programming. See &#147;Note of caution&#148; below. 
+
+       To store to the rstack we say >R , and to retrieve we say R> . The 
+       word R@ copies the top of the rstack to the TOS. 
+
+
+       Why use the rstack when we have a perfectly good parameter stack to 
+       play with? Sometimes it becomes hard to read code that performs com-
+       plex gymnastics on the stack. The rstack can reduce the complexity. 
+
+       Alternatively, <B><FONT color=red>VARIABLE</FONT></B>s --named locations-- provide a place to store 
+       numbers --such as intermediate results in a calculation-- off the
+       stack, again reducing the gymnastics. Try this:
+
+           \ YOU DO THIS            \ EXPLANATION
+
+           <FONT color=red>VARIABLE X</FONT> &lt;cr&gt;  ok      \ create a named storage location X;
+                                    \ X executes by leaving its address
+
+           <FONT color=red>3 X !</FONT> &lt;cr&gt;  ok           \ ! ("store") expects a number and
+                                    \ an address, and stores the number to
+                                    \ that address
+
+           <FONT color=red>X @  .</FONT> &lt;cr&gt;  3 ok        \ @ ("fetch") expects an address, and
+                                    \ places its contents in TOS.
+
+       However, Forth encourages using as few named variables as possible.
+       The reason: since <B>VARIABLE</B>s are typically global &#151;any subroutine can
+       access them&#151; they can cause unwanted interactions among parts of a
+       large program.
+
+       Although Forth can make variables <A HREF="#locals">local</A> to the subroutines that use
+       them (see &#147;headerless words&#148; in <A HREF="#FTR">FTR</A>), the rstack can often replace
+       local variables:
+
+         > The rstack already exists, so it need not be defined anew.
+
+         > When the numbers placed on it are removed, the rstack shrinks,
+           reclaiming some memory.
+
+
+       A note of caution: since the rstack is critical to execution we mess
+       with it at our peril. If we use the rstack for temporary storage we
+       must restore it to its initial state. A word that places a number on
+       the rstack must remove it &#151;using <B>R></B> or <B>RDROP</B> (if it has been defined)
+       &#151; before exiting that word. Since <B>DO...LOOP</B> also uses the rstack,
+       for each <B>>R</B> folowing <B>DO</B> there must be a corresponding <B>R></B> or <B>RDROP</B>
+       preceding <B>LOOP</B>. Neglecting these precautions will probably crash
+       the system.
+
+       <B>RDROP</B> is not an ANS Forth word that can be assumed predefined on any system.
+       Since it is not Standard, some systems call it <B>R>DROP</B> (which also is not
+       Standard). Here is its definition if needed:
+
+              <B><FONT color=red><B>: RDROP   ( or R>DROP)   ( r: n -- )  R>  DROP  ;</B></FONT></B>
+
+
+       c. <A NAME="locals"><B>Local variables and VALUEs</B></A>
+       I mentioned <B><FONT color=red>VARIABLE</FONT></B>s above&#151;a <B>VARIABLE</B> is a subroutine whose action is to
+       return the address of a named, cell-sized memory location, as in
+
+             <FONT color=red> VARIABLE x
+              x . </FONT>247496  ok   ( it doesn't have to be this address!)
+              <FONT color=red>-49 x !
+              x @ .  -49</FONT>  ok
+
+       A <B><FONT color=red>VALUE</FONT></B> is a widely used hybrid of <B>VARIABLE</B><B></B> and <B><FONT color=red>CONSTANT</FONT></B> (<A HREF="#constant">see below</A>). We
+       define and initialize a <B>VALUE</B> as we would a <B>CONSTANT</B>:
+
+              <FONT color=red>13 VALUE  thirteen</FONT>    ok
+
+       We invoke the new <B>VALUE</B> just as we would a <B>CONSTANT</B>:
+
+              <FONT color=red>thirteen  .</FONT>  13  ok
+
+       However, we can change a <B>VALUE</B> as though it were a <B>VARIABLE</B>:
+
+              <FONT color=red>47  TO  thirteen</FONT>  ok
+              <FONT color=red>thirteen  .</FONT>  47  ok
+
+       Needless to say, the word <B><FONT color=red>TO</FONT></B> also works within word definitions, replacing
+       the <B>VALUE</B> that follows it with whatever is currently in <B>TOS</B>. (Note that
+       it would be dangerous to follow <B>TO</B> with anything <I>but</I> a <B>VALUE</B> !!) <B>VALUE</B>s
+       are part of the ANS Forth <B>CORE EXTENSION</B> wordset (that is, the corresponding
+       code is not guaranteed to be loaded on minimal ANS-compliant systems).
+
+       ANS Forth also includes a <B>LOCALS EXTENSION</B> wordset that implements named memory
+       locations local to a word definition. Locals are generally dynamic in nature (that
+       is, their memory is reclaimed upon exiting the word), although the Standard does
+       not insist on this. A commonly used syntax is <B><FONT color=red>LOCALS|</FONT></B> <B><FONT color=blue>a b c ...</FONT></B> <B><FONT color=red>|</FONT></B>, as in this
+       definition (from a line-drawing algorithm):
+
+              <FONT color=red>: v+    ( a b c d -- a+c b+d)
+                  LOCALS| d c b a |
+                  a c +  b d +  ;</FONT>
+
+              <FONT color=red>2 3 4 5 v+ .S</FONT> [2] 6 8  ok..  ( <B><FONT color=red>.S</FONT></B> displays the stack without destroying it)
+
+       The important things to remember are
+
+              &gt; the names <B><FONT color=blue>a, b, c ...</FONT></B> can be any Forth-acceptable strings;
+
+              &gt; the local names have meaning only within a word definition;
+
+              &gt; the locals are initialized from the stack as shown in <B><FONT color=red>v+</FONT></B> above,
+                and as in the next example:
+
+                     <FONT color=red>: test-locals  ( a b c -- )
+                         LOCALS| c b a |
+                         CR  ." Normal order: " a .  b .  c .
+                         CR  ." Stack order:  " c .  b .  a .
+                         13 TO a   14 TO b  15 TO c</FONT>  <FONT color=blue>\ how TO works</FONT>
+                         <FONT color=red>CR ." Changed: " a . b . c
+                     ; </FONT> ok
+
+                     <FONT color=red>3 4 5 test-locals</FONT>
+                     Normal order: 3 4 5
+                     Stack order:  5 4 3
+                     Changed:  13 14 15  ok
+
+              &gt; the locals act like <B>VALUE</B>s, not like <B>VARIABLE</B>s, as the above
+                example makes clear;
+
+              &gt; the <B>LOCALS EXTENSION</B> wordset requires <B><FONT color=red>LOCALS|</FONT></B> <B><FONT color=blue>...</FONT></B> <B><FONT color=red>|</FONT></B> to accomodate
+                (at least) 8 local names.
+
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#memory"><img src=right.gif  width=26 height=26></A>
+</P>
+
+
+
+
+
+
+       6. <A NAME="memory"><B>Using memory</B></A>
+
+       As we just saw, ordinary numbers are fetched from memory to
+       the stack by <B><FONT color=red>@</FONT></B> ("fetch"), and stored by <B><FONT color=red>!</FONT></B> (store).
+
+       <B><FONT color=red>@</FONT></B> expects an address on the stack and replaces that address by 
+       its contents using, <I>e.g.</I>, the phrase   <B><FONT color=red>X  @</FONT></B> 
+
+       <B><FONT color=red>!</FONT></B> expects a number (NOS) and an address (TOS) to store it in, and 
+       places the number in the memory location referred to by the address, 
+       consuming both arguments in the process, as in the phrase   <B><FONT color=red>3 X  !</FONT></B> 
+
+       Double length numbers can similarly be fetched and stored, by
+       <B><FONT color=red>D@</FONT></B> and <B><FONT color=red>D!</FONT></B>, if the system has these words. 
+
+       Positive numbers that represent characters can be placed in character 
+       -sized cells of memory using <B><FONT color=red>C@</FONT></B> and <B><FONT color=red>C!</FONT></B>. This is convenient for operations 
+       with strings of text, for example screen and keyboard I/O. 
+
+       Of course, one cannot put numbers in memory or retrieve them,
+       for that matter, without a means of allocating memory and of
+       assigning labels to the memory so allocated.
+
+       The Forth subroutines <B><FONT color=red>CREATE</FONT></B> and <B><FONT color=red>ALLOT</FONT></B> are the basic tools for
+       setting aside memory and attaching a convenient label to it. As
+       we shall see <A HREF="#create">below</A>, <B>CREATE</B> makes a new dictionary entry, as in
+
+          <FONT color=red>CREATE X</FONT>
+
+       Here the new entry has the name X, but it could have been "Joe"
+       or anything else. The new name is a Forth subroutine that will
+       return the address of the next available space in memory. Thus
+
+          <FONT color=red>CREATE X</FONT>  ok
+          <FONT color=red>X . 247316</FONT>  ok
+          <FONT color=red>HERE . 247316</FONT>  ok
+
+       <B><FONT color=red>HERE</FONT></B> is a subroutine that returns the address of the next available
+       space&#151;we note that it is the same as the address of <B><FONT color=red>X</FONT></B> because no
+       space has been <B>ALLOT</B>ted. We can rectify this by saying
+
+          <FONT color=red>10 CELLS ALLOT</FONT>  ok
+
+       and checking with
+
+          <FONT color=red>HERE . 247356</FONT>  ok
+
+       We see that the next available space is now marked as 40 bytes
+       further up in memory. (Each <B><FONT color=red>CELL</FONT></B> is therefore 4 bytes or 32 bits
+       on this system.) In other words, the subroutine <B>ALLOT</B> increases
+       the pointer <B>HERE</B> by the number of address units you have told
+       it to allot. You could have said
+
+         <FONT color=red>40 ALLOT</FONT>
+
+       instead of
+
+         <FONT color=red>10 CELLS ALLOT</FONT>
+
+       but the latter is more portable because it frees you from having
+       to revise your code if you were to run it on a system with 64-bit
+       or 16-bit cells (both of which are in common use).
+
+
+       By executing the sequence
+
+          <FONT color=red>CREATE X  10 CELLS ALLOT</FONT>
+
+       we have set aside enough room to hold 10 32-bit numbers--for example
+       a table or array--that can be referenced by naming it. If we want to
+       get at the 6th element of the array (the first element has index 0,
+       so the 6th has index 5) we would say
+
+          <FONT color=red>X  5 CELLS  +</FONT>
+
+       to compute its address. To see how this works, let us say
+
+          <FONT color=red>137  X 5 CELLS +  ! </FONT> ok
+
+       to store an integer into the 6th array location; then
+
+          <FONT color=red>X 5 CELLS +  @  .</FONT> 137  ok
+
+       retrieves and displays it.
+
+
+       Using the tools provided by <B>CREATE</B> and <B>ALLOT</B> we can devise
+       any sort of data structure we like. This is why Forth does
+       not provide a panoply of data structures, such as are to be
+       found in languages like C, Pascal or Fortran. It is too easy
+       in Forth to custom tailor any sort of data structure one
+       wishes. In the section on <B>CREATE...DOES></B> <A HREF="#create">below</A> you will see
+       that Forth makes it easy to write subroutines ("constructors")
+       that create custom data structures--that can even include
+       code fragments that do useful things. For example, a <A NAME="constant"><B>CONSTANT</B></A>
+       is a number you would not want to change during a program's
+       execution. So you do not want access to its memory location.
+       How then do you get the number when you need it? You package
+       the code for <B>@</B> with the storage location, so that by naming
+       the <B>CONSTANT</B> you retrieve its contents. Its usage is
+
+          <FONT color=red>17 CONSTANT seventeen</FONT>  ok
+          <FONT color=red>seventeen .</FONT> 17  ok
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#branch"><img src=right.gif  width=26 height=26></A>
+</P>
+
+
+
+       7. <A NAME="branch"><B>Comparing and branching</B></A> 
+
+       Forth lets you compare two numbers on the stack, using relational 
+       operators "<B><FONT color=red>></FONT></B>", "<B><FONT color=red><</FONT></B>", "<B><FONT color=red>=</FONT></B>" . Thus, <I>e.g.</I>, the phrase 
+
+                <FONT color=red>2 3 ></FONT> &lt;cr&gt; ok 
+
+       leaves 0 ("false") on the stack, because 2 (NOS) is not greater than 3 
+       (TOS). Conversely, the phrase
+
+                <FONT color=red>2 3 <</FONT> &lt;cr&gt; ok 
+
+       leaves -1 ("true") because 2 is less than 3. 
+
+       Notes: In some Forths &#147;true&#148; is +1 rather than -1. 
+
+              Relational operators consume both arguments and leave a &#147;flag&#148; 
+              to show what happened. 
+
+       (Many Forths offer unary relational operators "<B><FONT color=red>0=</FONT></B>", "<B><FONT color=red>0></FONT></B>" and "<B><FONT color=red>0<</FONT></B>". 
+       These, as might be guessed, determine whether the TOS contains an 
+       integer that is 0, positive or negative.) 
+
+       The relational words are used for branching and control. For example,
+
+           <FONT color=red>: TEST     0 =  INVERT  IF   CR   ." Not zero!"   THEN  ; </FONT>
+
+           <FONT color=red>0 TEST</FONT> &lt;cr&gt;  ok     ( no action) 
+           <FONT color=red>-14 TEST</FONT> &lt;cr&gt; 
+           Not zero!  ok 
+
+       The TOS is compared with zero, and the <B><FONT color=red>INVERT</FONT></B> operator (bitwise logical
+       NOT&#151;this flips "true" and "false") is applied to the resulting flag. The
+       word <B><FONT color=red>CR</FONT></B> issues a carriage return (newline). Finally, if TOS is non-zero,
+       <B><FONT color=red>IF</FONT></B> swallows the flag and executes all the words between itself and the 
+       terminating <B><FONT color=red>THEN</FONT></B>. If TOS is zero, execution jumps to the word following
+       <B><font color=red >THEN</font></B>. 
+
+       The word <B><FONT color=red>ELSE</FONT></B> is used in the <B><FONT color=red>IF...ELSE...THEN</FONT></B> statement: a nonzero 
+       value in TOS causes any words between <B>IF</B> and <B>ELSE</B> to be executed, and 
+       words between <B>ELSE</B> and <B>THEN</B> to be skipped. A zero value produces the 
+       opposite behavior. Thus, <I>e.g.</I> 
+
+
+           <FONT color=red>: TRUTH    CR   0 =  IF  ." false"  ELSE  ." true"  THEN  ; </FONT>
+
+           <FONT color=red>1 TRUTH</FONT> &lt;cr&gt; 
+           true  ok 
+
+           <FONT color=red>0 TRUTH</FONT> &lt;cr&gt; 
+           false  ok 
+
+       Since <B>THEN</B> is used to terminate an <B>IF</B> statement rather than in its 
+       usual sense, some Forth writers prefer the name <B><FONT color=red>ENDIF</FONT></B>. 
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#comment"><img src=right.gif  width=26 height=26></A>
+</P>
+
+
+
+       8. <A NAME="comment"><B>Documenting and commenting Forth code</B></A> 
+
+       Forth is sometimes accused of being a "write-only" language, i.e. some 
+       complain that Forth is cryptic. This is really a complaint against
+       poor documentation and untelegraphic word names. Unreadability is 
+       equally a flaw of poorly written FORTRAN, PASCAL, C, etc. 
+
+       Forth offers programmers who take the trouble tools for producing ex- 
+       ceptionally clear code. 
+
+
+       a. <A NAME="parens"><B>Parenthesized remarks</B></A> 
+
+       The word <B><FONT size = +1 color=red>(</FONT><IMG SRC="red_box.gif"  align = middle width=15 height=20></B> &#151; a left parenthesis followed by a space &#151; says "disre- 
+       gard all following text until the next right parenthesis in the 
+       input stream". Thus we can intersperse explanatory remarks within 
+       colon definitions. 
+
+
+       b. <A NAME="stk_com"><B>Stack comments</B></A> 
+
+       A particular form of parenthesized remark describes the effect of a
+       word on the stack. In the example of a recursive loop (<B>GCD</B> below), 
+       stack comments are really all the documentation necessary. 
+
+       Glossaries generally explain the action of a word with a 
+       stack-effect comment. For example, 
+
+           ( adr -- n)
+
+       describes the word <B><FONT color=red>@</FONT></B> ("fetch"): it says <B><FONT color=red>@</FONT></B> expects to find an address 
+       (adr) on the stack, and to leave its contents (n) upon completion.  
+       The corresponding comment for <B><FONT color=red>!</FONT></B> would be 
+
+           ( n adr -- ) . 
+
+
+
+       c. <A NAME="backslash"><B>Drop line (\)</B></A> 
+
+       The word "<B><FONT color=red>\</FONT></B>" (back-slash followed by space) has recently gained favor 
+       as a method for including longer comments. It simply means "drop ev- 
+       erything in the input stream until the next carriage return". Instruc- 
+       tions to the user, clarifications or usage examples are most naturally
+       expressed in a block of text with each line set off by "<B><FONT color=red>\</FONT></B>"  . 
+
+
+
+       d. <A NAME="comblok"><B>Comment blocks</B></A>
+       ANS Forth contains interpreted IF...THEN, in the form of <B><font color=red>[IF] ... [THEN]</font></B>.
+       Although they are generally used for conditional compilation, these words
+       can be used to create comment blocks. Thus we can say
+
+            <B><font color=red>FALSE [IF]</font></B>   anything you want to say
+            <B><font color=red>[THEN]</font></B>
+
+       and the included remarks, code, examples or whatever will be ignored
+       by the compiling mechanism.
+
+
+
+       e. <A NAME="selfdoc"><B>Self-documenting code</B></A> 
+
+       By eliminating ungrammatical phrases like CALL or GOSUB, Forth pre-
+       sents the opportunity &#151;via telegraphic names for words&#151; to make code
+       almost as self-documenting and transparent as a readable English or
+       German sentence. Thus, for example, a robot control program could con-
+       tain a phrase like
+
+           <FONT color=red>2 TIMES   LEFT EYE  WINK</FONT> 
+
+       which is clear (although it sounds like a stage direction for Brun- 
+       hilde to vamp Siegfried). It would even be possible without much dif- 
+       ficulty to define the words in the program so that the sequence could 
+       be made English-like:  <FONT color=red>WINK  LEFT EYE 2 TIMES</FONT> . 
+
+       One key to doing this is to eliminate &#147;noise&#148; words like
+       <B>@</B>, <B>!</B>, <B>>R</B>, <I>etc.</I> by factoring them out into expressively
+       named &#151;and reuseable&#151; subroutines.
+
+       Another is to organize the listing of a subroutine so
+       that it physically resembles what it is supposed to do.
+       Two examples are the <A HREF="#jmp_tab">jump table</A> defined below, as well as
+       a method for programming <A HREF="http://www.jfar.org/article001.html">finite state automata</A>.
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#arith"><img src=right.gif  width=26 height=26></A></P>
+
+
+
+       9. <A NAME="arith"><B>Integer arithmetic operations</B></A>
+
+       The 1979 or 1983 standards require that a conforming Forth system con- 
+       tain a certain minimum set of pre-defined words. These consist of
+       arithmetic operators <B><FONT color=red>+ - * / MOD /MOD */</FONT></B> for (usually) 16-bit signed- 
+       integer (-32767 to +32767) arithmetic, and equivalents for unsigned (0
+       to 65535), double-length and mixed-mode (16- mixed with 32-bit) arith- 
+       metic. The list will be found in the glossary accompanying your 
+       system, as well as in <A HREF="#SF">SF</A> and <A HREF="#FTR">FTR</A>. 
+
+       Try this example of a non-trivial program that uses arithmetic and 
+       branching to compute the greatest common divisor of two integers using 
+       Euclid's algorithm: 
+
+           <FONT color=red>: TUCK   ( a b -- b a b)   SWAP  OVER  ;</FONT> 
+           <FONT color=red>: GCD    ( a b -- gcd)  ?DUP  IF  TUCK  MOD  GCD  THEN  ;</FONT> 
+
+       The word <B><FONT color=red>?DUP</FONT></B> duplicates TOS if it is not zero, and leaves it alone 
+       otherwise. If the TOS is 0, therefore, <B>GCD</B> consumes it and does 
+       nothing else. However, if TOS is unequal to 0, then <B>GCD</B> <B>TUCK</B>s TOS 
+       under NOS (to save it); then divides NOS by TOS, keeping the remainder 
+       (<B><FONT color=red>MOD</FONT></B>). There are now two numbers left on the stack, so we again take 
+       the <B>GCD</B> of them. That is, <B>GCD</B> calls itself.
+
+       If you try the above code <FONT color=red>it will fail</FONT>. A dictionary entry
+       cannot be looked up and found until the terminating "<B><FONT color=red>;</FONT></B>"
+       has completed it. So in fact we must use the word <B><FONT color=red>RECURSE</FONT></B>
+       to achieve self-reference, as in
+ 
+
+           <FONT color=red>: TUCK   ( a b -- b a b)   SWAP  OVER  ;</FONT>
+           <FONT color=red>: GCD    ( a b -- gcd)  ?DUP  IF   TUCK  MOD  RECURSE   THEN  ;
+</FONT>
+       Now try 
+
+           <FONT color=red>784 48 GCD .</FONT>  &lt;cr&gt;  16 ok 
+
+
+       The ANSI/ISO Forth Standard (adopted in 1994) mandates the minimal set
+       of arithmetic operators <B><FONT color=red>+  -  *  /  MOD  */  /MOD  */MOD</FONT></B> and  <B><FONT color=red>M*</FONT></B> . The
+       standard memory-word size is the <B><FONT color=red>cell</FONT></B>, which must be at least 16 bits,
+       but in many modern systems is 32- or even 64 bits wide. Single-length
+       integers in Win32Forth are 32 bits. The stack on ANS-compliant Forths
+       is always 1 <B>cell</B> wide.
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#loops"><img src=right.gif  width=26 height=26></A></P>
+
+
+
+       10. <A NAME="loops"><B>Looping and structured programming</B></A>
+
+       Forth has several ways to loop, including the implicit method of re- 
+       cursion, illustrated above. Recursion has a bad name as a looping
+       method because in most languages that permit recursion, it imposes 
+       unacceptable running time overhead on the program. Worse, recursion 
+       can &#151;for reasons beyond the scope of this Introduction to Forth&#151; be 
+       an extremely inefficient method of expressing the problem. In Forth, 
+       there is virtually no excess overhead in recursive calls because Forth 
+       uses the stack directly. So there is no reason not to recurse if that 
+       is the best way to program the algorithm. But for those times when 
+       recursion simply isn't enough, here are some more standard methods.
+
+       a. <A NAME="indef"><B>Indefinite loops</B></A>
+
+       The construct 
+
+           <FONT color=red>BEGIN xxx ( -- flag)  UNTIL</FONT> 
+
+       executes the words represented by xxx, leaving TOS (flag) set to <B>TRUE</B>
+       &#151;at which point <B><FONT color=red>UNTIL</FONT></B> terminates the loop&#151; or to <B>FALSE</B> &#151;at which
+       point <B>UNTIL</B> jumps back to <B>BEGIN</B>. Try: 
+
+           <FONT color=red>: COUNTDOWN    ( n --) </FONT>
+                <FONT color=red>BEGIN  CR   DUP  .  1 -   DUP   0  =   UNTIL  DROP  ;</FONT>
+
+           <FONT color=red>5 COUNTDOWN</FONT> 
+           5 
+           4
+           3 
+           2 
+           1  ok 
+
+       A variant of <B><FONT color=red>BEGIN...UNTIL</FONT></B> is 
+
+           <FONT color=red>BEGIN xxx ( -- flag) WHILE  yyy  REPEAT</FONT>
+
+       Here <FONT color=red>xxx</FONT> is executed, <B><FONT color=red>WHILE</FONT></B> tests the flag and if it is <B>FALSE</B>
+       leaves the loop; if the flag is <B>TRUE</B>, <B><FONT color=red>yyy</FONT></B> is executed; <B><FONT color=red>REPEAT</FONT></B> then
+       branches back to <B><FONT color=red>BEGIN</FONT></B>.
+
+       These forms can be used to set up loops that repeat until some
+       external event (pressing a key at the keyboard, e.g.) sets the
+       flag to exit the loop. They can also used to make endless loops
+       (like the outer interpreter of Forth) by forcing the flag
+       to be FALSE in a definition like
+
+
+           <FONT color=red>: ENDLESS     BEGIN  xxx  FALSE  UNTIL ;</FONT>
+
+
+       b. <A NAME="definite"><B>Definite loops</B></A> 
+
+       Most Forths allow indexed loops using <B><FONT color=red>DO...LOOP</FONT></B> (or <B><FONT color=red>+LOOP</FONT></B> or <B><FONT color=red>/LOOP</FONT></B>).
+       These are permitted only within definitions 
+
+           <FONT color=red>: BY-ONES   ( n --)   0 TUCK  DO   CR  DUP  .  1 +  LOOP   DROP  ; </FONT>
+
+       The words <B><FONT color=red>CR  DUP  .  1 +</FONT></B>  will be executed n times as the lower 
+       limit, 0, increases in unit steps to n-1. 
+
+       To step by 2's, we use the phrase <B><FONT color=red>2 +LOOP</FONT></B> to replace <B><FONT color=red>LOOP</FONT></B>, as with 
+
+           <FONT color=red>: BY-TWOS   ( n --)   0 TUCK</FONT> 
+                <FONT color=red>DO   CR  DUP  .  2 +    2 +LOOP    DROP  ;</FONT>
+
+       These words can be simplified by accessing the <I>loop index</I> with the word <B><FONT color=red>I</FONT></B>:
+
+              <FONT color=red>: BY-TWOS   ( n --)    0  DO   CR   I  .     2 +LOOP  ;</FONT>
+
+       It is even possible to nest loops and access the index of the outer from the inner
+       using the word <B><FONT color=red>J</FONT></B>, as in
+
+              <FONT color=red>: NESTED    ( n m --)  CR
+                     0 DO  DUP  ( n n --) 
+                            0 DO  CR  J .  I .  
+                            LOOP
+                     LOOP 
+              DROP  ;</FONT>
+
+              <B><FONT color=red>2 3  NESTED</FONT></B>  <cr>
+
+              0 0
+              0 1
+              1 0
+              1 1
+              2 0
+              2 1  ok
+
+
+
+       c. <A NAME="struc_prog"><B>Structured programming</B></A> 
+
+       N. Wirth invented the Pascal language in reaction to program flow
+       charts resembling a plate of spaghetti. Such flow diagrams were
+       often seen in early languages like FORTRAN and assembler. Wirth
+       intended to eliminate line labels and direct jumps (GOTOs), thereby
+       forcing control flow to be clear and direct.
+
+       The ideal was subroutines or functions that performed a single
+       task, with unique entries and exits. Unfortunately, programmers
+       insisted on GOTOs, so many Pascals and other modern languages now have
+       them. Worse, the ideal of short subroutines that do one thing only is
+       unreachable in such languages because the method for calling them and 
+       passing arguments imposes a large overhead. Thus execution speed re- 
+       quires minimizing calls, which in turn means longer, more complex sub- 
+       routines that perform several related tasks. Today structured program- 
+       ming seems to mean little more than writing code with nested IFs in- 
+       dented by a pretty-printer. 
+
+       Paradoxically, Forth is the only truly structured language in common 
+       use, although it was not designed with that as its goal. In Forth word 
+       definitions are lists of subroutines. The language contains no GOTO's so 
+       it is impossible to write &#147;spaghetti&#148; code. Forth also encourages 
+       structure through short definitions. The additional running time
+       incurred in breaking a long procedure into many small ones (this is
+       called &#147;factoring&#148;) is typically rather small in Forth. Each Forth sub-
+       routine (word) has one entry and one exit point, and can be written
+       to perform a single job.
+
+
+
+       d. <A NAME="topdown"><B>&#147;Top-down&#148; design</B> </A>
+
+       &#147;Top-down&#148; programming is a doctrine that one should design the entire 
+       program from the general to the particular: 
+
+         > Make an outline, flow chart or whatever, taking a broad overview
+           of the whole problem. 
+
+         > Break the problem into small pieces (decompose it). 
+
+         > Then code the individual components. 
+
+       The natural programming mode in Forth is &#147;bottom-up&#148; rather than &#147;top- 
+       down&#148; &#151;the most general word appears last, whereas the definitions 
+       must progress from the primitive to the complex. This leads to a some- 
+       what different approach from more familiar languages: 
+
+         > In Forth, components are specified roughly, and then as they are 
+           coded they are immediately tested, debugged, redesigned and 
+           improved. 
+
+         > The evolution of the components guides the evolution of the outer 
+           levels of the program. 
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#create"><img src=right.gif  width=26 height=26></A></P>
+
+
+
+       11. <A NAME="create"><B>CREATE ... DOES> (the pearl of FORTH)</B> </A>
+
+       Michael Ham has called the word pair <B><FONT color=red>CREATE...DOES></FONT></B>, the &#147;pearl of 
+       Forth&#148;. <B><FONT color=red>CREATE</FONT></B> is a component of the compiler, whose function is to
+       make a new dictionary entry with a given name (the next name in the 
+       input stream) and nothing else. <B><FONT color=red>DOES></FONT></B> assigns a specific run-time ac- 
+       tion to a newly <B>CREATE</B>d word. 
+
+
+       a. <A NAME="def_wds"><B>Defining &#147;defining&#148; words</B> </A>
+
+       <B>CREATE</B> finds its most important use in extending the powerful class of 
+       Forth words called &#147;defining&#148; words. The colon compiler  "<B><FONT color=red>:</FONT></B>"  is such 
+       a word, as are <B>VARIABLE</B> and <B>CONSTANT</B>. 
+
+       The definition of <B>VARIABLE</B> in high-level Forth is simple 
+
+           <FONT color=red>: VARIABLE  CREATE   1 CELLS  ALLOT ;</FONT>
+
+       We have already seen how <B>VARIABLE</B> is used in a program. (An altern-
+       ative definition found in some Forths is
+
+           <FONT color=red>: VARIABLE  CREATE   0  ,  ;</FONT>
+
+       &#151;these variables are initialized to 0.)
+
+       Forth lets us define words initialized to contain specific values: for
+       example, we might want to define the number 17 to be a word. <B>CREATE</B>
+       and "<B><FONT color=red>,</FONT></B>" ("comma") can do this:
+
+           <FONT color=red>17 CREATE SEVENTEEN  ,</FONT>  &lt;cr&gt;  ok
+
+       Now test it via
+
+           <FONT color=red>SEVENTEEN @ .</FONT>  &lt;cr&gt;  17 ok .
+
+
+       Remarks: 
+
+         > The word <B><FONT color=red>,</FONT></B> ("comma") puts TOS into the next cell of the dic-
+           tionary and increments the dictionary pointer by that number of
+           bytes.
+
+         > A word "<B><FONT color=red>C,</FONT></B>" ("see-comma") exists also &#151; it puts a character into
+           the next character-length slot of the dictionary and increments
+           the pointer by 1 such slot. (If the character representation is
+           ASCII the slots are 1 byte&#151;Unicode requires 2 bytes.)
+
+
+       b. <A NAME="runtime"><B>Run-time <I>vs.</I> compile-time actions</B> </A>
+
+       In the preceding example, we were able to initialize the variable 
+       <B>SEVENTEEN</B> to 17 when we <B>CREATE</B>d it, but we still have to fetch it to 
+       the stack via <B>SEVENTEEN @</B> whenever we want it. This is not quite what
+       we had in mind: we would like to find 17 in TOS when <B>SEVENTEEN</B> is 
+       named. The word <B>DOES></B> gives us the tool to do this. 
+
+       The function of <B>DOES></B> is to specify a run-time action for the &#147;child&#148; 
+       words of a defining word.  Consider the defining word <B>CONSTANT</B> , de- 
+       fined in high-level (of course <B>CONSTANT</B> is usually defined in machine
+       code for speed) Forth by
+
+           <FONT color=red>: CONSTANT  CREATE  ,  DOES>  @  ; </FONT>
+
+       and used as 
+
+           <FONT color=red>53 CONSTANT PRIME</FONT>  &lt;cr&gt; ok 
+
+       Now test it:
+
+           <FONT color=red>PRIME .</FONT> &lt;cr&gt;  53  ok . 
+
+
+       What is happening here? 
+
+         > <B>CREATE</B> (hidden in <B>CONSTANT</B>) makes an entry named <B>PRIME</B> (the
+           first word in the input stream following <B>CONSTANT</B>). Then "<B><FONT color=red>,</FONT></B>" 
+           places the TOS (the number 53) in the next cell of the dic-
+           tionary.
+
+         > Then <B>DOES></B> (inside <B>CONSTANT</B>) appends the actions of all words be- 
+           tween it and "<B><FONT color=red>;</FONT></B>" (the end of the definition) &#151;in this case, "<B><FONT color=red>@</FONT></B>"&#151; 
+           to the child word(s) defined by <B>CONSTANT</B>. 
+
+
+       c. <A NAME="dimdata"><B>Dimensioned data (intrinsic units)</B></A> 
+
+       Here is an example of the power of defining words and of the distinc- 
+       tion between compile-time and run-time behaviors. 
+
+       Physical problems generally involve quantities that have dimensions,
+       usually expressed as mass (M), length (L) and time (T) or products of 
+       powers of these. Sometimes there is more than one system of units in
+       common use to describe the same phenomena.
+
+       For example, U.S. or English police reporting accidents might use 
+       inches, feet and yards; while Continental police would use centimeters 
+       and meters. Rather than write different versions of an accident ana- 
+       lysis program it is simpler to write one program and make unit conver- 
+       sions part of the grammar. This is easy in Forth. 
+
+       The simplest method is to keep all internal lengths in millimeters, 
+       say, and convert as follows: 
+
+               <FONT color=red> : INCHES  254   10  */ ; 
+                : FEET   [ 254 12 * ] LITERAL  10  */ ; 
+                : YARDS  [ 254 36 * ] LITERAL  10  */ ; 
+                : CENTIMETERS   10  * ; 
+                : METERS   1000  * ; </FONT>
+
+       Note: This example is based on integer arithmetic.  The word <B><FONT color=red>*/</FONT></B>
+             means &#147;multiply the third number on the stack by NOS, keeping
+             double precision, and divide by TOS&#148;. That is, the stack com-
+             ment for <B><FONT color=red>*/</FONT></B> is ( a b c -- a*b/c). 
+
+
+       The usage would be 
+
+                <FONT color=red>10 FEET  .</FONT>  &lt;cr&gt;  3048 ok
+
+
+       The word "<B><FONT color=red>[</FONT></B>" switches from <B><FONT color=brown>compile</FONT></B> mode to <B><FONT color=violet>interpret</FONT></B> mode while com-
+       piling. (If the system is interpreting it changes nothing.) The word 
+       "<B><FONT color=red>]</FONT></B>" switches from <B><FONT color=violet>interpret</FONT></B> to <B><FONT color=brown>compile</FONT></B> mode. 
+
+       Barring some error-checking, the &#147;definition&#148; of the colon compiler 
+       "<B><FONT color=red>:</FONT></B>" is just 
+
+           <FONT color=red>:  :   CREATE  ]  DOES>  doLIST  ;</FONT>
+
+       and that of "<B><FONT color=red>;</FONT></B>" is just 
+
+           <FONT color=red>:  ;   next  [  ;  IMMEDIATE</FONT>
+
+       Another use for these switches is to perform arithmetic at compile-
+       time rather than at run-time, both for program clarity and for easy 
+       modification, as we did in the first try at dimensioned data (that is, 
+       phrases such as 
+
+          <FONT color=red> [ 254 12 * ] LITERAL</FONT> 
+
+       and 
+
+           <FONT color=red>[ 254 36 * ] LITERAL</FONT>
+
+       which allowed us to incorporate in a clear manner the number of 
+       tenths of millimeters in a foot or a yard.
+
+
+       The preceding method of dealing with units required unnecessarily many
+       definitions and generated unnecessary code. A more compact approach
+       uses a defining word, <B>UNITS</B> :
+
+           <FONT color=red>: D,  ( hi lo --)   SWAP  , ,  ;
+           : D@  ( adr -- hi lo)   DUP  @   SWAP   CELL+  @   ;
+           : UNITS  CREATE  D,   DOES> D@  */ ;</FONT>
+
+       Then we could make the table
+
+                <FONT color=red>254 10        UNITS INCHES
+                254 12 *  10  UNITS FEET
+                254 36 *  10  UNITS YARDS
+                10  1         UNITS CENTIMETERS
+                1000  1       UNITS METERS
+
+                \ Usage:
+                10 FEET  . &lt;cr&gt;  3048  ok
+                3 METERS . &lt;cr&gt;  3000  ok
+                \ .......................
+                \ etc.</FONT>
+
+       This is an improvement, but Forth permits a simple extension that
+       allows conversion back to the input units, for use in output:
+
+           <FONT color=red>VARIABLE  &lt;AS&gt;    0 &lt;AS&gt; !
+           : AS     TRUE  &lt;AS&gt; ! ;
+           : ~AS    FALSE &lt;AS&gt; ! ;
+           : UNITS  CREATE  D,  DOES>  D@  &lt;AS&gt; @
+                    IF  SWAP  THEN
+                    */    ~AS  ;</FONT>
+
+           <FONT color=red>\ UNIT DEFINITIONS REMAIN THE SAME.
+           \ Usage:
+           10 FEET  . </FONT>  &lt;cr&gt;  3048  ok
+           <FONT color=red>3048 AS FEET  .</FONT>  &lt;cr&gt;  10  ok
+
+
+
+       d. <A NAME="advanced"><B>Advanced uses of the compiler</B></A>
+
+       Suppose we have a series of push-buttons numbered 0-3, and a word <B>WHAT</B>
+       to read them. That is, <B>WHAT</B> waits for input from a keypad: when button
+       #3 is pushed, for example, <B>WHAT</B> leaves 3 on the stack.
+
+       We would like to define a word <B>BUTTON</B> to perform the action of pushing
+       the n'th button, so we could just say:
+
+           <B>WHAT BUTTON</B>
+
+       In a conventional language BUTTON would look something like
+
+           <B>: BUTTON  DUP  0 =  IF  RING  DROP  EXIT  THEN
+                     DUP  1 =  IF  OPEN  DROP  EXIT  THEN
+                     DUP  2 =  IF  LAUGH DROP  EXIT  THEN
+                     DUP  3 =  IF  CRY   DROP  EXIT  THEN
+                     ABORT" WRONG BUTTON!"   ;</B>
+
+       That is, we would have to go through two decisions on the average.
+
+       Forth makes possible a much neater algorithm, involving a &#147;jump
+       table&#148;. The mechanism by which Forth executes a subroutine is to
+       feed its &#147;execution token&#148; (often an address, but not necessarily)
+       to the word <B><FONT color=red>EXECUTE</FONT></B>. If we have a table of execution tokens we need
+       only look up the one corresponding to an index (offset into the table)
+       fetch it to the stack and say <B><FONT color=red>EXECUTE</FONT></B>.
+
+       One way to code this is
+
+           <FONT color=red> CREATE  BUTTONS  ' RING ,  ' OPEN ,  ' LAUGH ,  ' CRY ,
+            : BUTTON   ( nth --)    0 MAX  3 MIN
+                    CELLS  BUTTONS  +  @  EXECUTE  ;</FONT>
+
+       Note how the phrase <B><FONT color=red>0 MAX  3 MIN</FONT></B> protects against an out-of-range 
+       index. Although the Forth philosophy is not to slow the code with un-
+       necessary error checking (because words are checked as they are de- 
+       fined), when programming a user interface some form of error handling
+       is vital. It is usually easier to prevent errors as we just did, than 
+       to provide for recovery after they are made. 
+
+       How does the action-table method work? 
+
+         > <FONT color=red>CREATE BUTTONS</FONT> makes a dictionary entry <FONT color=red>BUTTONS</FONT>.
+
+         > The word <B><FONT color=red>'</FONT></B>  (&#147;tick&#148;) finds the execution token (xt) of the
+           following word, and the word <B><FONT color=red>,</FONT></B> (&#147;comma&#148;) stores it in the
+           data field of the new word BUTTONS. This is repeated until
+           all the subroutines we want to select among have their xt's
+           stored in the table.
+
+         > The table <B>BUTTONS</B> now contains xt's of the various actions of
+           <B>BUTTON</B>.
+
+         > <B>CELLS</B> then multiplies the index by the appropriate number of
+           bytes per cell, to get the offset into the table <B><B>BUTTONS</B></B>
+           of the desired xt.
+
+         > <FONT color=red>BUTTONS +</FONT>  then adds the base address of <B>BUTTONS</B> to get the abso-
+           lute address where the xt is stored.
+
+         > <B><FONT color=red>@</FONT></B> fetches the xt for <B><FONT color=red>EXECUTE</FONT></B> to execute.
+
+         > <B><FONT color=red>EXECUTE</FONT></B> then executes the word corresponding to the button pushed.
+           Simple!
+
+       If a program needs but one action table the preceding method suffices.
+       However, more complex programs may require many such. In that case
+       it may pay to set up a system for defining action tables, including
+       both error-preventing code and the code that executes the proper
+       choice. One way to code this is
+
+<FONT color=red>            : ;CASE   ;                     \ do-nothing word
+            : CASE:
+                CREATE  HERE  -1  >R   0  ,   \ place for length
+                BEGIN   BL  WORD  FIND        \ get next subroutine
+                   0=  IF   CR  COUNT  TYPE  ."  not found"  ABORT  THEN
+                   R>  1+  >R
+                   DUP  ,    ['] ;CASE  =
+                UNTIL   R>   1-  SWAP  !      \ store length
+                DOES>   DUP  @   ROT          ( -- base_adr len n)
+                        MIN  0  MAX           \ truncate index
+                        CELLS  +  CELL+  @  EXECUTE  ;</FONT>
+
+       Note the two forms of error checking. At compile-time, <B><FONT color=red>CASE:</FONT></B>
+       aborts compilation of the new word if we ask it to point to an
+       undefined subroutine:
+
+            <B><FONT color=red>case: test1   DUP  SWAP  X  ;case
+            X not found</FONT></B>
+
+       and we count how many subroutines are in the table (including
+       the do-nothing one, ;case) so that we can force the index to
+       lie in the range [0,n].
+
+            <FONT color=red>CASE:  TEST  *  /  +  -  ;CASE</FONT>  ok
+            <FONT color=red>15 3 0 TEST .</FONT> 45  ok
+            <FONT color=red>15 3 1 TEST .</FONT> 5  ok
+            <FONT color=red>15 3 2 TEST .</FONT> 18  ok
+            <FONT color=red>15 3 3 TEST .</FONT> 12  ok
+            <FONT color=red>15 3 4 TEST . .</FONT> 3 15  ok
+
+       <A NAME="jmp_tab">Just</A> for a change of pace, here is another way to do it:
+
+          <FONT color=red>: jtab:  ( Nmax --)      \ starts compilation
+               CREATE              \ make a new dictionary entry
+               1-  ,               \ store Nmax-1 in its body
+          ;                        \ for bounds clipping
+
+          : get_xt    ( n base_adr -- xt_addr)
+               DUP  @      ( -- n base_adr Nmax-1)
+               ROT         ( -- base_adr Nmax-1 n)
+               MIN  0  MAX    \ bounds-clip for safety
+               1+  CELLS+  ( -- xt_addr = base + 1_cell + offset)
+          ;
+
+          : |   '  ,   ;     \ get an xt and store it in next cell
+
+          : ;jtab   DOES>  ( n base_adr --)   \ ends compilation
+                    get_xt  @  EXECUTE        \ get token and execute it
+          ;    \ appends table lookup & execute code
+
+          \ Example:
+          : Snickers   ." It's a Snickers Bar!"   ;   \ stub for test
+
+          \ more stubs
+
+          5 jtab:  CandyMachine
+                   | Snickers
+                   | Payday
+                   | M&Ms
+                   | Hershey
+                   | AlmondJoy
+          ;jtab</FONT>
+
+          <FONT color=red>3 CandyMachine</FONT>  It's a Hershey Bar!   ok
+          <B><FONT color=red>1 CandyMachine</FONT></B>  It's a Payday!   ok
+          <B><FONT color=red>7 CandyMachine</FONT></B>  It's an Almond Joy!   ok
+          <B><FONT color=red>0 CandyMachine</FONT></B>  It's a Snickers Bar!   ok
+         <B><FONT color=red>-1 CandyMachine</FONT></B>  It's a Snickers Bar!   ok
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#fp"><img src=right.gif  width=26 height=26></A></P>
+
+
+
+       12. <A NAME="fp"><B>Floating point arithmetic</B></A>
+
+       Although Forth at one time eschewed floating point arithmetic
+       (because in the era before math co-processors integer arithmetic
+       was 3x faster), in recent years a standard set of word names has
+       been agreed upon. This permits the exchange of programs that will
+       operate correctly on any computer, as well as the development of
+       a Scientific Subroutine Library in Forth (FSL).
+
+       Although the ANS Standard does not require a separate stack for
+       floating point numbers, most programmers who use Forth for numer-
+       ical analysis employ a separate floating point stack; and most of
+       the routines in the FSL assume such. We shall do so here as well.
+
+       The floating point operators have the following names and perform
+       the actions indicated in the accompanying stack comments:
+
+            <B>F@</B>      ( adr --)       ( f: -- x)
+            <B>F!</B>      ( adr --)       ( f: x --)
+            <B>F+</B>                      ( f: x y -- x+y)
+            <B>F-</B>                      ( f: x y -- x-y)
+            <B>F*</B>                      ( f: x y -- x*y)
+            <B>F/</B>                      ( f: x y -- x/y)
+            <B>FEXP</B>                    ( f: x -- e^x)
+            <B>FLN</B>                     ( f: x -- ln[x])
+            <B>FSQRT</B>                   ( f: x -- x^0.5)
+
+       Additional operators, functions, trigonometric functions, etc. can
+       be found in the FLOATING and FLOATING EXT wordsets. (See dpANS6&#151;
+       available in HTML, PostScript and MS Word formats. The HTML version
+       can be accessed from this homepage.)
+
+       To aid in using floating point arithmetic I have created a simple
+       FORTRAN-like interface for incorporating formulas into Forth words.
+
+       The file ftest.f (included below) illustrates how ftran201.f
+       should be used.
+
+\ Test for ANS FORmula TRANslator
+
+marker -test
+fvariable a
+fvariable b
+fvariable c
+fvariable d
+fvariable x
+fvariable w
+
+: test0   f" b+c"  cr  fe.
+          f" b-c"  cr  fe.
+          f" (b-c)/(b+c)"  cr fe.  ;
+
+3.e0 b f!
+4.e0 c f!
+see test0
+test0
+
+: test1   f" a=b*c-3.17e-5/tanh(w)+abs(x)"  a f@  cr fe.  ;
+1.e-3 w f!
+-2.5e0 x f!
+cr cr
+see test1
+test1
+
+cr cr
+: test2   f" c^3.75"  cr fe.
+          f" b^4"     cr fe.  ;
+see test2
+test2
+
+\ Baden's test case
+
+: quadroot c f! b f! a f!
+      f" d = sqrt(b^2-4*a*c) "
+      f" (-b+d)/(2*a) "  f" (-b-d)/(2*a) "
+;
+cr cr
+see quadroot
+
+: goldenratio  f" max(quad root(1,-1,-1)) "  ;
+cr cr
+see goldenratio
+cr cr
+goldenratio f.
+
+
+
+0 [IF]
+Output should look like:
+
+: test0
+  c f@ b f@ f+ cr fe. c f@ fnegate b f@ f+ cr fe. c f@ fnegate b f@
+  f+ c f@ b f@ f+ f/ cr fe. ;
+7.00000000000000E0
+-1.00000000000000E0
+-142.857142857143E-3
+
+
+: test1
+  x f@ fabs 3.17000000000000E-5 w f@ ftanh f/ fnegate b f@ c f@ f* f+
+  f+ a f! a f@ cr fe. ;
+14.4682999894333E0  ok
+
+: test2
+  c f@ noop 3.75000000000000E0 f** cr fe. b f@ f^4 cr fe. ;
+181.019335983756E0
+81.0000000000000E0  ok
+
+: QUADROOT      C F! B F! A F! B F@ F^2 flit 4.00000 A F@
+                C F@ F* F* F- FSQRT D F! B F@ FNEGATE D
+                F@ F+ flit 2.00000 A F@ F* F/ B F@ FNEGATE
+                D F@ F- flit 2.00000 A F@ F* F/ ;
+
+
+: GOLDENRATIO           flit 1.00000 flit -1.00000 flit -1.00000
+                QUADROOT FMAX ;
+
+1.61803  ok
+
+with more or fewer places.
+
+[THEN]
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#din_root"><img src=right.gif  width=26 height=26></A></P>
+
+
+
+       13. <A NAME="bin_root"><B>Non-trivial programming example</B></A>
+
+       To illustrate how to construct a non-trivial program, let
+       us develop a binary search root-finder. We will use the
+       FORmula TRANslator <A HREF="ftran2x.htm">ftran201.f</A> to simplify the appearance
+       of the code (that is, it hides the data fetches and
+       stores that would otherwise be required).
+
+       First we need to understand the algorithm thoroughly:
+
+       If we know that the roots are bracketed between xa and
+       xb, and that f(xa)*f(xb) < 0  (at least 1 root lies in
+       the interval) we take the next guess to be xp = (xa+xb)/2 .
+
+       We then evaluate the function at xp: fp = f(xp).
+       If fa*fp > 0 we set xa = xp, else we set xb = xp.
+       We repeat until the ends of the interval containing
+       the root are sufficiently close together.
+
+
+       To begin programming, we note that we will have to keep
+       track of three points: xa, xb and xp. We also have to
+       keep track of three function values evaluated at those
+       points, Ra, Rb and Rp. We also need to specify a pre-
+       cision, epsilon, within which we expect to determine
+       the root.
+
+       Next we need to define the user interface. That is, once
+       we have a subroutine that finds roots, how will we invoke
+       it? Since we would like to be able to specify the name of
+       the function to find the root of, at the same time we
+       specify the interval we think the root is in, we need
+       some way to pass the name to the root finder as an
+       argument.
+
+       I have previously developed an interface that suits me: I
+       say
+
+            <font color=red>use( fn.name xa xb precision )bin_root</font>
+
+       as in
+
+            <font color=red>use( f1  0e0 2e0 1e-5 )bin_root</font>
+
+       and the root will be left on the floating point stack.
+
+
+       The code for passing names of functions as arguments is
+       included when you load <B>ftran201.f</B> &#151; the words used in
+       this program are <B>use(</B> , <B>v:</B> and <B>defines</B>&nbsp;.  <B>v:</B> creates a
+       dummy dictionary entry (named <B>dummy</B> in the program)
+       which can be made to execute the actual function whose
+       name is passed to the word <B>)bin_root</B>&nbsp;.
+
+       Here are the data structures and their identifications:
+
+        MARKER -binroots    \ say -binroots to unload
+
+        \ Data structures
+
+            FVARIABLE Ra                      \ f(xa)
+            FVARIABLE Rb                      \ f(xb)
+            FVARIABLE Rp                      \ f(xp)
+            FVARIABLE xa                      \ lower end
+            FVARIABLE xb                      \ upper end
+            FVARIABLE xp                      \ new guess
+            FVARIABLE epsilon                 \ precision
+
+            v: dummy                        \ create dummy dictionary entry
+
+       The actual root-finding subroutine, <B>)bin_root</B>&nbsp;, will be
+       quite simple and easy to follow:
+
+               <FONT color=red>: )bin_root  ( xt --)   ( f: Low High Precision -- root)
+                   initialize
+                   BEGIN   NotConverged?   WHILE   NewPoint   REPEAT
+                   f" (xa+xb)/2"           ( f: -- root)
+               ;</FONT>
+
+       Note that the subroutines comprising it are telegraph-
+       ically named so they need no explanation; whereas
+       <B>)bin_root</B> itself is explained by its stack comments. The
+       comments on the first line indicate that <B>)bin_root</B> expects
+       an &#147;execution token&#148; on the data stack, and three floating
+       point numbers on the floating point stack. These are its
+       arguments. (See 11d for a discussion of <B>EXECUTE</B>, etc.)
+       The execution token is what is used to change the
+       behavior of the dummy dictionary entry <B>dummy</B>&nbsp;: we say
+
+            <FONT color=red>defines dummy</FONT>
+
+       in the word <B>initialize</B> to make <B>dummy</B> behave like the
+       function whose root we are seeking.
+
+       The final comment ( f: -- root) indicates that <B>)bin_root</B> leaves
+       the answer on the floating point stack.
+
+
+       In a sense we are programming from the top down, since we
+       have begun with the last definition of the program and
+       are working our way forward. In Forth we often go both
+       ways &#151;top-down and bottom-up&#151; at the same time.
+
+
+       The key words we must now define are <B>initialize</B>&nbsp;,
+       <B>NotConverged?</B> and <B>NewPoint</B>&nbsp;. We might as well begin with
+       initialize since it is conceptually simple:
+
+               <FONT color=red>: initialize    ( xt --) ( f: lower upper precision --)
+                   defines dummy                       \ xt -> DUMMY
+                   f" epsilon="    f" xb="   f" xa="   \ store parameters
+                   f" Ra=dummy(xa)"
+                   f" Rb=dummy(xb)"
+                   f" MoreThan( Ra*Rb, 0)"             \ same sign?
+                   ABORT" Even # of roots in interval!"
+               ;</FONT>
+
+       The word <B><FONT color=red>ABORT"</FONT></B> prints the message that follows it and
+       aborts execution, if it encounters a <B>TRUE</B> flag on the
+       data stack. It is widely used as a simple error handler.
+       <B><FONT color=red>ABORT</FONT></B> (without the " ) simply aborts execution when
+       it is encountered. So it usually is found inside some
+       decision structure like an <B>IF...THEN</B> clause. (See 11d for
+       two examples of usage.)
+
+       <B>ABORT"</B> was preceded by a test. In order to use a test as
+       a function in a Fortran-like expression (this test con-
+       sumes two arguments from the floating point stack and
+       leaves a flag on the data stack), we must define a synonym
+       for it. The reason is that <B>ftran201.f</B> does not recognize
+       relational operators like <FONT color=red>&gt;</FONT> or <FONT color=red>&lt;</FONT> . The definition is<sup><FONT color=blue size=+2>*</FONT></sup>
+
+               <FONT color=red>: MoreThan    ( f: a b)  ( -- true if a>b)
+                   <A HREF="#postpone">POSTPONE</A>  F>  ;  IMMEDIATE</FONT>
+
+       The code produced by <B>f" MoreThan( Ra*Rb, 0)"</B> is then just
+
+               <FONT color=red>RA F@ RB F@ F* flit 0.00000E-1 F></FONT>
+
+       which is what we want. We have already explained the
+       phrase <B>defines dummy</B>. The phrases <B>f" xa="</B> and so on are
+       shorthand for storing something from the floating point
+       stack to a floating point variable. Thus <B>f" xa="</B>
+       generates the code <B>XA F!</B>&nbsp;. The rest of <B>initialize</B> is to
+       calculate the function at the endpoints of the supposed
+       bounding interval (a,b).
+
+
+       <B>NotConverged?</B> is a test for (non)convergence. <B>WHILE</B>
+       expects a flag on the data stack, as described in 10a. So
+       we define
+
+               <FONT color=red>: NotConverged?    ( -- f)
+                   f" MoreThan( ABS( xa - xb ), epsilon )"   ;</FONT>
+
+       which generates the code
+
+               <FONT color=red>XB F@ XA F@ F- FABS EPSILON F@ F></FONT>
+
+
+       What about <B>NewPoint</B>&nbsp;? Clearly,
+
+               <FONT color=red>: NewPoint
+                   f" xp = (xa+xb)/2"      \ new point
+                   f" Rp = dummy(xp)"
+                   f" MoreThan( Ra*Rp, 0)" \ xp on same side of root as xa?
+
+                   IF      f" xa=xp"  f" Ra=Rp"
+                   ELSE    f" xb=xp"  f" Rb=Rp"   THEN
+               ;</FONT>
+
+       That is, we generate a new guess by bisection, evaluate the
+       function there and decide how to choose the new bounding
+       interval.
+
+       All that remains is to put the definitions in the proper order
+       and test the result by loading the program <B>bin_rts.f</B> and
+       trying out the test case.
+
+
+        FALSE [IF]
+        Usage example:
+
+            : f1   fdup  fexp  f*  1e0  f-  ;  ok
+            use( f1  0e0 2e0 1e-5 )bin_root f. .567142  ok
+
+        [THEN]
+
+       Finally, if we want to be very careful indeed, and/or are
+       planning to re-use the program, we add an appropriate
+       boilerplate header, such as that included in the file
+       <A HREF="bin_rts.txt">bin_rts.f</A> .
+
+<HR size=2>
+      <sup><FONT color=blue size=+2>*</FONT></sup><B>Note:</B> the <A NAME="postpone">word </A><B><FONT color=red>POSTPONE</FONT></B> in this context means that the word following it
+       &#151;in this case <B><FONT color=red>F&gt;</FONT></B> &#151; will be compiled into the word that uses <B>MoreThan</B> rather
+       than in <B>MoreThan</B> itelf. (Note that <B>MoreThan</B> is <B>IMMEDIATE</B>.) This way of doing
+       things saves some overhead during execution. Some Forths (notably Win32Forth)
+       define a word <B>SYNONYM</B> to accomplish the same thing.
+<HR size=2>
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+Next&nbsp;&nbsp;<A HREF="#strings"><img src=right.gif  width=26 height=26></A></P>
+
+
+       14. <A NAME="strings"><B>Some remarks about strings</B></A>
+       As in other languages, alphanumeric strings in Forth are represented as
+       contiguous arrays in memory, each memory unit being a &#147;character&#148;.
+       Traditionally a character encoded by the <A HREF="http://www.dynamoo.com/technical/ascii-ebcdic.htm">ASCII or EBCDIC</A> systems occupied
+       one (1) byte of storage, allowing for 256 characters. With the need to encode
+       alphabets other than the Latin one (<I>e.g.</I> Chinese, Arabic, Hebrew, Cyrillic) a
+       two-byte encoding called <A HREF="http://www.unicode.org/">Unicode</A> has been adopted, which allows for 65535
+       distinct characters.
+
+       <A NAME="alph_num_str">A traditional Forth</A> string consisted of a count byte and up to 255 bytes containing
+       alphanumeric characters (usually in ASCII). In ANS Forth this scheme has been
+       abandoned: how strings are stored will depend on the implementation. However
+       ANS Forth contains words that enable us to manipulate strings without reference
+       to how they are implemented.
+
+       Most ANS Forths (and Win32Forth is one of them) define <B><FONT color=red>S"</FONT></B> to have defined
+       interpretive as well as compiling behavior. This means that if we say
+
+              <B><FONT color=red>S" This is a string!" CR TYPE</FONT></B>
+
+       we get
+
+              <B><FONT color=blue>This is a string!</FONT></B> ok
+
+       What happened? <B><FONT color=red>S" This is a string!"</FONT></B> created a string with text beginning at a
+       &#147;c-address&#148; and with a &#147;count&#148; that says how many characters (including blanks)
+       the string includes. The address and count are left on the stack. That is, the
+       proper stack picture would be
+
+              <B><FONT color=red>S" This is a string!"   ( -- c-addr u)</FONT></B>
+
+       (the count is an unsigned integer <B><FONT color=red>u</FONT></B> because strings of negative length are
+       meaningless).
+
+       The word <B><FONT color=red>CR</FONT></B> means &#147;insert a carriage return&#148;, and <B><FONT color=red>TYPE</FONT></B> means &#147;from the 
+       <B><FONT color=red>c-addr</FONT></B> output <B><FONT color=red>u</FONT></B> characters to the screen&#148;.
+
+       <B>Exercise:</B>
+       Use what you have just learned to write a &#147;Hello world!&#148; program.
+
+
+       It is perfectly feasible to define one's own word set for working with strings, depending
+       on what sort of application one is writing. For example, I have written a program to
+       translate mathematical formulas in Fortran-like form into Forth code, outputting the
+       result either to the screen (for test purposes) or embedding it into a Forth definition.
+       There is even a variant that evaluates the formula, provided all the variables have
+       been previously defined and given numerical values. To accomplish this required
+       strings longer than 255 characters, so I defined my own.
+
+
+
+       I now want to turn to &#147;pictured <A NAME="num_out">numerical output</A>&#148;. Many computer programs
+       need to output numbers in some particular format, no matter how they are stored intern-
+       ally. For example an accounting program might output monetary amounts in the usual
+       dollars-and-cents format. The words that accomplish this are
+
+              <B><FONT color=red>#</FONT></B> ,  <B><FONT color=red><#</FONT></B> ,  <B><FONT color=red>#S</FONT></B> ,  <B><FONT color=red>#></FONT></B> , <B><FONT color=red>SIGN</FONT></B> and <B><FONT color=red>HOLD</FONT></B>
+
+       They do not have any defined interpretive behavior (although there is no telling what
+       any particular Forth may do) and are intended to be used within word definitions. Here
+       is an example: suppose we are writing an accounting program. Since most users will
+       not be dealing with amounts that exceed $100,000,000 we can use signed 32-bit integers
+       to represent the dollars and cents. (Such numbers can represent amounts up to
+       &#177;(2<sup>31</sup>&#151;1) = &#177;2147483647 cents.) Signed double-length integers are at least 32 bits long
+       on all ANS-compatible systems (although they will be 64 bits on 32-bit computers).
+       Hence we shall use doubles so the program will run on any ANS-compatible
+       Forth.
+
+       A double-length integer is entered from the keyboard by including a decimal point in
+       it, as
+
+              <B><FONT color=red>-4756.325  ok</FONT></B>
+
+       Let us define a word to output a double-length integer. The first part will be to
+       translate it to an alphanumeric string referred to by<B><FONT color=red> c-addr u</FONT></B>.
+
+          <B><FONT color=red>: (d.$)    ( d -- c-adr u)  TUCK DABS  <#  # # [CHAR] .  HOLD  #S  ROT  SIGN  #>  ;</FONT></B>
+
+       As the stack comment <B><FONT color=red>( d -- c-adr u)</FONT></B> shows, <B><FONT color=red>(d.$)</FONT></B> consumes a (signed) double-length
+       integer from the stack and leaves the string data in a form that can be printed to the
+       screen by the word <B><FONT color=red>TYPE</FONT></B>. Let us test this:
+
+              <B><FONT color=red>4376.58  (d.$)  CR  TYPE</FONT></B>
+              <B><FONT color=blue>4376.58 ok</FONT></B>
+
+              <B><FONT color=red>-4376.99  (d.$)  CR  TYPE</FONT></B>
+              <B><FONT color=blue>-4376.99 ok</FONT></B>
+
+       It is worth exploring what each part does. A double length integer is stored as two
+       cells on the stack, with the most-significant part on TOS. Thus the word <B><FONT color=red>TUCK</FONT></B>
+       places the most-significant part (containing the algebraic sign) above <B><FONT color=red>d</FONT></B> and then <B><FONT color=red>DABS</FONT></B>
+       converts <B><FONT color=red>d</FONT></B> to <B><FONT color=red>|d|</FONT></B>. Next, <B><FONT color=red><#</FONT></B> begins the process of constructing an alphanumeric 
+       string. The two instances of <B><FONT color=red>#</FONT></B> peel off the two least-significant digits and put
+       <I>them</I> in the string. The phrase <B><FONT color=red>[CHAR] .  HOLD</FONT></B> adds a decimal point to the string.
+
+       <B><FONT color=red>[CHAR]</FONT></B> builds in the representation of the character <B><FONT color=red>.</FONT></B> as a numeric literal (in
+       ASCII it is 46). <B><FONT color=red>HOLD</FONT></B> then adds it to the string under construction. (<B><FONT color=red>HOLD</FONT></B> has no
+       meaning except between <B><FONT color=red><#</FONT></B> and <B><FONT color=red>#></FONT></B>.) Then the word <B><FONT color=red>#S</FONT></B> takes the rest of the digits
+       and adds <I>them</I> to the nascent string.
+
+       (Semi)finally, <B><FONT color=red>ROT</FONT></B> puts the most significant part of <B><FONT color=red>d</FONT></B> (with its sign) on TOS, and
+       <B><FONT color=red>SIGN</FONT></B> adds its algebraic sign to the beginning of the string. (Again, <B><FONT color=red>SIGN</FONT></B> is only
+       meaningful between <B><FONT color=red><#</FONT></B> and <B><FONT color=red>#></FONT></B>.) 
+
+       And finally, the word <B><FONT color=red>#></FONT></B> cleans everything up and leaves <B><FONT color=red>c-addr u</FONT></B>
+       on the stack, ready for display or whatever.
+
+       <B>Exercises:</B>
+
+       a) How would you add a leading dollar sign (<B><FONT color=red>$</FONT></B>) to the output number?
+       b) How would you enclose a negative amount in parentheses rather than
+          displaying a <B><FONT color=red>&#151;</FONT></B> sign? [That is, <B><FONT color=red>( 4376.99)</FONT></B> rather than <B><FONT color=red>-4376.99</FONT></B>.]
+       c) Define a word to display a double-length integer in dollar-and-cents format.
+
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+<!--Next&nbsp;&nbsp;<A HREF="#strings"<menu></menu>><img src=right.gif  width=26 height=26></A>--></P>
+
+
+
+       15. <A NAME="refs"><B>Some useful references</B></A>
+             &gt; <A NAME="FTR">M. Kelly and N. Spies, <I>Forth: A text and Reference</I> (Prentice-Hall, NJ, 1986)</A><BR>
+             &gt; <A NAME="SF">L. Brodie, <I>Starting Forth, 2nd ed.</I> (Prentice-Hall, NJ, 1986)</A><BR>
+             &gt; <A NAME="TF">L. Brodie, <I>Thinking FORTH</I> (Prentice-Hall, NJ, 1984</A> (<A HREF="http://thinking-forth.sourceforge.net/">online edition</A>)<BR>
+             
+
+<P ALIGN=RIGHT>Table of Contents&nbsp;&nbsp;<a href="#contents"><img src=up.gif  width=26 height=26></a>
+
+Home&nbsp;&nbsp;<a href="http://www.phys.virginia.edu/classes/551.jvn.fall01/"><img src=left.gif  width=26 height=26></a>
+<!--Next&nbsp;&nbsp;<A HREF="#strings"<menu></menu>><img src=right.gif  width=26 height=26></A>--></P>
+
+
+</PRE>
+</BODY>
+</HTML>

@@ -1,0 +1,17 @@
+Notes for Updating:
+
+1.Change the version number in src\kernel\version.f
+2 Make a new kernel and extend it with setup.exe
+3.Load Win32ForthInstaller.f in the IDE and compile it
+4.In the Win32Forth directory will be a new program
+  called w32fNNNNN.exe containing the installer and the needed compressed files.
+
+When the reserved space to contain the compressed files is too small,
+there will be a an error.
+Then look how big the file Win32Forth.dat is in the Win32Forth directory. 
+Make a new Win32Forth with setup.exe and use Option M to increase 
+the Application space. 
+The space that Win32Forth needs can be seen with .free
+
+The definition exclude? in lz77files.f contains a list of files that 
+are excluded from installation files

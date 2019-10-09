@@ -1,0 +1,81 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Form Designer</title>
+    <link rel="stylesheet" type="text/css" href="IDEstyle.css">
+</head>
+<body>
+
+<h1>Form Designer</h1>
+
+<br><br>
+
+<p>Form Designer, as its name suggest, is a tool for designing forms in the IDE.</p>
+
+<p>Form Designer is based on the stand-alone ForthForm application
+<IMG SRC="Forthform.gif" NAME="Graphic1" >.
+All the functionality of ForthForm is included in Form Designer.</p>
+
+<br>
+
+<h3>Overview</h3>
+
+<p>Win32Forth has no Windows Resources Editor. Instead it has Form Designer which
+can be thought as a code generator. It allows interactive design of frame windows,
+child windows and dialog boxes and pre-generates the code compatible with the
+Win32Forth Windows class library. Forms can be saved and used under different
+formats : the source version (files *.frm), once edited, cannot be reused by
+Form Designer but the form-format version (files *.ff) can be updated without
+changing already existing code calling the form (excepted, of course, for the
+handling of new controls that might have been added).</p>
+
+<p>Moreover, code for handling controls of a form can be added at design time.</p>
+
+<p>Due to the way Windows classes work in Win32Forth, other Windows goodies
+like menus, toolbars, property sheets and splitter windows are not part of
+a frame window : they are extra objects that are linked to or used by the
+main window. Hence, Form Designer offers some options to create them as
+separate objects that you may then link to your windows.</p>
+
+<p>The result is a tool allowing for interactive design without the use of
+Windows Resources.</p>
+
+
+
+
+<h3>The Form Designer tab</h3>
+
+<p>The Form Designer window is displayed by clicking on the Form designer tab in
+the IDE TabWindow.</p>
+
+<p><center><img src="FormDesignerTab.gif" alt="" align="absmiddle"></center>
+
+<p> The top window in the Form Designer tab contains the form toolbar. Many of
+the toolbar buttons are enabled or disabled depending on whether a form is opened
+and it contains any controls. However, hovering the mouse cursor over a button
+will pop up a tooltip identifying the function of the button.</p>
+
+<p>The bottom window contains three tabs. Clicking the "Status" tab displays
+information about the currently selected form and any control selected. It also
+displays a "monitor" window which allows the setting of the runtime position of
+a form on the display monitor.</p>
+
+<p>The "Properties" tab allows the selection of the dialogs for Form, Control and Action properties.
+</p>
+
+<p>The Code Editor tab displays the dialog window that allows <A HREF="Code Window.htm">adding code at design time</A>
+to a form.</p>
+
+<p>The Forms Designer tab can be detached into a floating window. This is done by
+selecting the "Float Form Designer Window" option from the IDE Preferences dialog.
+</A> When detached, newly created forms will be positioned relative to the
+location of the detached window. Thus, if using dual monitors, created forms will
+be displayed on the same monitor as the Form Designer window.</P>
+
+<hr>
+
+<p>Document : Form Designer.htm -- 2008/08/26 -- Ezra Boyce</p>
+
+</body>
+
+</html>

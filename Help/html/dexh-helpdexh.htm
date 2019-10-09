@@ -1,0 +1,281 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+dexh.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>DexH -- Document Extractor, HTML output
+</h1><h3><i>Version 3
+</i></h3><p>Primary contributors: Brad Eckert &nbsp;brad1NO@SPAMtinyboot.com
+Modified for use in Win32Forth by George Hubert and Dirk Busch
+</p><h3><i>Abstract
+</i></h3><p>DexH is a simple literate programming tool inspired by MPE's DOCGEN. DexH
+can also be used to write articles about Forth featuring a mixture of
+documentation and source code. DexH is a standalone program that processes
+a Forth source file. The following command does the conversion: <br />
+<b>DEX input_filename</b>
+</p><h2>Commands
+</h2><p>Commands are embedded within comments. You can use the following formats,
+with either starting at the first column.
+</p><ul><li>( ?? ... ) where ?? is the command, or
+</li><li>\ ?? ...
+</li></ul><p>You can append HTML to created files by DEXing any number of source files
+but you should use a *Z command to complete the HTML.
+</p><table><tr><th>Command
+</th>
+<th>Effect
+</th>
+</tr>
+<tr><td>**
+</td>
+<td>continuation of G, E or P
+</td>
+</tr>
+<tr><td>*D
+</td>
+<td>Select a new output folder
+</td>
+<td>) \ db
+</td>
+</tr>
+<tr><td>*!
+</td>
+<td>create and select a new output file
+</td>
+</tr>
+<tr><td>*&gt;
+</td>
+<td>select an existing file to add text to
+</td>
+</tr>
+<tr><td>*T
+</td>
+<td>Title
+</td>
+</tr>
+<tr><td>*Q
+</td>
+<td>Quotation or abstract
+</td>
+</tr>
+<tr><td>*S
+</td>
+<td>Section
+</td>
+</tr>
+<tr><td>*N
+</td>
+<td>Sub-section
+</td>
+</tr>
+<tr><td>*P
+</td>
+<td>Paragraph
+</td>
+</tr>
+<tr><td>*E
+</td>
+<td>Paragraph which is a code example
+</td>
+</tr>
+<tr><td>*B
+</td>
+<td>Bullet entry
+</td>
+</tr>
+<tr><td>*G
+</td>
+<td>Glossary entry for the previous line
+</td>
+</tr>
+<tr><td>*R
+</td>
+<td>raw LaTeX
+</td>
+</tr>
+<tr><td>*W
+</td>
+<td>raw HTML
+</td>
+</tr>
+<tr><td>*Z
+</td>
+<td>End output
+</td>
+</tr>
+<tr><td>*+
+</td>
+<td>Include source code as document text
+</td>
+</tr>
+<tr><td>*-
+</td>
+<td>Turn off source code inclusion
+</td>
+</tr>
+</table><p>DexH is ANS Forth except for the need for BOUNDS, SCAN, SKIP and LCOUNT.
+They are commonly used words but redefined here for completeness.
+</p><pre>\&nbsp;: BOUNDS OVER + SWAP ;
+\&nbsp;: SCAN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len char -- addr' len' )
+\&nbsp;&nbsp;&nbsp;&nbsp;&gt;R BEGIN DUP WHILE OVER C@ R@ &lt;&gt;
+\&nbsp;&nbsp;&nbsp;&nbsp;WHILE 1 /STRING REPEAT THEN R&gt; DROP ;
+\&nbsp;: SKIP &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len char -- addr' len' )
+\&nbsp;&nbsp;&nbsp;&nbsp;&gt;R BEGIN DUP WHILE OVER C@ R@ =
+\&nbsp;&nbsp;&nbsp;&nbsp;WHILE 1 /STRING REPEAT THEN R&gt; DROP ;
+\&nbsp;: LCOUNT &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr -- addr' len ) DUP CELL+ SWAP @ ;
+</pre><p>Some files use very long lines, which is desirable for long sections of
+documentation. You can allocate buffers for lines longer than 2000 chars
+by changing the following line:
+</p><pre>2000 CHARS CONSTANT max$
+</pre><pre></pre><p>HTML needs some canned boilerplate. This is created by ,| since HTML
+doesn't use | characters.
+</p><pre>: (,$) &nbsp;( a len -- ) &nbsp;DUP C, 0 ?DO COUNT C, LOOP DROP ;
+: ,| &nbsp;&nbsp;&nbsp;( &lt;text&gt; -- ) [CHAR] | WORD COUNT -TRAILING (,$) ;
+
+external
+
+CREATE DexHTMLheader
+&nbsp;&nbsp;&nbsp;,| &lt;?xml version=&quot;1.0&quot;?&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;,| &lt;!DOCTYPE html PUBLIC &quot;-//W3C//DTD XHTML 1.0 Strict//EN&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;,| &nbsp;&nbsp;&nbsp;&nbsp;&quot;http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd&quot;&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;,| &lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xml:lang=&quot;en&quot; lang=&quot;en&quot;&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;,| &lt;head&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;,| &lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/xml; charset=iso-8859-1&quot; /&gt;|
+&nbsp;&nbsp;&nbsp;,| &lt;meta name=&quot;GENERATOR&quot; content=&quot;DexH v03&quot; /&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;,| &lt;style type=&quot;text/css&quot;&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;,| &lt;/style&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;,| &lt;title&gt; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|
+&nbsp;&nbsp;&nbsp;0 C,
+</pre><p>All output is via OUT and OUTLN, which can be sent to the screen for
+debugging purposes.
+</p><pre>0 VALUE testing &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;screen is for testing
+: werr &nbsp;&nbsp;&nbsp;&nbsp;( n -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ABORT&quot; Error writing file&quot; ;
+: out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( a len -- ) &nbsp;testing IF TYPE &nbsp;&nbsp;&nbsp;ELSE outfile WRITE-FILE werr THEN ;
+: outln &nbsp;&nbsp;&nbsp;( a len -- ) &nbsp;testing IF TYPE CR ELSE outfile WRITE-LINE werr THEN ;
+</pre><p>Some characters are replaced by special strings so they can't be
+interpreted as tags. Also, runs of blanks need special treatment.
+Some escape sequences are supported:
+</p><table><tr><th><b>seq</b>
+</th>
+<th><b>Escape command </b>
+</th>
+</tr>
+<tr><td>\i
+</td>
+<td>Italics
+</td>
+</tr>
+<tr><td>\b
+</td>
+<td>Bold
+</td>
+</tr>
+<tr><td>\t
+</td>
+<td>Typewriter
+</td>
+</tr>
+<tr><td>\^
+</td>
+<td>Superscript (i.e. ax\^2\d+bx+c=0)
+</td>
+</tr>
+<tr><td>\_
+</td>
+<td>Subscript
+</td>
+</tr>
+<tr><td>\d
+</td>
+<td>Default font (ends italic, superscript, etc.)
+</td>
+</tr>
+<tr><td>\n
+</td>
+<td>Line break
+</td>
+</tr>
+<tr><td>\r
+</td>
+<td>Horizontal rule
+</td>
+</tr>
+<tr><td>\p
+</td>
+<td>Page break
+</td>
+</tr>
+<tr><td>\\
+</td>
+<td>\
+</td>
+</tr>
+</table><p>Sample usage:
+&quot;ax\^2\d + bx + w\_0\d = 0&quot; displays ax<sup>2</sup> + bx + w<sub>0</sub> = 0
+</p><p>&quot;Try \bbold, \iitalic \dand \ttypewriter.\d&quot; displays
+&quot;Try <b>bold, </b><i>italic </i>and <code>typewriter</code>.&quot;
+</p><pre>: new-font &nbsp;( n -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;switch to a new font
+&nbsp;&nbsp;&nbsp;thisfont @ SWAP thisfont !
+&nbsp;&nbsp;&nbsp;CASE [CHAR] i OF S&quot; &lt;/i&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] b OF S&quot; &lt;/b&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] t OF S&quot; &lt;/code&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] ^ OF S&quot; &lt;/sup&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] _ OF S&quot; &lt;/sub&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;ENDCASE ;
+
+: outh &nbsp;&nbsp;&nbsp;( addr len -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;HTMLized text output
+&nbsp;&nbsp;&nbsp;999 bltally !
+&nbsp;&nbsp;&nbsp;BOUNDS ?DO I C@ escape @ IF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CASE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] \&nbsp;OF S&quot; \&quot;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] n OF S&quot; &lt;br /&gt;&quot; &nbsp;&nbsp;&nbsp;out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] r OF hr &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] i OF I C@ new-font S&quot; &lt;i&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] b OF I C@ new-font S&quot; &lt;b&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] t OF I C@ new-font S&quot; &lt;code&gt;&quot; out &nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] ^ OF I C@ new-font S&quot; &lt;sup&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] _ OF I C@ new-font S&quot; &lt;sub&gt;&quot; out &nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] d OF 0 &nbsp;&nbsp;&nbsp;new-font &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;no-escape I 1 out
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDCASE 0 escape !
+&nbsp;&nbsp;&nbsp;ELSE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CASE
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] \&nbsp;OF captive @
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF no-escape ELSE 1 escape ! THEN ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] &amp;&nbsp;OF S&quot; &amp;amp;&quot; &nbsp;&nbsp;&nbsp;&nbsp;out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] &lt;&nbsp;OF S&quot; &amp;lt;&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] &gt;&nbsp;OF S&quot; &amp;gt;&quot; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] &quot;&nbsp;OF S&quot; &amp;quot;&quot; &nbsp;&nbsp;&nbsp;out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[CHAR] &copy;&nbsp;OF S&quot; &amp;copy;&quot; &nbsp;&nbsp;&nbsp;out &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;BL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;OF bltally @ IF S&quot; &amp;nbsp;&quot; ELSE S&quot; &nbsp;&quot;&nbsp;THEN out
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 bltally +! &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDOF
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I 1 out &nbsp;0 bltally !
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ENDCASE
+&nbsp;&nbsp;&nbsp;THEN LOOP
+&nbsp;&nbsp;&nbsp;escape @ IF no-escape THEN &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;trailing \
+&nbsp;&nbsp;&nbsp;S&quot; &quot;&nbsp;outln ;
+</pre><p>The fields in a table are separated by | (vertical bar) and end in |.
+</p><p><b><code>: gl-open &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Open glossary File.
+</p><p><b><code>: gl-close &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Close glossary File.
+</p><p><b><code>: gl-anchor &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Write anchor number.
+</p><p><b><code>: gl-create-entry ( -- )
+</code></b><br>Create a glossary entry
+</p><hr />
+<h2>Glossary
+</h2><p><b><code>: (dex) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- )
+</code></b><br>Convert a file or files to HTML. Output filenames are included in the
+source file.
+</p><p><b><code>: DEX &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( &lt;filename&gt; -- )
+</code></b><br>Convert a file or files to HTML. Output filenames are included in the
+source file.
+</p><p><b><code>: q &nbsp;( &lt;string&gt; -- )
+</code></b><br>Test a single line of text, outputting to the screen.
+</p><hr /><p>This file generated by <a href="dexh.F">DexH</a></p>
+</body></html>

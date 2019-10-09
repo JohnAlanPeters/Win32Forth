@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Miscellaneous utilities</h1>
+
+
+
+<p>Brief description of Win32Forth utility words.
+Some words may be deprecated, others may be described elsewhere in the help).
+A bit of housekeeping to do...</p>
+
+<p>To be updated and dispatched in the "right places" ...</p>
+
+
+
+
+<h2>Win32Forth development environment</h2>
+
+<p>SCREENDELAY ( -- n1 )
+A VALUE that holds a number of Milli-Seconds to delay when performing screen
+output using DUMP and WORDS. Pressing keys '0' to '9' while these words are
+displaying, adjusts screen display speed slower. </p>
+
+<p>PAUSE-SECONDS   ( n -- )            
+Delay for n seconds, but with certain operator controlled options. A message
+is displayed with an invitation to press a key. 
+A key press will allow a hold, then other options to continue the delay,
+to pause, or to cancel the delay.</p>
+
+<p>MINIMIZE-CONSOLE ( -- )           
+Reduce the working Win32Forth window to an ICON.</p>
+
+<p>SCREEN-SIZE ( -- width height )        
+Returns the Windows screen size.</p>
+
+
+
+
+<h2>Defering words</h2>
+
+<p>.DEFERRED ( -- )
+Display all of the deferred words with their current and default functions.</p>
+
+<p>IS-DEFAULT ( cfa -&lt;name&gt;- ) 
+Set the default field of a deferred word.</p>
+
+<p>RESTORE-DEFAULT  ( -&lt;name&gt;- )
+Reset name to its default function</p>
+
+
+
+
+
+
+
+<h2> Compilation</h2>
+
+<p>IN-APPLICATION ( -- ) 
+Select the application dictionary for any following compiled code.</p>
+
+<p>IN-SYSTEM ( -- )               
+Select the system dictionary for any following compiled code.</p>
+
+<p>.LOADED ( -- )               
+Display a list of all of the files which have been loaded.</p>
+
+<p>NEEDS ( -&lt;name&gt;- )   
+Conditionally load file &quot;name&quot; if not loaded.</p>
+
+<p>$EXEC ( a1 -- f1 )      
+Invoke a DOS command string with preprocess for file and line parameters.  f1= true on error.</p>
+
+<p>SHELL ( -&lt;string&gt;- ) \ (synonym sys)
+Execute the DOS command specified, and wait for the user to execute a keystroke before
+returning to Win32Forth</p>
+
+<p>SYS ( -&lt;string&gt;- ) \ (synonym shell)
+Execute the DOS command specified, and wait for the user to execute a keystroke before
+returning to Win32Forth.</p>
+
+<p>DOS ( -&lt;string&gt;- )
+Execute the DOS command specified in a DOS window.  Close the window when the
+command is finished.</p>
+
+<p>COPYFILE ( -&lt;from to&gt;- )
+Copy a file to a directory</p>
+
+<p>WHERE ( -&lt;name&gt;- ) \ (synonym .v)
+Display the file name and line number for the source definition of the specified
+word.  If you then type: 'E &lt;enter&gt;', the editor will be started on 'name'.</p>
+
+<p>LOCATE ( -&lt;name&gt;- ) \ (synonym l)
+Show some source lines of word.</p>
+
+<p>N ( -- )               
+Show the next bunch of lines.</p>
+
+<p>LINELIST ( n1 -- )          
+Display a number of lines from the currently open file, starting at line n1.</p>
+
+<p>VIEW ( -&lt;name&gt;- ) \ (synonym v)
+View the source for a word</p>
+
+<p>EDIT ( -&lt;filename&gt;- ) \ (synonym z)
+Edit a particular file</p>
+
+<p>#FLOAD ( n1 -&lt;name&gt;- ) 
+Load file &quot;name&quot; from line n1, 1 based</p>
+
+<p>LINELOAD ( n1 -- )          
+Load the current file from line n1</p>
+
+<p>FTYPE ( -&lt;name&gt;- ) \ (synonym flist)
+Type file &quot;name&quot; to the console</p>
+
+<p>ANEW ( -&lt;name&gt;- )   
+If the &lt;name&gt; does not exist, create it.  If it does exist, execute the word.  The
+word will cause the equivalent of a FORGET to a point just past the word.  This construct
+may be used to allow a file to be loaded repeatedly by FORGETting previous loads.</p>
+
+<p>CHECKSTACK ( -- ) \ (synonym NOSTACK1)
+Do not stack check the line on which the word CHECKSTACK appears. Typically used at
+the end of a line in a source file.( Compile time stack depth checking)</p>
+
+<p>NO-STACK ( -- )               
+While loading but not compiling, STACK-CHECK will verify that no changes in the
+stack depth have occurred.</p>
+
+
+
+
+<h2>Time and timer handling</h2>
+
+<p>GET-LOCAL-TIME ( -- )               
+Get the local computer date and time and store it in TIME-BUF.</p>
+
+<p>TIME&amp;DATE ( -- sec min hour day month year ) 
+Returns the local time.</p>
+
+<p>.DATE ( -- )               
+Displays the current date.</p>
+
+<p>.TIME ( -- )               
+Display the current time.</p>
+
+<p>MS@ ( -- ms )          
+Returns the number of milliseconds that have occured since midnight of the current day.</p>
+
+<p>TIME-RESET ( -- )               
+Start an elapsed time timer.</p>
+
+<p>.ELAPSED ( -- )               
+Display the time elapsed since time-reset.</p>
+
+<p>MS ( n -- )
+\ Delay for at least n milliseconds.</p>
+
+<p>SECONDS ( n -- )           
+Delay for at least n seconds.</p>
+
+
+
+
+
+<h2>OS handling</h2>
+
+<p>.FILE ( -- ) 
+Display the name of the current file.</p>
+
+<p>CURRENT-DIR$ ( -- a ) 
+Get the full path to the current directory.</p>
+
+<p>$CURRENT-DIR! ( a1 -- f1 )
+Set the current directory, where a1 is a null terminated directory string.</p>
+
+<p>.PLATFORM ( -- )               
+Display the platform currently being used (NT, Windows95, etc.)</p>
+
+<p>NT? ( -- f1 )           
+Return true if we are running on NT</p>
+
+<p>WIN95? ( -- f1 )           
+Return true if we are running Windows 95</p>
+
+<p>F.S ( f: f1 f2 ... fn -- f1 f2 ... fn )    
+Display the contents of the floating point stack. The floating point stack is
+unchanged by this operation.</p>
+
+<p>.S ( n1 n2 ... nk -- n1 n2 ... nk )  
+Display the contents of the data stack without changing the contents.  </p>
+
+<p>.FONTS ( -- )               
+Display the available Windows fonts.</p>
+
+<p>.V ( -&lt;name&gt;- )   
+Display the file name and line number for the source of the user specified
+Win32For name.</p>
+
+<p>.BROWSE ( -- )               
+Display the editor, browser, shell, and dos command line strings.</p>
+
+<p>.DOS ( -- )               
+Display the editor, browser, shell, and dos command line strings.</p>
+
+<p>.SHELL ( -- )               
+Display the editor, browser, shell, and dos command line strings.</p>
+
+<p>.RSTACK ( -- )               
+Display the contents of the return stack.  If possible, each address n the stack is
+specified by the name of the calling function with an offset.</p>
+
+<p>.$ ( -x&lt;string&gt;x- )                 
+Used in a colon definition to specify a string delimited by the first character. 
+When later executed, the string will be displayed (without the delimiters).  In
+the stack comment above,  the &quot;x&quot; is used as a delimiting character,
+but any other character could be used.</p>
+
+
+
+
+
+<h2>Forth Internals - Headers, etc.</h2>
+
+<p>.VERSION ( -- )               
+Display the version number of the current Win32Forth system.</p>
+
+<p>.CVERSION ( -- )               
+Display the date and time of the generation of the current Win32Forth system.</p>
+
+<p>.FREE ( -- ) \ (synonym .MEM)
+Display the amount of used and available program memory</p>
+
+<p>.MEM-FREE ( -- )               
+Display the amount of unused program memory.</p>
+
+<p>.ID ( nfa -- )          
+Display the name of the forth word whose name field address is given as nfa.</p>
+
+<p>.NAME ( cfa -- )          
+Display the name of the forth word whose code field address is given as cfa.</p>
+
+<p>&gt;BODY ( cfa -- pfa )    
+Convert a code field address to a parameter field address (or body).</p>
+
+<p>BODY&gt; ( pfa -- cfa )    
+Convert a parameter field address to a code field address.</p>
+
+<p>L&gt;NAME ( lfa -- nfa )     
+Convert a link field address to a name field address.</p>
+
+<p>N&gt;LINK ( nfa -- lfa )     
+Convert a name field address to a link field address.</p>
+
+<p>&gt;NAME ( cfa -- nfa )    
+Convert a code field address to a name field address.</p>
+
+<p>NAME&gt; ( nfa -- cfa )    
+Convert a name field address to a code field address.</p>
+
+<p>&gt;VIEW ( cfa -- vfa )    
+Convert a code field address to a view field address.</p>
+
+<p>VIEW&gt; ( vfa -- cfa )    
+Convert a view field address to a code field address.</p>
+
+<p>.COUNTS ( -- )               
+Display the thread number and number of words in each thread for the context vocabulary.</p>
+
+<p>.WORDS    ( -- )               
+Display the total number of words in the system.</p>
+
+<p>.THREADS  ( -- )               
+Display each thread number and the names of the words in each thread for the context vocabulary.</p>
+
+
+
+
+<h2>Error handling / Debugging</h2>
+
+<p>BREAKER ( -- )               
+A no-operation word that can be used to set break points in colon definitions. 
+Insert the word BREAKER at the desired point in the source.  Prior to loading
+the source, type:    DEBUG BREAKER    then load the source file or execute the
+desired word.  You may wish to use the un-nest character &quot;U&quot; to
+continue single-step debugging of the desired word.</p>
+
+<p>.EXCEPTION  ( -- )               
+Display the cause of the most recent sytem exception.</p>
+
+<p>?WIN-ERROR ( f1 -- )           
+Display the last error resulting from a Windows call.</p>
+
+
+
+<hr>
+
+<p>Document : w32f-utils.htm -- old -- </p>
+
+</body>
+
+</html>

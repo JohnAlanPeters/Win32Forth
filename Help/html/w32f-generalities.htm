@@ -1,0 +1,48 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+<h1>Some generalities</h1>
+
+<h2>Case-sensivity</h2>
+
+<p>Win32Forth is case
+insensitive. <o:p></o:p></span></p>
+
+<p>There is one important exception however, it is for Windows procedures calls where you have
+to strictly follow Windows spelling : eg you have to type : </p>
+
+<p><code>LoadLibrary GetProcAddress</code> etc.</p>
+
+
+
+<h2>Forth comments</h2>
+
+<p>Forth traditional comments are in the form : </p>
+
+<p><code>\       </code>comment until end of line</p>
+<p><code>(       </code>comment until <code>)</code> is encountered (this can be a multiline comment)</p>
+
+<p>It is sometimes useful to have other sets of comments (to transiently comment in or out some
+pieces of code while debugging for instance). Win32Forth offers two additionnal multiline
+comments : </p>
+
+<p><code>((       </code>comment until <code>))</code> is encountered </p>
+<p><code>COMMENT: </code>comment until <code>COMMENT;</code> is encountered </p>
+
+<p>There is also a word to comment until end of source file : </p>
+
+<p><code>\S      </code>comment until end of file</p>
+
+
+
+<p><hr>Document : w32f-generalities.htm 2008/04/29 Camille Doiteau</p>
+
+</body>
+
+</html>

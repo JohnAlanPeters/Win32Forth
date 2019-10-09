@@ -1,0 +1,36 @@
+ProjectName= PictureViewer
+BuildFile= apps\PictureViewer\PictureViewer.f
+SearchPath= 
+PictureViewer,0
+Modules,24
+apps\PictureViewer\PictureViewer.f
+SRC\LIB\MDI.F
+SRC\LIB\RecentFiles.F
+APPS\PICTUREVIEWER\PVMenu.F
+APPS\PICTUREVIEWER\PVDialogs.F
+SRC\LIB\RegistrySupport.F
+APPS\PICTUREVIEWER\PVStatusBar.F
+SRC\LIB\StatusBar.F
+APPS\PICTUREVIEWER\PVToolbar.F
+SRC\LIB\ToolBar.F
+SRC\LIB\ExControls.F
+SRC\LIB\Textbox.f
+SRC\LIB\Listbox.f
+SRC\LIB\UpDownControl.f
+SRC\LIB\Buttons.f
+SRC\LIB\Label.f
+SRC\LIB\ScrollBar.f
+SRC\LIB\TabControl.f
+APPS\PICTUREVIEWER\RotateBits.F
+APPS\PICTUREVIEWER\PVPrinting.F
+SRC\PrintSupport.F
+SRC\LIB\AcceleratorTables.F
+APPS\PICTUREVIEWER\PVResources.F
+SRC\LIB\Resources.f
+DLLs,1
+FreeImage.dll
+Forms,0
+Auxiliary Files,0
+Resources,1
+APPS\PICTUREVIEWER\RES\PV.h
+Docs,0

@@ -1,0 +1,1262 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+
+
+<h1>Classes of error</h1>
+
+<p>There are several classes of error that you can make in Win32Forth. They are:</p>
+
+<p>Programmer error (sometimes called &quot;stupid mistake&quot;), Win32Forth error
+message (closely associated with &quot;Programmer error&quot;) and Win32Forth system error
+(rare). Here's some simple help that might help you form tearing your hair out.</p>
+
+<h2>Handling errors in Win32Forth</h2>
+
+<p>As an extended ANS system, Win32Forth implements the <a href="dpans/dpans9.htm">exception wordset</a>
+(which you are strongly recommended to read, if only to understand the need for errors
+in the first place) from the <a href="dpans/dpans.htm">ANS specification</a>.
+These words allow the programmer to trap errors, and to continue execution
+based on the error value returned. </p>
+
+<p>Commonly, though, the error is unanticipated, and the system has a global error
+handler that catches errors, prints a default error message and resets the system to allow
+programmer input. Where possible, Win32Forth tries to use the defined <a
+href="dpans/dpans9.htm#9.3.5">ANS error numbers</a>, but not all errors can be trapped by
+the system, so many are unused at present. For instance, it's very difficult to trap
+stack overflow; Win32Forth will simply terminate in this case. Frustrating, but unavoidable.
+The tables below document the used error numbers.</p>
+
+<h2><a name="Suppressing_Warnings">Suppressing Warnings</a></h2>
+
+<p>Warnings are useful to tell you of potential problems, but on the other hand if you
+know about the potential problem you may want to suppress them</p>
+
+<h3>Redefinition Warnings</h3>
+
+<p>The display of these warnings is controlled by the variable <code>WARNING</code>&nbsp
+which can be turned on and off with the words&nbsp;<code>ON</code> and <code>OFF</code>.</p>
+
+<h3>System Word Warnings</h3>
+
+<p>The display of these warnings is controlled by the value <code>SYS-WARNING?</code>
+which can be set and reset with <code>SYS-WARNING-ON</code> and <code>SYS-WARNING-OFF
+</code> respectively. The word <code>\IN-SYSTEM-OK</code> suppresses the warnings for
+remainder of the current line and then restores the previous state of <code>SYS-WARNING?
+</code> even if an error occurs. It DOES NOT make it OK to use system words in
+TURNKEYed application.</p>
+
+<h3>Stack Change Warnings</h3>
+
+<p>These warnings are suppressed with <code>NOSTACK</code> and turned back on with <code>
+CHECKSTACK</code> or its alias <code>NOSTACK1</code>. <code>CHECKSTACK</code> can also be
+used to suppress the warning for the current line if it's used after values are added to the
+stack.</p>
+
+<h3>Deprecated Word Warnings</h3>
+
+<p>The display of these warnings is controlled by the value <code>DPR-WARNING?</code> which
+can be set and reset with <code>DPR-WARNING-ON</code> and <code>DPR-WARNING-OFF</code>
+respectively.</p>
+
+
+<h2>Error messages</h2>
+
+<p>These announce themselves like so:</p>
+
+<pre>Error(n): &lt;name&gt; &lt;text&gt; in file &lt;filename&gt; at line &lt;n&gt;</pre>
+
+<p>or</p>
+
+<pre>Warning:(n) &lt;name&gt; &lt;text&gt; in file &lt;filename&gt; at line &lt;n&gt;</pre>
+
+<p>Errors entered at the console do not have the <code>&quot;in file &lt;filename&gt; at
+line &lt;n&gt;&quot;</code> text appended; it only appears if the line in error was included
+from a source file. The source line is marked with one or more carets (<code>^</code>) to indicate
+the position of the error, or the word in error, and the error or warning message is printed
+underneath. Here are a few examples;</p>
+
+<pre><b>
+     : dup 123 ;</b>
+       ^^^
+     Warning(-4100): DUP is redefined ok</pre>
+
+<pre><b>
+     : x y ;</b>
+         ^
+     Error(-13): Y is undefined ok</pre>
+
+
+
+<h2>Error Descriptions</h2>
+
+<p><code>Error(-n): &lt;name&gt; text</code></p>
+
+<p><b>Summary: </b>A summary of the error or warning above.</p>
+
+<p><b>Example: </b>An example of the error.</p>
+<pre><b>
+     10 value</b>
+             ^
+     Error(-16): requires a name</pre>
+
+<p><b>Resolution: </b>The resolution (if there is one).</p>
+
+<h3>ANS Error Messages</h3>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>THROW error number</th>
+      <th>Message text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-1</td>
+      <td><a href="#Error(-1)">no message</a></td>
+    </tr>
+    <tr>
+      <td>-2</td>
+      <td><a href="#Error(-2)">&lt;message from <code>ABORT&quot; &gt;</code></td>
+    </tr>
+    <tr>
+      <td>-4</td>
+      <td><a href="#Error(-4)">stack underflow</a></td>
+    </tr>
+    <tr>
+      <td>-13</td>
+      <td><a href="#Error(-13)">is undefined</a></td>
+    </tr>
+    <tr>
+      <td>-14</td>
+      <td><a href="#Error(-14)">is compilation only</a></td>
+    </tr>
+    <tr>
+      <td>-16</td>
+      <td><a href="#Error(-16)">requires a name</a></td>
+    </tr>
+    <tr>
+      <td>-22</td>
+      <td><a href="#Error(-22)">control structure mismatch</a></td>
+    </tr>
+    <tr>
+      <td>-38</td>
+      <td><a href="#Error(-38)">file not found</a></td>
+    </tr>
+    <tr>
+      <td>-45</td>
+      <td><a href="#Error(-45)">floating point stack underflow</a></td>
+    </tr>
+    <tr>
+      <td>-58</td>
+      <td><a href="#Error(-38)">unmatched interpreted conditionals</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Extended System Error Messages</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>THROW error number</th>
+      <th>Message text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-260</td>
+      <td><a href="#Error(-260)">is not a DEFER</a></td>
+    </tr>
+    <tr>
+      <td>-262</td>
+      <td><a href="#Error(-262)">is not a VALUE</a></td>
+    </tr>
+    <tr>
+      <td>-270</td>
+      <td><a href="#Error(-270)">out of memory</a></td>
+    </tr>
+      <tr>
+      <td>-271</td>
+      <td><a href="#Error(-271)">memory allocation failed</a></td>
+    </tr>
+    <tr>
+      <td>-272</td>
+      <td><a href="#Error(-272)">memory release failed</a></td>
+    </tr>
+    <tr>
+      <td>-280</td>
+      <td><a href="#Error(-280)">create-file failed</a></td>
+    </tr>
+    <tr>
+      <td>-281</td>
+      <td><a href="#Error(-281)">read-file failed</a></td>
+    </tr>
+    <tr>
+      <td>-282</td>
+      <td><a href="#Error(-282)">write-file failed</a></td>
+    </tr>
+    <tr>
+      <td>-290</td>
+      <td><a href="#Error(-290)">is interpretation only</a></td>
+    </tr>
+    <tr>
+      <td>-300</td>
+      <td><a href="#Error(-300)">locals defined twice</a></td>
+    </tr>
+    <tr>
+      <td>-301</td>
+      <td><a href="#Error(-301)">too many locals</a></td>
+    </tr>
+    <tr>
+      <td>-302</td>
+      <td><a href="#Error(-302)">missing }</a></td>
+    </tr>
+    <tr>
+      <td>-310</td>
+      <td><a href="#Error(-310)">procedure not found</a></td>
+    </tr>
+    <tr>
+      <td>-311</td>
+      <td><a href="#Error(-311)">&lt;Windows error message&gt;</a></td>
+    </tr>
+    <tr>
+      <td>-320</td>
+      <td><a href="#Error(-320)">stack changed</a></td>
+    </tr>
+    <tr>
+      <td>-330</td>
+      <td><a href="#Error(-330)">can't use EXIT in a method</a></td>
+    </tr>
+    <tr>
+      <td>-331</td>
+      <td><a href="#Error(-331)">can't use DOES&gt; in a method</a></td>
+    </tr>
+    <tr>
+      <td>-332</td>
+      <td ><a href="#Error(-332)">method must end with ;M</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Warning Messages</h3>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>THROW error number</th>
+      <th>Message text</th>
+    </tr>
+  </thead>
+  <Tbody>
+    <tr>
+      <td>-4100</td>
+      <td><a href="#Warning(-4100)">is redefined</a></td>
+    </tr>
+    <tr>
+      <td>-4101</td>
+      <td><a href="#Warning(-4101)">is a system word in an application word</a></td>
+    </tr>
+    <tr>
+      <td>-4102</td>
+      <td><a href="#Warning(-4103)">is an application word set to a system word</a></td>
+    </tr>
+    <tr>
+      <td>-4103</td>
+      <td><a href="#Warning(-4103)">stack depth increased</a></td>
+    </tr>
+    <tr>
+      <td>-4104</td>
+      <td><a href="#Warning(-4104)">is a deprecated word</a></td>
+    </tr>
+    <tr>
+      <td>-4105</td>
+      <td><a href="#Warning(-4105)">has a hash value that is already recognised by this class.&quot;</a></td>
+    </tr>
+    <tr>
+      <td>-4106</td>
+      <td><a href="#Warning(-4106)">is an application word whose runtime is in a system word.&quot;</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+<h3>Application and Runtime Error Messages</h3>
+
+
+<table>
+  <thead>
+    <tr>
+      <th>THROW error number</th>
+      <th>Message text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>9998</td>
+      <td><a href="#Error(9998)">Windows exception trapped</a></td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-1)">Error(-1)</a>: &lt;no message&gt;</h2>
+
+<p><b>Summary:</b> ANS error number. This error number you will never see. It's
+generated by <code><a href="dpans/dpans6.htm#6.1.0670">ABORT</a></code> (or <code>
+<a href="dpans/dpans9.htm#9.6.1.227">-1 THROW</a></code>) and is handled silently by the
+system.</p>
+
+<p><b>Resolution:</b> This error needs to be <code><a href="dpans/dpans9.htm#9.3.5">CATCH</a>ed</code>
+if you wish to handle it.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-2)">Error(-2)</a>: &lt;name&gt; &lt;message from ABORT&quot;&gt;</h2>
+
+<p><b>Summary: </b>ANS error number. This error message is generated by <code><a
+href="dpans/dpans9.htm#9.6.2.0680">ABORT&quot;</a></code>, and the message text is from that. </p>
+
+<p><b>Example: </b></p>
+<pre><b>    : X S&quot; Rubbish File Name&quot; OPEN-FILE ABORT&quot; Rubbish file didn't open!&quot; ;</b> 
+    ok
+    x
+    ^
+    Error(-2): X Rubbish file didn't open!</pre>
+
+<p><b>Resolution:</b> These are application errors, not Win32Forth system errors; hopefully,
+the message text is clear enough so that you can fix the problem. If it's not, then you need
+to refer to the application's documentation for this error (if it exists) or contact the author
+if you can't understand or fix the problem yourself.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-4)">Error(-4)</b></a>: &lt;name&gt; stack underflow</h2>
+
+<p><b>Summary: </b>ANS error number. The word &lt;name&gt; caused the data stack to underflow;
+the top of the stack would have pointed to an entry before the start of the stack.</p>
+
+<p><b>Example:</b></p>
+<pre><b>    10 drop drop</b>
+            ^^^^
+    Error(-4): DROP stack underflow</pre>
+
+<p><b>Resolution: </b>Definite programmer error. Best advice is to use the
+<a href="w32f-debugging.htm">debugger</a>, and watch the stack contents carefully. It
+may be that the word in the message is OK, just that there weren't enough stack
+entries for it because of some previous words, or it may be that the word
+itself declares it consumes x stack entries, but in fact consumes &gt;x.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-13)">Error(-13)</a>: &lt;name&gt; is undefined</h2>
+
+<p><b>Summary: </b>ANS error number. The word
+&lt;name&gt; doesn't exist in the current vocabulary search order.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    : x 10 make-csr ;</b>
+           ^^^^
+    Error(-13): MAKE-CSR is undefined</pre>
+
+<p><b>Resolution: </b>Definite programmer error. Have you
+typed it correctly? Have you checked it exists, but in some vocabulary that's
+not in the <a href="dpans/dpans16.htm">search order</a>? If you're sure you typed it correctly, think
+the word is something like MAKE but you're not sure, or can't remember if you
+defined it or not, try these steps.</p>
+
+<ul>
+ <li>Have you mistyped? Perhaps the word starts with "MAK" . <a href="dpans/dpans15.htm#15.6.1.2465">
+<code>WORDS</code></a> is your friend here;</li>
+</ul>
+
+<pre><b>
+    words mak</b>
+    ----------- HASHED -----------------------------------------------
+    MAKECURSOR:
+    ----------- FORTH ------------------------------------------------
+    MAKELONG <span style='color:red'>MAKE-CURSOR</span> MAKEPATHRELATIVETO MAKEABSOLUTEPATH MAKEDEFER
+    ------------------------------------------------------------------
+</pre>
+
+<ul>
+ <li >If the word is in a vocabulary, perhaps it's not in the <a href="dpans/dpans16.htm">
+search order</a>.</li>
+</ul>
+
+<pre><b>    order</b>
+    Context: FORTH FORTH ROOT
+    Current: FORTH ok</pre>
+
+<p>Words will be <a href="dpans/dpans16.htm#16.6.1.1180">defined</a> in
+the <b>current</b> vocabulary (in this case, <code><a href="dpans/dpans16.htm#16.6.2.1590">
+FORTH</a>)</code>,
+and will be searched for in the <b>context</b> vocabularies (<code>FORTH</code> and
+<code>ROOT</code>). Use <code><a href="dpans/dpans16.htm#16.6.2.1965">ONLY</a></code>
+<code><a href="dpans/dpans16.htm#16.6.2.0715">ALSO</a></code> and
+<code><a href="dpans/dpans16.htm#16.6.2.2037">PREVIOUS</a></code> with specific vocabularies to
+modify the search order.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-14)">Error(-14)</a>: &lt;name&gt; is compilation only</h2>
+
+<p><b>Summary: </b>ANS error number. The word
+&lt;name&gt; can't be used except in a : <a
+href="dpans/dpans6.htm#6.1.0450"><code>colon definition</code></a>.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    10 0 do i . loop</b>
+         ^^
+    Error(-14): DO is compilation only</pre>
+
+<p><b>Resolution: </b>Definite programmer error. Some words just can't be used while
+<a href="dpans/dpansa3.htm#A.3.4.3.2">interpreting</a>; they include</p>
+
+<pre><code>IF ELSE THEN ENDIF DO I J K LOOP +LOOP LEAVE UNLOOP BEGIN WHILE REPEAT UNTIL CASE OF ENDOF ENDCASE</code></pre>
+
+<p>and possibly others. Put the words you want to test in a definition, and execute that.</p>
+
+<pre><b>    : test 10 0 do i . loop ;</b>
+    ok
+    <b>test</b> 0 1 2 3 4 5 6 7 8 9 ok</pre>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-16)">Error(-16)</a>: &lt;name&gt; requires a name</h2>
+
+<p><b>Summary: </b>ANS error number. The word &lt;name&gt; is to be parsed by a defining word
+which will create a word named <code>name</code> ; it needs a name to create.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    10 value</b>
+            ^
+    Error(-16): requires a name</pre>
+
+<p><b>Resolution: </b>Definite programmer error. Some words that require a name to create are</p>
+
+<pre><code><a href="dpans/dpans6.htm#6.1.1000">CREATE</a> <a href="dpans/dpans6.htm#6.2.2405">VALUE</a> <a href="dpans/dpans6.htm#6.1.2410">VARIABLE</a> DEFER VOCABULARY</code></pre>
+
+<p>and possibly others.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-22)">Error(-22)</a>: &lt;name&gt; control structure mismatch </h2>
+
+<p><b>Summary: </b>ANS error number. The named control
+structure word is in the wrong place.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    : notright if 10 then 20 else 30 ;</b>
+                             ^^^^
+    Error(-22): ELSE control structure mismatch</pre>
+
+<p><b>Resolution: </b>The example above is a typical example of thinking in C or PASCAL
+instead of Forth; it's a : </p>
+
+<p><code>&lt;flag&gt; IF &lt;things to do if true&gt; ELSE &lt;things to do if
+false&gt; THEN </code></p>
+
+<p>construction. Other control words (like <code>LOOP</code> and <code>ENDCASE</code>
+without a preceding <code>DO</code> or <code>CASE</code> respectively) cause the same error.
+Also note that a control structure must be complete in the word in which it's defined.
+You can't start an <code>IF</code> in one word and have the matching <code>THEN</code> in another.
+Also see error -320; you might make this mistake;</p>
+
+<pre><b>    : notright if dup if 10 else 20 then ;</b>
+                                         ^
+    Error(-320): ; stack changed</pre>
+
+<p>There's a missing <code>THEN</code> in the definition; Win32Forth only knows that
+there's something wrong right at the end, but can't tell what it is, hence the peculiar
+message. (Reason: W32F uses the data stack as a
+<a href="dpans/dpans3.htm#3.2.3.2">control flow stack</a> while compiling these words,
+and as a consequence can't tell that the value is a control value, rather than a regular
+data value.)</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-38)">Error(-38)</a>: &lt;name&gt; file not found</h2>
+
+<p><b>Summary: </b>ANS error number. For words that
+expect a filename, the file couldn't be found in the search path.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    fload files2.f</b>
+          ^^^^^^^^
+    Error(-38): files2.f file not found</pre>
+
+<p><b>Resolution: </b>Make sure the file you require is in
+the search path. The <code>.FPATH</code> command will show you the list of
+directories that will be searched.</p>
+
+<pre><b>.fpath </b>.;S:\FORTH\CVSVER;SRC;SRC\LIB;RES;DEMOS;SRC\CONSOLE;HTM ok</pre>
+
+<p>Paths can be added with the <code>FPATH+</code> command.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-45)">Error(-45)</a>: &lt;name&gt; floating point stack underflow</h2>
+
+<p><b>Summary: </b>ANS error number. The word &lt;name&gt; caused the floating point stack
+to underflow; the top of the floating point stack would have pointed to an entry before
+the start of the floating point stack.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    10e0 fdrop fdrop</b>
+               ^^^^^
+    Error(-45): FDROP floating point stack underflow</pre>
+
+<p><b>Resolution: </b>Definite programmer error. The problem might be that the base is
+set to HEX which causes the number to be treated as an integer (as "e" is a valid
+hexadecimal digit) or double, and thus go on the data stack. Best advice is to use the
+<a href="w32f-debugging.htm">debugger</a>, and watch the stack contents carefully. It
+may be that the word in the message is OK, just that there weren't enough stack
+entries for it because of some previous words, or it may (it happens) be that the word's comments
+are wrong, declaring it as consuming x stack entries, but in fact consuming more than x
+entries.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-58)">Error(-58)</a>: &lt;name&gt; Unmatched Interpreted conditionals</h2>
+
+<p><b>Summary: </b>ANS error number. The word
+&lt;name&gt; caused the interpreter to encounter an interpreted conditional
+structure which was not concluded before the input stream (including any
+necessary REFILLs) is exhausted. When the source code is loaded from a file
+then the error occurs at the end of the last line of the file. When inputting
+from the command line this error does <b>not</b> occur; instead all input is
+ignored until the correct ending interpreted conditional is encountered. <b>&lt;name&gt;</b>
+normally indicates a word that calls EVALUATE, either directly or indirectly.
+It is possible for this error to only occur on some occassions since different
+values of the test supplied to [IF] or #IF cause different parts of the input
+stream to be scanned for the matching conditional(s).</p>
+
+<p><b>Example:</b></p>
+<pre>    &nbsp;
+    &nbsp;
+    ^
+    Error(-58): Unmatched Interpreted conditionals!!!
+    in file C:\PROGRAM FILES\WIN32FORTH\</pre><pre>TEST.F at line 98</pre>
+
+<p><b>Resolution: </b>Definite programmer error. The
+problem is either a missing <code>[THEN]</code> or <code>#THEN</code> (or their synonyms
+<code>[ENDIF]</code> or <code>#ENDIF</code>) or the [] and # forms are intermixed (although
+they perform the same actions <code>#THEN</code> will not match with <code>[IF]</code> or
+vice versa).</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-260)">Error(-260)</a>: &lt;name&gt; is not a DEFER </h2>
+
+<p><b>Summary: </b>Extended error number. The word <code>IS</code> can
+only set the value of a <code>DEFER</code>ed word.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    0 value z2  </b>
+    ok
+    <b>' dup is z2</b>
+             ^
+    Error(-260): Z2 is not a DEFER</pre>
+
+<p><b>Resolution: </b>If the name is a <code><a href="dpans/dpans6.htm#6.2.2405">VALUE</a></code>
+ or a <code>2VALUE</code> , use <code><a href="dpans/dpans6.htm#6.2.2295">TO</a></code>
+or <code>+TO</code> to set a value.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-262)">Error(-262)</a>: &lt;name&gt; is not a VALUE </h2>
+
+<p><b>Summary: </b>Extended error number. The word
+<code><a href="dpans/dpans6.htm#6.2.2295">TO</a></code> or <code>+TO</code> can
+only set the value of a <code><a href="dpans/dpans6.htm#6.2.2405">VALUE</a></code> word.</p>
+
+<p><b>Example:</b></p>
+<pre><b>
+    2 constant z2  </b>
+    ok<b>
+    5 to z2</b>
+             ^
+    Error(-260): Z2 is not a VALUE</pre>
+
+<p><b>Resolution: </b>If the name is a <code>DEFER</code> ,
+use <code>IS</code> to set a value. You cannot <code><a href="dpans/dpans6.htm#6.2.2295">TO
+</a></code> a <code><a href="dpans/dpans6.htm#6.1.0950">CONSTANT</a></code> or a
+<code><a href="dpans/dpans6.htm#6.1.2410">VARIABLE</code></a> .</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-270)">Error(-270)</a>: &lt;name&gt; &lt;memory pool&gt; out of memory</h2>
+
+<p><b>Summary: </b>Extended error number. An <code><a
+href="dpans/dpans6.htm#6.1.0710">ALLOT</a></code> or <code><a
+href="dpans/dpans6.htm#6.1.0150">,</a></code> has caused the named memory pool to be exhausted.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>
+    200000000 allot</b>
+              ^^^^^
+    Error(-270): ALLOT APP out of memory</pre>
+
+<p><b>Resolution: </b>There is a limit to each of the
+predefined memory pools. The <code>.FREE</code> word shows the areas and their
+size;</p>
+
+<pre><b>    .free</b>
+    Section Address     Total     Used       Free
+    ------- --------- --------- --------- ---------
+    LOCALS  1473C0h      4,096         0      4,096
+    *PROCS  4135F8h     12,288     4,070      8,218
+    CODE    401000h     40,960    12,144     28,816
+    APP     40B000h  1,024,000   188,760    835,240
+    SYS     505000h    512,000   271,608    240,392
+    * areas are inline
+    Malloc/Pointer: 1,046,504 ok</pre>
+
+<p>Each of the pools is defined when
+the kernel is compiled. If your program requires large memory areas, then
+consider using <code><a
+href="dpans/dpans14.htm#14.6.1.0707">ALLOCATE</a></code> instead of
+<code><a href="dpans/dpans6.htm#6.1.0710">ALLOT</a></code>. You may wish to meta-compile
+a new kernel with larger named memory
+pools. On the other hand, this could be a programming error, if all you're
+doing is allocating a few small buffers.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-271)">Error(-271)</a>: &lt;name&gt; memory allocation failed</h2>
+
+<p><b>Summary: </b>Extended error number. A request for
+system memory failed, probably due to the size requested.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    123456789012 malloc</b>
+                 ^^^^^^
+    Error(-271): MALLOC memory allocation failed</pre>
+
+<p><b>Resolution: </b><code>MALLOC</code>
+requests memory from the operating system. There's lots of it. Are you sure you
+need <b>that</b> much? <code>.MALLOCS</code> will show you the number and size
+of already allocated memory; on most systems, you should be able to get several
+hundred megabytes without a problem.</p>
+
+<pre><b>    .mallocs</b>
+    Abs-Addr Rel-Addr       Bytes HeapAddr Type
+    -------- --------    -------- -------- ----
+    00C50020 00C50030   1,024,000 00140000
+    0014C0E0 0014C0F0       8,192 00140000
+    0014BE60 0014BE70         332 00140000
+    00149EB8 00149EC8       8,060 00140000
+    001473B0 001473C0       4,096 00140000
+    00146C68 00146C78       1,824 00140000
+    -------- --------    -------- -------- ----
+    Total allocated 1,046,504
+    ok</pre>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-272)">Error(-272)</a>: &lt;name&gt; memory release failed</h2>
+
+<p><b>Summary: </b>Extended error number. Memory
+released failed; probably due to an invalid pointer.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    : x release ;</b>
+     ok
+    <b>0 x</b>
+      ^
+    Error(-272): X memory release failed</pre>
+
+<p><b>Resolution: </b>Probably a bad pointer, not one you got from an
+<code><a href="dpans/dpans14.htm#14.6.1.0707">ALLOCATE</a></code> or <code>MALLOC</code>. You
+can only <code>RELEASE</code> memory in the <code>REL-ADDR</code> column below; it's the value
+returned by a <code>MALLOC</code> .</p>
+
+<pre><b>    .mallocs</b>
+    Abs-Addr Rel-Addr       Bytes HeapAddr Type
+    -------- -------- -------- -------- ----
+    00C50020 00C50030   1,024,000 00140000
+    0014C0E0 0014C0F0       8,192 00140000
+    0014BE60 0014BE70         332 00140000
+    00149EB8 00149EC8       8,060 00140000
+    001473B0 001473C0       4,096 00140000
+    00146C68 00146C78       1,824 00140000
+    -------- --------    -------- -------- ----
+    Total allocated 1,046,504
+    ok</pre>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-280)">Error(-280)</a>: &lt;name&gt; create-file failed</h2>
+
+<p><b>Summary: </b>Extended error number. Currently
+only used by <code>FSAVE-FILE</code>; probably indicates a bad file name.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    0x40000 300 c&quot; .. def^$??&quot; fsave-file</b>
+                               ^^^^^^^^^^
+    Error(-280): FSAVE-FILE create-file failed</pre>
+
+<p><b>Resolution: </b>Try following Windows standards for
+naming files -- or perhaps you're trying to write to an existing file or to a
+directory you don't have permission to access.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-281)">Error(-281)</a>: &lt;name&gt; read-file failed</h2>
+
+<p><b>Summary: </b>Extended error number. Currently
+only used by <code><a href="dpans/dpans7.htm#7.6.2.2125">REFILL</a></code>. Very unusual error.</p>
+
+<p><b>Example:</b></p>
+
+<p><b>Resolution: </b>An I/O error of some description was
+encountered while reading the source for a program. Probably indicates there's
+something wrong with the file, the disk or the file handle; I/O errors during
+read are unusual. Have you closed a file handle you didn't own? Is it a pipe
+that's disconnected?</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-282)">Error(-282)</a>: &lt;name&gt; write-file failed</h2>
+
+<p><b>Summary: </b>Extended error number. Currently
+only used by <code>FSAVE-FILE</code>; probably indicates a full file system, or a
+file system I/O error.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    0x40000 300 c&quot; .. def^$??&quot; fsave-file</b>
+                               ^^^^^^^^^^
+    Error(-280): FSAVE-FILE write-file failed</pre>
+
+<p><b>Resolution: </b>Your disk might be full; or (if the
+file is a pipe) perhaps the pipe is broken.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-290)">Error(-290)</a>: is interpretation only </h2>
+
+<p><b>Summary: </b>Extended error number. Reserved; not currently used.</p>
+
+<p><b>Example:</b></p>
+
+<p><b>Resolution:
+</b></p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-300)">Error(-300)</a>: { locals defined twice </h2>
+
+<p><b>Summary: </b>Extended error number. Locals can only be defined once.</p>
+
+<pre><b>Example:</b>    : x { a b -- c } { d } ;</b>
+                             ^
+    Error(-300): { locals defined twice</pre>
+
+<p><b>Resolution: </b>Did you really mean this? Perhaps you used { } for locals, and also
+specified <code><a href="dpans/DPANS13.HTM#13.6.2.1795">LOCALS|</a></code> . They're mutually
+exclusive</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-301)">Error(-301)</a>: &lt;name&gt; too many locals </h2>
+
+<p><b>Summary: </b>Extended error number. </p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    : x { a b c d e f g h i j k l m n o p } ;</b>
+                                  ^
+    Error(-301): M too many locals</pre>
+
+<p><b>Resolution: </b>16 is the maximum number of locals.
+Perhaps you forgot the closing }, or need to factor your word better.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-302)">Error(-302)</a>: missing } </h2>
+
+<p><b>Summary: </b>Extended error number. Locals
+started with { require a closing }.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    fload test</b>
+    ^
+    Error(-302): missing } in file &lt;directory&gt;\TEST.F at line 3</pre>
+
+<p><b>Resolution: </b>Only occurs when including a file,
+if the end of the file is encountered during the { definition. The file in this
+case looked like this;</p>
+
+<pre>: x { a b c</pre>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-310)">Error(-310)</a>: &lt;name&gt; procedure not found </h2>
+
+<p><b>Summary: </b>Extended error number. The CALL
+couldn't find the Windows procedure.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    call Allocconsole</b>
+         ^^^^^^^^^^^^
+    Error(-310): Allocconsole procedure not found</pre>
+
+<p><b>Resolution: </b> Did you spell the procedure name correctly? They're CaseSensitive names
+and must follow Window's spelling. Have you declared the library that contains the
+procedure? Check if you've done so. Use the words <code>.PROCS</code> and <code>.LIBS</code> ,
+ (that use case insensitive wildcard string) to identify the procedures and libraries loaded.</p>
+
+<pre><b>    .procs alloc</b>
+    Location ProcName    Prm ProcEP   LibName
+    -------- --------    --- -------- --------
+    00414208 GlobalAlloc  -  7C58DB7D KERNEL32.DLL
+    00420E98 GlobalLock   1  7C58E043 KERNEL32.DLL
+    0040F1FC VirtualAlloc 4  7C58E845 KERNEL32.DLL
+    0040D5AC HeapReAlloc  4
+    0040D574 HeapAlloc    3  77FCC0EF KERNEL32.DLL
+    0040BF98 <span style='color:red'>AllocConsole 0</span>
+    Displayed 6 of 248 procedures defined</pre>
+<pre><b>    .libs</b>
+    Location Handle   Name
+    -------- -------- -----------
+    00437490 71710000 COMCTL32.DLL
+    00432034 77A50000 OLE32.DLL
+    00420508 76B30000 COMDLG32.DLL
+    004114E8 782F0000 SHELL32.DLL
+    004114D0 7C2D0000 ADVAPI32.DLL
+    004114BC 77F40000 GDI32.DLL
+    00411368 00940000 WINCON.DLL
+    0040E81C 70A70000 SHLWAPI.DLL
+    0040D15C 7C570000 KERNEL32.DLL
+    0040BD88 77E10000 USER32.DLL
+    0040BAEC 10000000 W32FCONSOLE.DLL</pre>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-311)">Error(-311)</a>: &lt;name&gt; &lt;Windows error message&gt; </h2>
+
+<p><b>Summary: </b>Extended error number. Some Windows error occurred; the text explains what.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    fsave win32for.exe</b>
+    Entry point at 2A84h (402A84h)
+    Segment Origin    Size    Alloc
+    ------- --------- ------  -------
+    CODE    401000h    12120   40960
+    APP     40B000h   188600 1024000
+    SYSTEM  505000h   271836  512000
+    ------- --------- ------ -------
+    Total             472556
+    Building image win32for.exe
+    File 'win32for.exe' :
+          ^^^^^^^^^^^^
+    Error(-311): win32for.exe The process cannot access the file because
+    it is being used by another process. Windows DLL error</pre>
+
+<p><b>Resolution: </b>Fix it! Some are pretty
+straightforward; the example shows that <code>FSAVE</code>ing the running process doesn't
+work. Others are tougher. </p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-320)">Error(-320)</a>: &lt;name&gt; stack changed</h2>
+
+<p><b>Summary: </b>Extended error number. Compilation error.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    : x if 20 else 30 ;</b>
+                      ^
+    Error(-320): ; stack changed</pre>
+
+<p><b>
+Resolution: </b>You've added or removed something
+from the stack while compiling a <code><a href="dpans/DPANS6.HTM#6.1.0450">:</a></code> or
+ <code><a href="dpans/DPANS15.HTM#15.6.2.0930">CODE</a></code> definition. The example has a
+missing <code>THEN</code> ; see also <code><a
+href="#Error(-22)">Error(-22)</a></code> for another example.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-330)">Error(-330)</a>: &lt;name&gt; can't use EXIT in a method</h2>
+
+<p><b>Summary: </b>Extended error number. Due to the
+internal structure of classes and methods, <code><a href="dpans/DPANS6.HTM#6.1.1380">EXIT</a></code>
+or anything that compiles the equivalent is not permitted. </p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    :class x &lt;super object </b>
+    ok
+    :m draw: { a b }
+    dup 0= if exit then ;m
+              ^^^^
+    Error(-330): EXIT can't use EXIT in a method</pre>
+
+<p><b>Resolution: </b>Well, rewrite the code; it might be
+all the better for it.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-331)">Error(-331)</a>: &lt;name&gt; can't use DOES&gt; in a method</h2>
+
+<p><b>Summary: </b>Extended error number. Due to the internal structure of classes and methods,
+<code><a href="dpans/DPANS6.HTM#6.1.1250">DOES&gt;</a></code> or anything that compiles the
+equivalent is not permitted. </p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    :class x &lt;super object</b>
+     ok
+    :m draw: { a b }
+     dup 0= does&gt; @ ;m
+           ^^^^^
+    Error(-331): DOES&gt; can't use DOES&gt; in a method</pre>
+
+<p><b>Resolution: </b>What exactly would you want to do with a <code>DOES&gt;</code>
+in a method? This <code>DOES&gt;</code> not compute.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(-332)">Error(-332)</a>: &lt;name&gt; method must end with ;M</h2>
+
+<p><b>Summary: </b>Extended error number. Well, they just must, OK?
+<a href="w32f-objects.htm">Methods</a> aren't ordinary words.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    :class x &lt;super object</b>
+     ok
+    :m draw: { a b }
+    dup 0= @ ;
+             ^
+    Error(-332): ; method must end with ;M</pre>
+
+<p><b>Resolution: </b>Replace <code>;</code> with <code>;M</code></p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Warning(-4100)">Warning(-4100)</a>: &lt;name&gt; is redefined</h2>
+
+<p><b>Summary: </b>Warning. There are two or more
+definitions of &lt;name&gt; in the same vocabulary. The last definition is the
+one in force. </p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    : y 1 2 3 ;</b>
+     ok
+    : y 4 5 6 ;
+      ^
+    Warning(-4100): Y is redefined ok</pre>
+
+<p><b>Resolution: </b>Did you mean to define the same word
+twice in the same vocabulary? If so, and this is annoying you, then turn off
+warnings with <code><a href="#Suppressing_Warnings">WARNING OFF</a></code>. </p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Warning(-4101)">Warning(-4101)</a>: &lt;name&gt; is a system word in an application word</h2>
+
+<p><b>Summary: </b>Warning. The word you are defining is
+in the normal application area; but the &lt;name&gt; is in the system area, and
+might not be available if the application is <code>TURNKEY</code>ed. </p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    : xx .procs ;</b>
+         ^^^^^^
+    Warning(-4101): .PROCS is a system word in an application word</pre>
+
+<p><b>Resolution: </b>If you understand this, and it's
+annoying you, then turn off warnings with
+<code><a href="#Suppressing_Warnings">SYS-WARNING-OFF</a></code>. Otherwise, realise that your
+application might fail if it is <code>TURNKEY</code>ed.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Warning(-4102)">Warning(-4102)</a>: &lt;name&gt; is an application word set to a system word</h2>
+
+<p><b>Summary: </b>Warning. The word you are setting is
+in the normal application area; but the &lt;name&gt; is in the system area, and
+might not be available if the application is <code>TURNKEY</code>ed. </p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    defer x</b>
+     ok
+    ' .procs is x
+                ^
+    Warning(-4102): X is an application word set to a system word</pre>
+
+<p><b>Resolution: </b>If you understand this, and it's annoying you, then turn off warnings
+with <code><a href="#Suppressing_Warnings">SYS-WARNING-OFF</a></code>. Otherwise, realise that your
+application might fail if it is <code>TURNKEY</code>ed.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Warning(-4103)">Warning(-4103)</a>: &lt;name&gt; stack depth increased</h2>
+
+<p><b>Summary: </b>Warning. When loading a file, one or
+more lines have left a value on the stack. This is possibly an error, but might
+be OK for you. See about
+<a href="#Suppressing_Warnings">suppressing warning messages</a> for more
+details on stack changes.</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    fload test</b>
+    1 2
+    ^
+    Warning(-4103): stack depth increased in file &lt;directory&gt;\TEST.F at line 5
+    Stack: [2] 1 2
+    ok..</pre>
+
+<p><b>Resolution: </b>Depends; check out whether it's OK for this to happen.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Warning(-4104)">Warning(-4104)</a>: is a deprecated word</h2>
+
+<p><b>Summary: </b>Warning. The word you are using is
+marked as deprecated. Such words will be removed form Win32Forth in the
+future.For more information take a look at the source of the deprecated word.</p>
+
+<p><b>Example:</b></p>
+
+<pre>   : foo ; DEPRECATED
+     ok
+    : foo1 foo ;
+           ^^^
+   Warning(-4104): FOO is a deprecated word 
+   ok</pre>
+
+<p><b>Resolution: </b>If you understand this, and it's annoying you, then turn off warnings with
+<code><a href="#Suppressing_Warnings">DPR-WARNING-OFF</a></code>. Otherwise, realise that
+your application might not work with new Win32Forth Versions in the future.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Warning(-4105)">Warning(-4105)</a>: has a hash value that is already recognised by this class</h2>
+
+<p><b>Summary: </b>Warning. There are two or more
+methods in the same class, or an ancestor. The last method is the one in force.
+</p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    :m getPeriodY: .&quot; Executing GetPeriodY&quot; ;m</b>
+     ok
+    :m setperiods: .&quot; Executing SetPeriods&quot; ;m
+       ^^^^^^^^^^^
+    Warning(-4105): SETPERIODS: has a hash value that is already recognised by this class.  ok</pre>
+
+<p><b>Resolution: </b>Hashing method names is not perfect,
+so very occassionally clashes may occur. Try renaming the method. If the method
+that the new method clashes with is in an ancestor, and is not needed by this
+class then you can ignore the warning. If so, and this is annoying you, then
+turn off warnings with <code><a href="#Suppressing_Warnings">WARNING OFF</a></code>. </p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Warning(-4106)">Warning(-4106)</a>: &lt;name&gt; is an application word whose runtime is in a system word</h2>
+
+<p><b>Summary: </b>Warning. The word &lt;name&gt; you
+are defining is in the normal application area; but the DOES&gt; part of the
+defining word is in the system area, and might not be available if the
+application is <code>TURNKEY</code>ed. </p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    : MyConstant create , does&gt; @ ;</b>
+     ok
+    ' MyConstant Foo
+                 ^
+    Warning(-4106): Foo is an application word whose runtime is in a system word </pre>
+
+<p><b>Resolution: </b>If you understand this, and it's
+annoying you, then turn off warnings with
+<code><a href="#Suppressing_Warnings">SYS-WARNING-OFF</a></code>. Otherwise, realise that your
+application might fail if it is <code>TURNKEY</code>ed.</p>
+
+
+
+
+
+<p><hr></p>
+<h2><a name="Error(9998)">Error(9998)</a>: &lt;name&gt; Windows exception trapped</h2>
+
+<p><b>Summary:
+</b>Application/run time error number. </p>
+
+<p><b>Example:</b></p>
+
+<pre><b>    0 0 /</b>
+    EXCEPTION 0xC0000094 INT_DIVIDE_BY_ZERO
+    Version: 6.09.14 Build: 17
+    Registers:
+    Eax:      00000000
+    Ebx: TOS  00000000 top of stack
+    Ecx:      00127FB0
+    Edx: USER 00000000 user area
+    Edi:      00000000
+    Esi: IP   0040B100 Forth ip
+    Esp: SP@  00126F78 stack ptr
+    Ebp: RP@  0012FF8C rstack ptr
+    Eip: PC   00401C12 machine ip
+    Backtracking: _INTERPRET+20 CONSOLE-STATUSBAR-INTERPRET+0 QUERY-INTERPRET+2 CATCH+14
+    Data stack: 0 0 1 2
+    Primitive /MOD loaded from: SRC\KERNEL\FKERNEL.F at line: 1207
+    Invoking word _INTERPRET loaded from: SRC\KERNEL\FKERNEL.F at line: 4579
+    fails at word / loaded from: SRC\KERNEL\FKERNEL.F at line: 1233
+
+    Press any key to exit...
+         ^
+    Error(9998): / Windows exception trapped</pre>
+
+<p><b>Resolution: </b>Wow, you expect us to fix all your problems? If you really can't
+debug this one (and some of them can be difficult), please send the mini-dump shown above to us
+<a href="mailto:win32forth@yahoogroups.com?subject=Error(9998):%20please%20help,%20I've%20tried%20everything;%20mini-dump%20included"> here: </a>
+and we'll try our best. <b>Please, please, please include the mini-dump and any other
+supporting material, such as the code that caused the error.</b> </p>
+
+
+
+<p><hr></p>
+<p>Document: w32f-errors.htm -- 2006/08/03 -- georgeahubert</p>
+
+</body>
+
+</html>

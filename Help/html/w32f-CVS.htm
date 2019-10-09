@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>CVS (Concurrent Versions System) use</span></h1>
+
+<p>This document is of interest only for the Win32Forth developers.</p>
+
+
+
+<h2>First Installation of the CVS</h2>
+
+<p>To install the CVS, please refer to this link :
+<a href='http://win32forth.sourceforge.net/howtojoin.htm'>Sourceforge CVS</a>
+<img border=0 width=16 height=16 id="_x0000_i1026" src=ONWEB.gif>
+(if this link is broken, look at http://www.win32forth.org ).
+It explains how to get rights, set public and private keys, and establish a
+connexion to the CVS.</p>
+
+<p>Basically, installing the CVS on your computer means creating a local copy
+of all the directories and files that form the "under-development" version of
+Win32Forth and that lays in the Sourceforge repository. Then you can make changes
+to theese files and upload them ("commit them") on Sourceforge.</p>
+
+<p>It is a good idea to devote a new directory (say c:\win32forthcvs") to theese
+files.</p>
+
+<p>The preferred Concurrent Versions System Client used is named "TortoiseCVS" (though
+there are alternatives available).</p>
+
+
+<h2>How to use the CVS</h2>
+
+
+<h3>How to handle Win32forth and the CVS</h3>
+
+<p>As already explained, you will have a new version of Win32Forth. The best way
+to get coherent files is to run new developments in the CVS directory itself. For
+that, you need to make the CVS version a running win32Forth. Do this  by
+executing Setup.exe with the I (install all) option.</p>
+
+<p>Note: newly generated files (eg win32forthIDE.exe) won't be considered as parts
+of the CVS (this is important as they won't be committed, which is desirable)</p>
+
+
+
+<h3>Connecting to the CVS & downloading (updating)</h3>
+
+<p>Once initial installation has been done, subsequent connexions are much simpler :</p>
+<ul>
+  <li>Start your internet connexion (if not a permanent connexion).</li>
+  <li>Start pageant.exe. If no key is there, then give it your private key (not
+your public one !)</li>
+  <li>Right-click on your win32forthCVS directory to get Tortoise menus, begin with
+a general download (named "check out" or "update" from the CVS point of view)</li>
+</ul>
+
+<p>A log will give you the status of every file on your CVS directory compared to
+the original on CVS : </p>
+
+<ul>
+  <li>C = "conflict" = modifications from different developpers must be coordinated</li>
+  <li>M = "modified" = file has changed only on local PC - Tortoise doesn't change the local copy</li>
+  <li>P = "???" = file has changed on the CVS - a new local copy is made</li>
+  <li>U = "uploaded" = file exists on CVS but not on the local PC - Tortoise copy the new file</li>
+  <li>A = "added" = file has been added to CVS but not yet committed</li>
+  <li>R = "removed" = file has been removed from CVS but this fact has not yet been commited</li>
+  <li>? = this file is present on your directory but not in the CVS</li>
+</ul>
+
+<p>It is a good habit to download (update) from CVS before any upload (commit) so that
+you can test your future changes against the latest version currently in the CVS</p>
+
+
+
+<h3>Use of CVS</h3>
+
+<p>The following explains how to upload ("commit") files to the CVS, add new files to
+the CVS, remove files from the CVS, etc.</p>
+
+<p>You should first be familiar with the little embedded icons that decorate the
+files and directories in your CVS directory, they indicate their current CVS-status : </p>
+<ul>
+  <li>a green check mark means the CVS file is unmodified</li>
+  <li>an orange left arrow means the CVS file has been locally modified (and then
+      should probably be committed)</li>
+  <li>a blue "?" means this file is not part of the CVS</li>
+  <li>a red cross means a file previously not part of the CVS has been
+      declared as part of the CVS but not yet committed)</li>
+  <li>a red "!" means there is a conflict</li>
+</ul>
+
+<p>For using all the options that follow, select a bunch of files, right click
+and select the CVS option.</p>
+
+
+
+<h4>Then how to commit</h4>
+
+<p>The first thing to do is to update your CVS so that you can test your future
+changes against the latest version currently in the CVS.</p>
+
+<p>Of course all files must have been carefully tested in the CVS itself. A good
+test is rebuilding win32forth with setup.exe and also running all aspects of the
+parts to be added. Run some old demos too, to check if everything is still ok.</p>
+
+<p>Before committing, Tortoise will ask you for a comment. Think about this comment
+before committing so that you can make it meaningful.</p>
+
+<p>Use "Commit" to upload not only the CVS files you modified but also the ones
+you added or removed (see next).</p>
+
+
+
+<h4>Conflicts</h4>
+
+<p>A conflict occurs when two or more different people have committed the same line, 
+or contiguous lines in the same file.
+Conflicts are usually rare but when they happen, the developpers themselves must resolve
+the conflict. Some tools are proposed to compare and merge files but the simplest way to
+resolve conflict is probably to post messages on the Win32Forth Yahoo Group (unless the
+conflict is obvious).</p>
+
+
+
+<h4>Then how to NOT commit</h4>
+
+<p>It may happen that you accidently modified a file and don't want to commit it. In
+this case, simply delete it so that next update will bring back the original file.
+(Note : the CVS Unedit option, despite its name, is not made for this job)</p>
+
+
+
+<h4>Adding files to the CVS</h4>
+
+<p>To add a new file (once it has been created or copied or etc.), use the "Add file"
+CVS menu option. This will have no effect however (except for the little embedded
+icon) until the file is committed.</p>
+
+
+
+<h4>Remove files from the CVS</h4>
+
+<p>To remove a file, use the Remove CVS menu option. This will have no effect however
+(except for the little embedded icon) until the file is committed. Note : Tortoise
+keeps the latest version of the file anyway.</p>
+
+<p>Notice that files removed by others will appear with a question mark in your
+own CVS directory after an update.</p>
+
+
+<h4>Rename/Move files on the CVS</h4>
+
+<p>Despites the Rename CVS option which doesn't seem to work as expected, it seems
+that the safest way to do this is :</p>
+<ul>
+  <li>Copy the file (under a new name for Rename, in another place for Move)</li>
+  <li>Add the copy to the CVS</li>
+  <li>Remove the original from the CVS</li>
+</ul>
+
+
+<p><hr>Document : w32f-CVS.htm -- 2008/05/28 -- Camille Doiteau<p>
+
+</body>
+</html>

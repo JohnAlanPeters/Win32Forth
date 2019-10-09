@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>gdiMetafile -- Metafile class
+</h1><hr /><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><h2>Glossary
+</h2><a name="gdiMetafile"></a>
+<pre><b><a name="0">:class gdiMetafile &lt;super gdiObject
+</a></b></pre><p>Metafile class. This class only support's enhanced metafiles (emf) !
+</p><pre><b><a name="1">:M Destroy: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</a></b></pre><p>Destroy the metafile.
+</p><pre><b><a name="2">:M SetHandle: ( hMF -- )
+</a></b></pre><p>Set the handle of the metafile.
+</p><pre><b><a name="3">:M Copy: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- hCopy )
+</a></b></pre><p>Create a copy of the metafile in memory
+</p><pre><b><a name="4">:M Load: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f )
+</a></b></pre><p>Load a metafile from a file
+</p><pre><b><a name="5">:M Save: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f )
+</a></b></pre><p>Save the metafile in a file
+</p><pre><b><a name="6">:M PlayInRect: &nbsp;( left top right bottom hDestDC -- )
+</a></b></pre><p>Play the metafile in a rectangle
+</p><pre><b><a name="7">:M CopyToClipboard: ( -- )
+</a></b></pre><p>Copy the metafile to the clipboard
+</p><pre><b><a name="8">:M GetFromClipboard: ( -- )
+</a></b></pre><p>Get a metafile from the clipboard
+</p><pre><b><a name="9">:M GetFileHeader: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( pemh size -- n )
+</a></b></pre><p>The GetFileHeader: method retrieves the record containing the header
+for the specified enhanced-format metafile. <br />
+pemh &nbsp;Pointer to an ENHMETAHEADER structure that receives the header record.
+If this parameter is NULL, the function returns the size of the header record. <br />
+size Specifies the size, in bytes, of the buffer to receive the data. Only this
+many bytes will be copied.
+</p><pre><b><a name="10">:M GetPaletteEntries: &nbsp;&nbsp;( cEntries lppe -- n )
+</a></b></pre><p>The GetPaletteEntries: methods retrieves optional palette entries from the
+specified enhanced metafile. <br />
+cEntries &nbsp;Specifies the number of entries to be retrieved from the optional
+palette. <br />
+lppe Pointer to an array of PALETTEENTRY structures that receives the palette
+colors. The array must contain at least as many structures as there are entries
+specified by the cEntries parameter.
+If the array pointer is NULL and the enhanced metafile contains an optional palette,
+the return value is the number of entries in the enhanced metafile's palette; if
+the array pointer is a valid pointer and the enhanced metafile contains an optional
+palette, the return value is the number of entries copied; if the metafile does not
+contain an optional palette, the return value is zero. Otherwise, the return value
+is GDI_ERROR.
+</p><pre><b><a name="11">;class
+</a></b></pre><p>End of gdiMetafile class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

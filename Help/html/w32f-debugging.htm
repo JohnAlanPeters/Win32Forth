@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Debugging in Win32Forth</h1>
+
+<h2>Debugging Words</h2>
+
+<p>Win32Forth includes a
+debugging facility similar to the debugger in F-PC. The keys you press however
+may have changes, so you can use the '?' (question mark) key while debugging to
+see a list of the available debugging commands. </p>
+
+<p>To select a word for debugging, you use the word DEBUG as follows (let us debug
+the Forth word <code>WORDS</code> ) : </p>
+
+<pre>    DEBUG WORDS [enter] </pre>
+
+<p>The debugger installs a breakpoint into the first cell of the definition <code>WORDS</code> ,
+and waits for <code>WORDS</code> to be executed. It also sets the value of base which the
+debugger will use to the current base. Since we haven't
+executed <code>WORDS</code> yet, nothing more happens. </p>
+
+
+
+<p><i>NOTE: As soon as you perform the following suggested command, the debugger will
+automatically tell the editor to display the source for <code>WORDS</code> .
+To return to WINED, use Ctrl-PgUp. </i></p>
+
+
+<p>To get the debugger to start, you
+need to execute the word where the breakpoint is set like this; </p>
+
+<pre>    WORDS ! [enter] </pre>
+
+<p>The debugger will be invoked, and it
+will display the stack on entry to <code>WORDS</code> , and the source for <code>WORDS</code> will be
+displayed in the editor. Return here as described in the note above. </p>
+
+<p>Following the stack display (probably the word 'empty'), you will see 'const 0' which
+means <code>CONSTANT</code> with a value of zero. If you press
+[enter] while the console window is selected, you will see a <code>[1] 0</code> displayed
+indicating one stack item with a value of zero. The debugger then displays <code>TO WORDS-CNT</code>
+which is where the zero is about to be stored, into the value <code>WORDS-CNT</code> . You
+can press the '?' key at this point to see the commands available in the
+debugger. Specifically the commands 'N' (nest) and 'U' (unnest) are useful for
+stepping into or out of definitions while debugging to get to the point where
+you can see what is really happening in your program. </p>
+
+<p>Another debugging words is <code>DBG</code> ; it works like <code>DEBUG</code> ,
+but it immediately invokes the word following. So you need to setup
+whatever stack arguments before using it. Of course you also need to do this
+with <code>DEBUG</code> as well, before the word being debugged gets executed. Here is an
+example; </p>
+
+<pre>    DBG WORDS ! [enter] </pre>
+
+<p>The debugger starts immediately debugging <code>WORDS</code> , the character '!' is
+passed to <code>WORDS</code> in the input stream as a substring parameter. </p>
+
+<p>The debugger commands are shown here. They are case-insensitve :</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>ENTER/SPACE</td>
+      <td>Single step execute your program</td>
+    </tr>
+    <tr>
+      <td>ESC/Q</td>
+      <td>Quit, unbug, abort to forth </td>
+    </tr>
+    <tr>
+      <td>. (dot)</td>
+      <td>Display the depth of the floating point stack</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>continuous step program execution till key press</td>
+    </tr>
+    <tr>
+      <td>D</td>
+      <td>Done debugging, run the program to completion</td>
+    </tr>
+    <tr>
+      <td>F</td>
+      <td>Allow
+     entry of a Forth command line</td>
+    </tr>
+    <tr>
+      <td>H</td>
+      <td>Toggle the display of Hex and Decimal numbers</td>
+    </tr>
+    <tr>
+      <td>J</td>
+      <td>Jump
+     over next Word, useful for exiting LOOPs </td>
+    </tr>
+    <tr>
+      <td>N</td>
+      <td>Nest
+     into a colon or does&gt; definition</td>
+    </tr>
+    <tr>
+      <td>O</td>
+      <td>Display the current vocabulary search order</td>
+    </tr>
+    <tr>
+      <td>P</td>
+      <td>Proceed to initial breakpoint location again</td>
+    </tr>
+    <tr>
+      <td>^P</td>
+      <td>Proceed to the current program point again</td>
+    </tr>
+    <tr>
+      <td>R</td>
+      <td>Show the Return stack functions</td>
+    </tr>
+    <tr>
+      <td>U</td>
+      <td>Unnest to definition above this one</td>
+    </tr>
+    <tr>
+      <td>V</td>
+      <td>Display the current vocabulary search order</td>
+    </tr>
+    <tr>
+      <td>W</td>
+      <td>Allow the entry of watch commands</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>NOTE: The words <code>WITHOUT-SOURCE</code> and <code>WITH-SOURCE</code> can be used
+to turn source level debugging off and on respectively. If you have limited memory, you
+may need to use <code>WITHOUT-SOURCE</code> to turn off source level debugging. </p>
+
+
+
+<h2>Debugging Objects </h2>
+
+<p>The words <code>MDEBUG</code> and <code>MDBG</code> are the versions of <code>DEBUG</code>
+and <code>DBG</code> for use with objects. Their use is identical to their non-object
+counterparts except they take both a method and an object; </p>
+
+<pre>    MDEBUG ERASERECT: TEMPRECT [enter] </pre>
+
+<p>will set the breakpoint into the <code>ERASERECT:</code> method of the object
+<code>TEMPRECT</code> . Since all objects of the same class have the same methods then
+any object of class <code>RECTANGLE</code> or any classes that inherit the method
+will be debugged, although you can't specify a <code>CLASS</code> as the second argument </p>
+
+<p><br></p>
+
+<p>On next help page : some more utilities words for class debugging.</p>
+
+<hr>
+
+<p>Document : w32f-debugging.htm -- 2004/12/21 -- alex_mcdonald</p>
+
+</body>
+
+</html>

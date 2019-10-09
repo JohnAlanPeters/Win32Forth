@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+unicode.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Unicode Wordset
+</h1><h3><i>Tom Dixon - August 2006
+</i></h3><p>Unicode wordset for working with Unicode APIs
+</p><p><b><code>: Unew$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- addr )
+</code></b><br>Allocate 2X MAXSTRING bytes from the dynamic string buffer and return the address. This is
+designed for 16bit Unicode strings which are twice as long as Ascii.
+</p><p><b><code>: UniPlace ( addr len destaddr -- )
+</code></b><br>Store a unicode string to an address
+</p><p><b><code>: +UniPlace ( addr len destaddr -- )
+</code></b><br>Append a string to the end of an address
+</p><p><b><code>: +UniNull &nbsp;( destaddr -- )
+</code></b><br>Append a null to the unicode string at address.
+</p><p><b><code>: UniCount ( addr -- addr len )
+</code></b><br>Fetch a unicode string from an address (stored with uniplace)
+</p><p><b><code>: ZUniCount ( addr -- addr len )
+</code></b><br>Fetch a null-terminated unicode string from an address (null is 16-bit)
+</p><p><b><code>: UniType ( addr len -- )
+</code></b><br>Type a unicode string to the console
+</p><p><b><code>: Ustr, ( addr n -- )
+</code></b><br>Store a unicode string to the dictionary at HERE
+</p><p><b><code>: Asc&gt;Uni ( str len -- str len ) \ !!! MUST FREE STRING AFTER !!!
+</code></b><br>Convert a ascii string to unicode.<br />
+must free unicode string with 'free' when no longer needed.
+</p><p><b><code>: Uni&gt;Asc ( str len -- str len ) \ !!! MUST FREE STRING AFTER !!!
+</code></b><br>Convert a unicode string to ascii<br />
+must free ascii string afterwards when no longer needed.
+</p><p><b><code>: &gt;Unicode ( str len -- str len )
+</code></b><br>Convert ascii string to unicode (uses Unew$)
+</p><p><b><code>: &gt;ascii ( str len -- str len )
+</code></b><br>Convert unicode string to ascii (uses new$)
+</p><p><b><code>: U&quot; ( ... &quot;&nbsp;-- str len )
+</code></b><br>Unicode string - same as s&quot;
+</p><p><b><code>: Asc&gt;bstr ( str len -- bstr )
+</code></b><br>Convert ascii string to unicode bstr. &nbsp;bstr must be freed later with 'bstrfree'.
+</p><p><b><code>: bstrFree ( bstr -- )
+</code></b><br>Free a bstr.
+</p><p><b><code>: bstrlen ( ustr -- len )
+</code></b><br>Returns the length of the bstr. &nbsp;From this the bstr can be used with all the
+other unicode functions.
+</p></body></html>

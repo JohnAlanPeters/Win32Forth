@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+SQLite.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>SQLite -- Database Class for SQLite
+</h1><h3><i>Tom Dixon
+</i></h3><p>This class provides an interface to SQLite databases.
+</p><h2>SQLite Behavior
+</h2>SQLite operates on database files. &nbsp;Files are opened as read-only, if
+no update occurs, and can be shared through several applications.
+Writes cause a block until the file can be opened as read/write. &nbsp;This
+makes the locking scheme very efficient and easy to work with.<br /><br />
+SQLite is very fast, flexible, and simple. &nbsp;One very nice feature is
+that SQLite will convert types as best as it can for you if you want
+a type different from the native database type.<br /><br />
+For more information about SQLite, please see
+<A href="http://www.sqlite.org/">www.sqlite.org</A>
+<p><b><code>:class SQLiteDB &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;SUPER Object
+</code></b><br>SQLiteDB is an interface to SQLite.
+</p><p><b><code>:M ERR: ( -- ) \ thows an error on any problem
+</code></b><br>Displays any error that might have occured.
+</p><p><b><code>:M Open: ( str len -- )
+</code></b><br>Opens a database file so we can execute operations on it.<br />
+If the string is &quot;:memory:&quot; the database is actually created
+in memory instead of on disk, and should be faster.
+</p><p><b><code>:M Close: ( -- flag )
+</code></b><br>Closes the database. &nbsp;You can still open another database with
+the same object after closing, if desired.
+</p><p><b><code>:M Version: ( -- str len )
+</code></b><br>Returns the version of SQLite being used
+</p><p><b><code>:M Execute: ( str len -- )
+</code></b><br>Execute a SQL query on the cursor. &nbsp;Any returned data will be in the cursor.
+</p><p><b><code>:M Requery: ( -- )
+</code></b><br>Rerun the last query.
+</p><p><b><code>:M FieldCnt: ( -- n )
+</code></b><br>Returns the number of columns in the current record.
+</p><p><b><code>:M FieldType: ( field -- DataTypeEnum )
+</code></b><br>Returns the data type constant of the given column. Possible data types are:
+</p><table><tr><th>SQLITE_INTEGER
+</th>
+</tr>
+<tr><td>SQLITE_FLOAT
+</td>
+</tr>
+<tr><td>SQLITE_TEXT
+</td>
+</tr>
+<tr><td>SQLITE_BLOB
+</td>
+</tr>
+<tr><td>SQLITE_NULL
+</td>
+</tr>
+</table><p><b><code>:M FieldName: ( field -- str len )
+</code></b><br>Returns the column name of the given column number.
+</p><p><b><code>:M GetInt: ( field -- int )
+</code></b><br>Returns an integer value of the given column on the current row.
+</p><p><b><code>:M GetDouble: ( field -- d )
+</code></b><br>Returns the double of the given column on the current row.
+</p><p><b><code>:M GetFloat: ( field -- float )
+</code></b><br>Returns the floating point value of the given column on the current row.
+</p><p><b><code>:M GetStr: ( field -- str len )
+</code></b><br>Returns the string of the given column on the current row. &nbsp;May be much longer than 255
+</p><p><b><code>:M GetBLOB: ( field -- addr len )
+</code></b><br>Returns the Binary Buffer of the given column on the current row.
+This binary data may be anything.
+</p><p><b><code>:M isNull?: ( field -- flag )
+</code></b><br>Returns true if the given field for the given flag is null
+</p><p><b><code>:M NextRow: ( -- flag )
+</code></b><br>Goes to the next row of the query result. &nbsp;If there are no more rows,
+it will return true
+</p><p><b><code>:M BindInt: ( n i -- )
+</code></b><br>Binds a '?' in the query string to a integer. &nbsp;If there are no more question
+marks in the query string, the query will execute.
+</p><p><b><code>:M BindDouble: ( d i -- )
+</code></b><br>Binds a '?' in the query string to a double int. &nbsp;If there are no more question
+marks in the query string, the query will execute.
+</p><p><b><code>:M BindFloat: ( f i -- )
+</code></b><br>Binds a '?' in the query string to a floating point number.
+If there are no more question
+marks in the query string, the query will execute.
+</p><p><b><code>:M BindStr: ( str len i -- )
+</code></b><br>Binds a '?' in the query string to a string. &nbsp;If there are no more question
+marks in the query string, the query will execute.
+</p><p><b><code>:M BindBlob: ( str len i -- )
+</code></b><br>Binds a '?' in the query string to a blob (binary buffer object, or in simpler
+terms, a bunch of bytes). &nbsp;If there are no more question
+marks in the query string, the query will execute.
+</p><h2>Examples of Usage:
+</h2><br><U>Creating/Opening a Database:</U><br><br>
+<pre>SQLiteDB sqlite
+s&quot; c:\test.db&quot; open: sqlite
+</pre><br><U>Creating a Database in RAM:</U><br><br>
+<pre>SQLiteDB sqlite
+s&quot; :memory:&quot; open: sqlite
+</pre><br><U>Closing a Database:</U><br><br>
+<pre>close: sqlite
+</pre><br><U>Creating a table:</U><br><br>
+<pre>s&quot; CREATE TABLE idtoname (id int, name varchar)&quot;
+execute: sqlite
+</pre><br><U>Inserting into a table:</U><br><br>
+<pre>s&quot; INSERT INTO idtoname(id, name) VALUES(?,?)&quot;
+execute: sqlite
+1 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 bindint: sqlite
+s&quot; Jim Hawkins&quot; &nbsp;&nbsp;&nbsp;1 bindstr: sqlite
+
+s&quot; INSERT INTO idtoname(id, name) VALUES(?,?)&quot;
+execute: sqlite
+2 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 bindint: sqlite
+s&quot; Billy Bones&quot; &nbsp;&nbsp;&nbsp;1 bindstr: sqlite
+
+s&quot; INSERT INTO idtoname(id, name) VALUES(?,?)&quot;
+execute: sqlite
+3 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0 bindint: sqlite
+s&quot; Long John Silver&quot; 1 bindstr: sqlite
+</pre><br><U>Executing SQL:</U><br><br>
+<pre>: qdump ( -- )
+&nbsp;fieldcnt: sqlite
+&nbsp;0 ?do
+&nbsp;&nbsp;&nbsp;i fieldname: sqlite type tab
+&nbsp;loop cr cr
+&nbsp;begin
+&nbsp;&nbsp;&nbsp;fieldcnt: sqlite
+&nbsp;&nbsp;&nbsp;0 ?do
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i getstr: sqlite type tab
+&nbsp;&nbsp;&nbsp;loop cr
+&nbsp;&nbsp;&nbsp;nextrow: sqlite
+&nbsp;until ;
+
+s&quot; SELECT * FROM idtoname WHERE id &lt;&nbsp;1000 ORDER BY name DESC&quot;
+execute: sqlite
+cr qdump
+
+</pre><br><U>Deleting a table:</U><br><br>
+<pre>s&quot; DROP TABLE idtoname&quot;
+execute: sqlite
+</pre></body></html>

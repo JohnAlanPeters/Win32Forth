@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+control.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Control -- Class for child controls with subclassing.
+</h1><a name="Control"></a>
+<h2>Generic Control class
+</h2><p><b><code>|Class Control &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Generic-Window
+</code></b><br>Generic control class. <br />
+Since Control is a generic class it should not be used to create
+any instances.
+</p><p><b><code>:M GetParent: &nbsp;&nbsp;( -- parent )
+</code></b><br>Get the parent window of this control.
+</p><p><b><code>:M GetHandleOfParent: ( -- handleofparent )
+</code></b><br>Get the window handle of the parent window of this control.
+</p><p><b><code>:M SetID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( id -- )
+</code></b><br>Set the ID of this control. Normaly you don't need to do this, because
+every control get's an unique ID when it's created.
+</p><p><b><code>:M GetID: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- id )
+</code></b><br>Get the ID of this control
+</p><p><b><code>:M ExWindowStyle: ( -- exstyle )
+</code></b><br>Get the extended window style of this control
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of this control
+</p><p><b><code>:M AddStyle: &nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Set any additional style of the control. Must be done before the control
+is started. Use +Style: to add to a running control.
+</p><p><b><code>:M StartSize: &nbsp;&nbsp;( -- width height )
+</code></b><br>Get the start size of this control. <br />
+Override this method to change it.
+</p><p><b><code>:M StartPos: &nbsp;&nbsp;&nbsp;( -- left top )
+</code></b><br>Get the start position of this control. <br />
+Override this method to change it.
+</p><p><b><code>:M AutoSize: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Size the window to fit into the client area of the parent window.
+</p><p><b><code>:M CreateStruct: ( -- CreateStrucPointer )
+</code></b><br>This pointer to a structure, depends on what kind of window you are
+creating, so we just default it to NULL.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>;Class
+</code></b><br>End of Control class
+</p></body></html>

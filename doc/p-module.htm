@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+ W32F module</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>Using the Module Wordset
+</h1><hr /><p>Win32Forth implements the ANSI search-order wordset and extensions as well as it's
+own set of words for constructing modules. Since the module wordset works by manipulating
+the search order then care should be taken when using the module wordset and search order
+wordset together. If the search order is changed with the search order words it should be
+restored to it's previous state before any of the words INTERNAL EXTERNAL or MODULE are
+executed. Similarly since the object compiler also manipulates the search order the same
+criterion applies while building classes or objects (with :OBJECT). The words INTERNAL
+EXTERNAL and MODULE should not be executed within a CLASS or OBJECT although they can
+be used before and after the CLASS or OBJECT.
+</p><h2>Error Handling
+</h2><p>If an uncaught error occurs while building a module then the default error handler resets
+the state of the module wordset as though the module had been finished correctly.
+</p><h2>Glossary
+</h2><pre><b><a name="0">: (PRIVATE) &nbsp;&nbsp;&nbsp;&nbsp;( xt-of-voc -- ) &nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Module System
+</a></b></pre><p>Set the vocabulary for internal definitions for the next module to be built.
+This is a non-parsing version of the word PRIVATE.
+</p><pre><b><a name="1">: PRIVATE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -&lt;voc&gt;- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Module System
+</a></b></pre><p>Set the vocabulary for internal definitions for the next module to be built.
+This is a parsing version of the word (PRIVATE).
+</p><pre><b><a name="2">: INTERNAL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Module System
+</a></b></pre><p>If a module hasn't yet been started or the internal vocabulary isn't the context
+vocabulary add the internal vocabulary to the search order and save the current
+vocabulary as the external vocabulary, then make the current vocabulary the internal
+vocabulary. If a module is already being built then make the current vocabulary
+the internal vocabulary.
+</p><pre><b><a name="3">: EXTERNAL &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Module System
+</a></b></pre><p>Make the external vocabulary the current vocabulary.
+</p><pre><b><a name="4">: MODULE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- ) &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Module System
+</a></b></pre><p>Complete the module by making the external vocabulary the current vocabulary,
+removing the internal vocabulary from the search order if it's the context
+vocabulary and resetting the internal vocabulary to hidden.
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

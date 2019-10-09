@@ -1,0 +1,149 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta name="GENERATOR" content="dexh v03">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>
+</title><style><!--
+h1           { font-family: Tahoma; font-size: 24pt; font-weight: bold }
+h2           { font-family: Tahoma; font-size: 18pt; font-weight: bold } -->
+</style>
+</head>
+<body><h1 align="center">
+<a href="mailto:win32forth@yahoogroups.com?subject=DOC:Doc error in $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $">
+<img border="0" src="../TELLUS.gif" align="left" width="32" height="32"></a>
+<img border="0" src="../FORTHPRO.gif"
+width="32" height="32">&nbsp;&nbsp;Win32Forth</h1>
+<hr /><h1>GdiPen -- Class for GDI Pens
+</h1><hr /><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><a name="gdiPen"></a>
+<h2>gdiPen class
+</h2><pre><b><a name="0">:class gdiPen &lt;super gdiObject
+</a></b></pre><p>Class for cosmetic pen's
+</p><pre><b><a name="1">:M ClassInit: &nbsp;&nbsp;( -- )
+</a></b></pre><p>Init the class
+</p><pre><b><a name="2">:M SetStyle: &nbsp;&nbsp;&nbsp;( style -- )
+</a></b></pre><p>Set Syle of the pen. Possible values are:
+</p><table border="1"><tr><td>PS_SOLID
+</td>
+<td>The pen is solid.
+</td>
+</tr>
+<tr><td>PS_DASH
+</td>
+<td>The pen is dashed. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DOT
+</td>
+<td>The pen is dotted. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DASHDOT
+</td>
+<td>The pen has alternating dashes and dots. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DASHDOTDOT
+</td>
+<td>The pen has alternating dashes and double dots. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_NULL
+</td>
+<td>The pen is invisible.
+</td>
+</tr>
+<tr><td>PS_INSIDEFRAME
+</td>
+<td>The pen is solid. When this pen is used the dimensions of the figure are shrunk so that it fits entirely in the bounding rectangle, taking into account the width of the pen. Only for geometric pens.
+</td>
+</tr>
+</table><pre><b><a name="3">:M SetWidth: &nbsp;&nbsp;&nbsp;( width -- )
+</a></b></pre><p>Set the width of the pen in logical units. If Width is zero, the pen is a single pixel
+wide, regardless of the current transformation.
+</p><pre><b><a name="4">:M SetRValue: &nbsp;&nbsp;( r -- )
+</a></b></pre><p>Set the red component of the pen color.
+</p><pre><b><a name="5">:M SetGValue: &nbsp;&nbsp;( g -- )
+</a></b></pre><p>Set the green component of the pen color.
+</p><pre><b><a name="6">:M SetBValue: &nbsp;&nbsp;( b -- )
+</a></b></pre><p>Set the blue component of the pen color.
+</p><pre><b><a name="7">:M SetRGB: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( r g b -- )
+</a></b></pre><p>Set the red, green and blue component of the pen color.
+</p><pre><b><a name="8">:M SetColor: &nbsp;&nbsp;&nbsp;( colorref -- )
+</a></b></pre><p>Set color of the pen.
+</p><pre><b><a name="9">:M SetSysColor: ( n -- )
+</a></b></pre><p>Set the color of the pen to a system color.
+</p><pre><b><a name="10">:M ChooseColor: ( hWnd -- f )
+</a></b></pre><p>Open a dialog to choose the color of the pen.
+</p><pre><b><a name="11">:M GetStyle: &nbsp;&nbsp;&nbsp;( -- style )
+</a></b></pre><p>Get Syle of the pen. Possible values are:
+</p><table border="1"><tr><td>PS_SOLID
+</td>
+<td>The pen is solid.
+</td>
+</tr>
+<tr><td>PS_DASH
+</td>
+<td>The pen is dashed. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DOT
+</td>
+<td>The pen is dotted. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DASHDOT
+</td>
+<td>The pen has alternating dashes and dots. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_DASHDOTDOT
+</td>
+<td>The pen has alternating dashes and double dots. This style is valid only when the pen width is one or less in device units.
+</td>
+</tr>
+<tr><td>PS_NULL
+</td>
+<td>The pen is invisible.
+</td>
+</tr>
+<tr><td>PS_INSIDEFRAME
+</td>
+<td>The pen is solid. When this pen is used the dimensions of the figure are shrunk so that it fits entirely in the bounding rectangle, taking into account the width of the pen. This applies only to geometric pens.
+</td>
+</tr>
+</table><pre><b><a name="12">:M GetWidth: &nbsp;&nbsp;&nbsp;( -- width )
+</a></b></pre><p>Get the width of the pen in logical units. If the width is zero, the pen is a single pixel
+wide, regardless of the current transformation.
+</p><pre><b><a name="13">:M GetRValue: &nbsp;&nbsp;( -- r )
+</a></b></pre><p>Get the red component of the pen color.
+</p><pre><b><a name="14">:M GetGValue: &nbsp;&nbsp;( -- g )
+</a></b></pre><p>Get the green component of the pen color.
+</p><pre><b><a name="15">:M GetBValue: &nbsp;&nbsp;( -- b )
+</a></b></pre><p>Get the blue component of the pen color.
+</p><pre><b><a name="16">:M GetColor: &nbsp;&nbsp;&nbsp;( -- colorref )
+</a></b></pre><p>Get the color of the pen as a windows COLORREF value.
+</p><pre><b><a name="17">:M Create: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</a></b></pre><p>Create the pen with the current style, color and width.
+</p><pre><b><a name="18">:M CreateIndirect: ( pLogpen -- f )
+</a></b></pre><p>The CreateIndirect function creates a logical cosmetic pen that
+has the style, width, and color specified in a structure.
+</p><pre><b><a name="19">;class
+</a></b></pre><p>End of class
+</p><a name="gdiGeometricPen"></a>
+<h2>gdiGeometricPen class
+</h2><pre><b><a name="20">:class gdiGeometricPen &lt;super gdiObject
+</a></b></pre><p>Class for geometric pen's &nbsp;&nbsp;<br />
+Note: this class isn't implemented yet
+</p><pre><b><a name="21">:M ClassInit: &nbsp;&nbsp;( -- )
+</a></b></pre><p>Init the class
+</p><pre><b><a name="22">;class
+</a></b></pre><p>End of class
+</p><hr><p>Document $Id: W32fdexh.f,v 1.8 2008/12/23 21:12:06 camilleforth Exp $</p>
+</body></html>

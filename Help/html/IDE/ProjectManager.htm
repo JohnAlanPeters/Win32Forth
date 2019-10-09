@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Project Manager</title>
+    <link rel="stylesheet" type="text/css" href="IDEstyle.css">
+</head>
+<body>
+
+<h1>Project Manager</h1>
+
+<br>
+
+
+<p>The Project Manager helps managing the files associated with a Forth project.
+It allows files associated with an application to be easily transferred to other
+disk media as a standard zip file or by simply copying the files.</p>
+
+<p>You may open a project from the IDE with the Project Manager Toolbar or menu
+option (see lower). You can also open Project Manager with a previously saved
+project (.fpj) file by double clicking it if the file association has been set
+up.</p>
+
+
+
+<h3>Project Manager tab</h3>
+
+<p>Click on the Project Manager tab. The following is a screenshot of an opened
+project.</p>
+
+<center><img src="ProjectTab.gif" alt="" border="0"></center><br><br>
+
+<p>The name of the opened project is displayed at the root of the project tree.</p>
+
+<p>Files for an application are divided into the six categories shown :</p>
+<ul>
+  <li>Modules - Forth .f files </li>
+  <li>Forms - Form files, *.frm </li>
+  <li>DLLs - any Dlls needed </li>
+  <li>Resources - bitmap or icon files </li>
+  <li>Docs - .htm and .txt files. </li>
+  <li>Auxiliary - any other files </li>
+</ul>
+
+<p>If any category contain files then clicking on that category name will
+expand the item and show the files. Clicking on a selected file will open it
+in the editor for editing or browsing.</p>
+
+<p>The path name for a selected file is not shown in the treeview, however the
+full pathname is stored in the project manager. Note too that even if more than
+one file references or includes the same file only one copy is saved in the
+tree.</p>
+
+
+
+<h3>Project Toolbar & Menu</h3>
+
+<p>The Project toolbar <img src="Project Toolbar.gif"  alt="" border="0">and menu
+allow access to other Project Manager functions. For the toolbar hovering the
+mouse over a button will pop up a tooltip indicating the button's function.</p>
+
+The menu options are aas follows :
+
+<ul>
+  <li><b>New</b> - start a new project.</li>
+  
+  <li><b>Close</b> - close the current project.</li>
+
+  <li><b>Open</b> - open a previously saved project. The name of the opened project
+  is displayed in the statusbar.</li>
+
+  <li><b>Save</b> - save current project. A project is saved as a standard text
+  file.</li>
+
+  <li><b>Save As</b> - save a copy of the project.</li>
+
+  <li><b>Rename</b> - rename current project i.e the root name.</li>
+
+  <li><b>Build</b> - build project. The build file would be the main file of the
+  project. Scans the build file for needs, include and fload statements and
+  add specified files. Recurses found files. Note that the build file is
+  highlighted with a red icon in the project tree.</li>
+
+  <li><b>ReBuild</b> - Same as build except any files currently in the project
+  are deleted first.</li>
+
+  <li><b>Set search path for build</b> - set the path to search for files with option
+  to save to disk.</li>
+
+  <li><b>New Module</b> - creates a blank .f file, adds it to the module list and
+  opens the file in the editor ready for editing.</li>
+
+  <li><b>Navigator</b> - Project Navigator : tracks code in a project.</li>
+
+  <li><b>Add files to project</b> - opens a dialog allowing single or multiple file
+  selection.</li>
+
+  <li><b>Delete from project</b> - deletes highlighted file.</li>
+
+  <li><b>Add open Forms</b> - Add any saved open forms to the forms list.</li>
+
+</ul>
+
+
+
+<h3>Compiling a project</h3>
+
+<p>If the option "Always compile main Project file" (from the Options Menu)
+is checked then the opened project will be compiled when "Compile" is selected
+from the menu or toolbar. If not checked then if the file in the active window
+is a source file it will be compiled.</p>
+
+<hr>
+
+<p>Document : projectmanager.htm -- 2008/08/26 -- Ezra Boyce</p>
+
+</body>
+
+</html>

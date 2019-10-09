@@ -1,0 +1,1631 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+controls.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>Controls -- Classes for standard windows controls.
+</h1><a name="EditControl"></a>
+<h2>EditControl class
+</h2><p><b><code>:Class EditControl &lt;Super CONTROL
+</code></b><br>Class for Edit controls.
+An edit control is a rectangular control window typically used in a dialog
+box to permit the user to enter and edit text by typing on the keyboard.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M StartSize: &nbsp;&nbsp;( -- width height )
+</code></b><br>Get the start size of the control. Default size is 100 x 25.
+</p><p><b><code>:M WindowStyle: ( -- Style )
+</code></b><br>Get the window style of the control. Default style is:
+WS_BORDER, WS_TABSTOP and ES_AUTOHSCROLL.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M SetWmChar: &nbsp;&nbsp;( pWmChar -- )
+</code></b><br>Install the WM_CHAR filter function.
+</p><p><b><code>:M SetWmKeyDown: ( pWmKeyDown -- )
+</code></b><br>Install the WM_KEYDOWN filter function.
+</p><p>Install these filter functions if you want to capture certain keys, like
+Return or F3, or whatever.
+</p><p><b><code>:M SetWmKillFocus: ( pWmKillFocus -- )
+</code></b><br>Install the WM_KILLFOCUS filter function.
+</p><p><b><code>:M SubClass: &nbsp;&nbsp;&nbsp;( hWnd Parent -- )
+</code></b><br>Subclass this control.
+</p><p><b><code>;Class
+</code></b><br>End of EditControl class
+</p><a name="ComboControl"></a>
+<h2>ComboControl class
+</h2><p><b><code>:Class ComboControl &lt;Super CONTROL
+</code></b><br>Class for editable combo box controls.
+</p><p><b><code>:M StartSize: &nbsp;&nbsp;( -- width height )
+</code></b><br>Get the start size of the control
+</p><p><b><code>:M WindowStyle: ( -- Style )
+</code></b><br>Get the window style of the control. The default style is:
+CBS_DROPDOWN, WS_VSCROLL, WS_TABSTOP, WS_VISIBLE and ES_AUTOHSCROLL.
+</p><p><b><code>:M SetWmChar: &nbsp;&nbsp;( pWmChar -- )
+</code></b><br>install the WM_CHAR filter function for the EditControl of the combo box.
+</p><p><b><code>:M SetWmKeyDown: ( pWmKeyDown -- )
+</code></b><br>install the WM_KEYDOWN filter function for the EditControl of the combo box.
+</p><p><b><code>:M SetWmKillFocus: ( pWmKillFocus -- )
+</code></b><br>install the WM_KILLFOCUS filter function for the EditControl of the combo box.
+</p><p><b><code>:M InsertString: ( adr len -- )
+</code></b><br>Insert a string into the combo box
+</p><p><b><code>:M GetString: &nbsp;&nbsp;( adr index -- )
+</code></b><br>Use: GetString: to get indexed items out of the combo box string list
+Use: GetText: to get the current combo box string.
+</p><p><b><code>:M GetCount: &nbsp;&nbsp;&nbsp;( -- n1 )
+</code></b><br>Use: GetCount: to get the count of items in the combo box string list.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of ComboControl class
+</p><a name="ComboListControl"></a>
+<h2>ComboListControl class
+</h2><p><b><code>:Class ComboListControl &lt;Super ComboControl
+</code></b><br>Class for select only combo box controls.
+</p><p><b><code>:M WindowStyle: ( -- Style )
+</code></b><br>Get the window style of the control. The default style is: CBS_DROPDOWNLIST.
+</p><p><b><code>;Class
+</code></b><br>End of ComboListControl class
+</p><a name="ListControl"></a>
+<h2>ListControl class
+</h2><p><b><code>:Class ListControl &lt;Super CONTROL
+</code></b><br>Class for list box controls.
+</p><p><b><code>:M WindowStyle: ( -- Style )
+</code></b><br>Get the window style of the control. The default style is: WS_VSCROLL,
+LBS_NOTIFY, LBS_NOINTEGRALHEIGHT and WS_TABSTOP.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of ListControlControl class
+</p><a name="GroupControl"></a>
+<h2>GroupControl control class
+</h2><p><b><code>:Class GroupControl &lt;Super CONTROL
+</code></b><br>Class for group controls.
+</p><p><b><code>:M WindowStyle: ( -- Style )
+</code></b><br>Get the window style of the control. The default style is: BS_GROUPBOX.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of GroupControl class
+</p><a name="StaticControl"></a>
+<h2>StaticControl control class
+</h2><p><b><code>:Class StaticControl &lt;Super CONTROL
+</code></b><br>Class for static controls.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of StaticControl class
+</p><a name="CheckControl"></a>
+<h2>CheckControl control class
+</h2><p><b><code>:Class CheckControl &lt;Super CONTROL
+</code></b><br>Class for check box controls.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is: BS_AUTOCHECKBOX,
+and WS_TABSTOP.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of CheckControl class
+</p><a name="RadioControl"></a>
+<h2>RadioControl control class
+</h2><p><b><code>:Class RadioControl &lt;Super CONTROL
+</code></b><br>Class for radio button controls.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is: BS_AUTORADIOBUTTON,
+and WS_TABSTOP.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of RadioControl class
+</p><a name="ButtonControl"></a>
+<h2>ButtonControl control class
+</h2><p><b><code>:Class ButtonControl &lt;Super CONTROL
+</code></b><br>Class for push button controls.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M SetFunc: &nbsp;&nbsp;&nbsp;&nbsp;( cfa -- )
+</code></b><br>Set the button function. This function is executed when the
+button is pressed with a click with the left mouse button
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is: BS_PUSHBUTTON,
+and WS_TABSTOP.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of ButtonControl class
+</p><a name="DialogWindow"></a>
+<h2>Dialog Window Class
+</h2><p><b><code>:CLASS DialogWindow &nbsp;&nbsp;&lt;Super Window
+</code></b><br>Base class for windows that contain controls.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>;Class
+</code></b><br>End of DialogWindow class
+</p><h1>ExControls -- More (enhanced) classes for standard windows controls.
+</h1><a name="Statusbar"></a>
+<h2>Statusbar class
+</h2><p><b><code>:Class Statusbar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Control
+</code></b><br>Status bar control
+</p><p>A status bar is a horizontal window at the bottom of a parent window in
+which an application can display various kinds of status information.
+</p><p>This status bar control has only one part to display information.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M RaisedBorder: ( -- )
+</code></b><br>The text is drawn with a border to appear lower than the plane of the
+window (default).
+</p><p><b><code>:M NoBorder: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>The text is drawn without borders.
+</p><p><b><code>:M SunkenBorder: ( -- )
+</code></b><br>The text is drawn with a border to appear higher than the plane of the window.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M MinHeight: &nbsp;&nbsp;( #pixels -- )
+</code></b><br>Sets the minimum height of the status window's drawing area.
+</p><p>The minimum height is the sum of #pixels and twice the width, in pixels,
+of the vertical border of the status window.
+</p><p>An application must use the Redraw: method to redraw the window.
+</p><p><b><code>:M GetBorders: &nbsp;( -- hWidth vWidth divWidth )
+</code></b><br>Retrieves the current widths of the horizontal and vertical borders of
+the status window.
+</p><p><i>&nbsp;hWidth </i>&nbsp;is the width of the horizontal border.
+</p><p><i>&nbsp;vWidth </i>&nbsp;is the width of the vertical border.
+</p><p><i>&nbsp;divWidth </i>&nbsp;is the width of the border between rectangles.
+</p><p><b><code>:M Redraw: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Redraw the statusbar after changes (e.g. size).
+</p><p><b><code>:M SetText: &nbsp;&nbsp;&nbsp;&nbsp;( szText -- )
+</code></b><br>Sets the text in the status window.
+</p><p>Use <i>&nbsp;RaisedBorder: </i>, <i>&nbsp;NoBorder: </i>&nbsp;or <i>&nbsp;SunkenBorder: </i>&nbsp;to set
+the the style how the text is drawn.
+</p><p><b><code>:M Clear: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>clears text in the status window.
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>;Class
+</code></b><br>End of Statusbar class
+</p><a name="MultiStatusbar"></a>
+<h2>MultiStatusbar class
+</h2><p><b><code>:Class MultiStatusbar &nbsp;&nbsp;&lt;Super Statusbar
+</code></b><br>Status bar control
+</p><p>A status bar is a horizontal window at the bottom of a parent window in
+which an application can display various kinds of status information.
+</p><p>This status bar control can have multiple parts to display information.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M SetParts: &nbsp;&nbsp;&nbsp;( aWidths nParts -- )
+</code></b><br>Sets the number of parts in the status window and the coordinate of the right
+edge of each part.
+</p><p><i>&nbsp;nParts </i>&nbsp;Number of parts to set (cannot be greater than 256).
+</p><p><i>&nbsp;aWidths </i>&nbsp;is a pointer to an integer array. The number of elements is
+specified in nParts. Each element specifies the position, in client coordinates,
+of the right edge of the corresponding part. If an element is -1, the right edge
+of the corresponding part extends to the border of the window.
+</p><p>Note: <i>&nbsp;aWidths </i>&nbsp;must be valid until SetParts: is used again!
+</p><p><b><code>:M GetParts: &nbsp;&nbsp;&nbsp;( -- aWidths nParts )
+</code></b><br>Gets the number of parts in the status window and the coordinate of the right
+edge of each part.
+</p><p><b><code>:M SetSimple: &nbsp;&nbsp;( -- )
+</code></b><br>Reset the status bar to show only one part.
+</p><p><b><code>:M SetMulti: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Set the status bar to show all parts set with <i>&nbsp;SetParts: </i>&nbsp;before.
+</p><p><b><code>:M SetText: &nbsp;&nbsp;&nbsp;&nbsp;( szText n -- )
+</code></b><br>Sets the text in the <i>&nbsp;n'th </i>&nbsp;part of status window.
+</p><p>Use <i>&nbsp;RaisedBorder: </i>, <i>&nbsp;NoBorder: </i>&nbsp;or <i>&nbsp;SunkenBorder: </i>&nbsp;to set
+the the style how the text is drawn.
+</p><p><b><code>;Class
+</code></b><br>End of MultiStatusbar class
+</p><a name="TextBox"></a>
+<h2>TextBox class
+</h2><p><b><code>:Class TextBox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super EditControl
+</code></b><br>Class for Edit controls.
+An edit control is a rectangular control window typically used in a dialog
+box to permit the user to enter and edit text by typing on the keyboard.
+</p><p>This is an enhanced Version of the EditControl class.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M SetWmSetFocus: ( xt -- )
+</code></b><br>Set handler for WM_SETFOCUS messages.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control.
+</p><p><b><code>:M ReadOnly: &nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Set or remove the read-only style of the edit control.
+A value of TRUE sets the read-only style; a value of FALSE removes it.
+</p><p><b><code>:M SetSelection: ( nEnd nStart -- )
+</code></b><br>Selects a range of characters in the edit control. <i>&nbsp;nEnd </i>&nbsp;specifies the
+ending character position of the selection. <i>&nbsp;nStart </i>&nbsp;specifies the
+starting character position of the selection.
+</p><p>The start value can be greater than the end value. The lower of the two values
+specifies the character position of the first character in the selection. The
+higher value specifies the position of the first character beyond the selection.
+</p><p>The start value is the anchor point of the selection, and the end value is the
+active end. If the user uses the SHIFT key to adjust the size of the selection,
+the active end can move but the anchor point remains the same.
+</p><p>The control displays a flashing caret at the end position regardless of the relative
+values of start and end.
+</p><p><b><code>:M GetSelection: ( -- nEnd nStart )
+</code></b><br>Get the starting and ending character positions of the current selection in the edit control
+</p><p><b><code>:M SelectAll: &nbsp;&nbsp;( -- )
+</code></b><br>Set the focus to the edit control and select all the text in the control.
+</p><p><b><code>:M RemoveSelection: ( -- )
+</code></b><br>Remove any selection.
+</p><p><b><code>:M GetCursor: &nbsp;&nbsp;( -- n )
+</code></b><br>Get location of cursor (chars from start)
+</p><p><b><code>:M IsModified?: ( -- f )
+</code></b><br>Get the state of an edit control's modification flag. The flag indicates whether
+the contents of the edit control have been modified.
+</p><p><b><code>:M SetModify: &nbsp;&nbsp;( f -- )
+</code></b><br>Sets or clears the modification flag for an edit control. The modification flag
+indicates whether the text within the edit control has been modified.
+</p><p><b><code>:M NotModified: ( -- )
+</code></b><br>Depreacted method. Use <i>&nbsp;SetModify: </i>&nbsp;instead.
+</p><p><b><code>:M Undo?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>Check is there is an operation in the control's undo queue.
+</p><p><b><code>:M Undo: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Undoes the last edit control operation in the control's undo queue.
+</p><p><b><code>:M Redo?: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>Check is there is an operation in the control's redo queue.
+</p><p><b><code>:M Redo: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Redoes the last edit control operation in the control's redo queue.
+</p><p><b><code>:M Cut: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Delete (cut) the current selection, if any, in the edit control and
+copy the deleted text to the clipboard in CF_TEXT format.
+</p><p><b><code>:M Copy: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Copy the current selection to the clipboard in CF_TEXT format.
+</p><p><b><code>:M Paste: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Copy the current content of the clipboard to the edit control at the current
+caret position. Data is inserted only if the clipboard contains data in CF_TEXT
+format.
+</p><p><b><code>:M Clear: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Delete selected text.
+</p><p><b><code>:M SetFont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>:M SetTextLimit: ( n -- )
+</code></b><br>Set the text limit of an edit control.
+</p><p><i>&nbsp;n </i>&nbsp;Specifies the maximum number of characters the user can enter. This number does
+not include the null terminator. <br />
+Edit controls on Windows NT/ 2000: If this parameter is zero, the text length is set
+to 0x7FFFFFFE characters for single-line edit controls or -1 for multiline edit controls. <br />
+Edit controls on Windows 95/98: If this parameter is zero, the text length is set to 0x7FFE
+characters for single-line edit controls or 0xFFFF for multiline edit controls.
+</p><p>The SetTextLimit: method limits only the text the user can enter. It does not affect any text
+already in the edit control when the message is sent, nor does it affect the length of the text
+copied to the edit control by the SetText: method. If an application uses the SetText: method
+to place more text into an edit control than is specified in the SetTextLimit: method, the user can
+edit the entire contents of the edit control.
+</p><p>Before the SetTextLimit: method is called, the default limit for the amount of text a user can enter
+in an edit control is 32,767 characters.
+</p><p>Edit controls on Windows NT/ 2000: For single-line edit controls, the text limit is either 0x7FFFFFFE bytes
+or the value of <i>&nbsp;n </i>, whichever is smaller. For multiline edit controls, this value is either
+-1 bytes or the value of <i>&nbsp;n </i>, whichever is smaller.
+</p><p>Edit controls on Windows 95/98: For single-line edit controls, the text limit is either 0x7FFE bytes or
+the value of <i>&nbsp;n </i>, whichever is smaller. For multiline edit controls, this value is either 0xFFFF bytes
+or the value of <i>&nbsp;n </i>, whichever is smaller.
+</p><p><b><code>:M GetTextEx: &nbsp;\ { buffer$ maxlen -- buffer$ len }
+</code></b><br>Copies the text of the edit control into a buffer.
+</p><p><i>&nbsp;buffer$ </i>&nbsp;is the address of the buffer that will receive the text.
+</p><p><i>&nbsp;maxlen </i>&nbsp;Specifies the maximum number of characters to copy to the
+buffer, including the NULL character. If the text exceeds this limit, it
+is truncated.
+</p><p>If the method succeeds, <i>&nbsp;len </i>&nbsp;is the length, in characters, of the copied
+string, not including the terminating null character.
+</p><p><b><code>:M SetTextZ: &nbsp;&nbsp;&nbsp;( addrz -- )
+</code></b><br>Copy the text from the 0 terminated string <i>&nbsp;addrz </i>&nbsp;into the edit control.
+</p><p><b><code>;Class
+</code></b><br>End of TextBox class
+</p><a name="PassWordBox"></a>
+<h2>PassWordBox class
+</h2><p><b><code>:Class PassWordBox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super TextBox
+</code></b><br>Class for Edit controls.
+All characters in the control are displayed as an asterisk (*).
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is ES_PASSWORD.
+</p><p><b><code>;Class
+</code></b><br>End of PassWordBox class
+</p><a name="MultiLineTextBox"></a>
+<h2>MultiLineTextBox class
+</h2><p><b><code>:Class MultiLineTextBox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super TextBox
+</code></b><br>Class for multi line text edit controls.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is:
+ES_AUTOVSCROLL, ES_MULTILINE, ES_WANTRETURN and ES_NOHIDESEL.
+</p><p><b><code>:M SetTabStops: ( tabarray #tabs -- )
+</code></b><br>Sets the tab stops in the multiline edit control. When text is copied to
+the control, any tab character in the text causes space to be generated up
+to the next tab stop.
+</p><p><i>&nbsp;#tabs </i>&nbsp;Specifies the number of tab stops contained in the array. If this
+parameter is zero, the lParam parameter is ignored and default tab stops are
+set at every 32 dialog template units. If this parameter is 1, tab stops are
+set at every n dialog template units, where n is the distance pointed to by
+the <i>&nbsp;tabarray </i>&nbsp;parameter. If this parameter is greater than 1, <i>&nbsp;tabarray </i>
+is a pointer to an array of tab stops.
+</p><p><i>&nbsp;tabarray </i>&nbsp;Pointer to an array of unsigned integers specifying the tab stops,
+in dialog template units. If the <i>&nbsp;#tabs </i>&nbsp;parameter is 1, this parameter is a pointer
+to an unsigned integer containing the distance between all tab stops, in dialog template
+units.
+</p><p><b><code>:M DefaultTabs: ( -- )
+</code></b><br>Set the default tab stops in the multiline edit control (16 dialog template units).
+</p><p><b><code>:M SetMargins: &nbsp;( left right -- )
+</code></b><br>Sets the widths of the left and right margins for an edit control.
+</p><p><b><code>:M SelectAll: &nbsp;&nbsp;( -- )
+</code></b><br>Select all the text in the multiline edit control.
+</p><p><b><code>:M GetLine: &nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Return location of the cursor (lines from start).
+</p><p><b><code>:M Wrap: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Set control to wrap text.
+Note this method does nothing!
+</p><p><b><code>:M Unwrap: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Set control to scroll instead of wrap text.
+Note this method does nothing!
+</p><p><b><code>:M GetLineCount: ( -- n )
+</code></b><br>Retrieves the number of lines in the multiline edit control.
+</p><p>The return value is an integer specifying the total number of
+text lines in the multiline edit control. If the control has no text,
+the return value is 1. The return value will never be less than 1.
+</p><p><b><code>:M GetSelText: &nbsp;( addr -- n )
+</code></b><br>Retrieves the currently selected text from the edit control.
+</p><p><i>&nbsp;addr </i>&nbsp;is the address of the a buffer that receives the selected text.
+The calling application must ensure that the buffer is large enough to hold
+the selected text.
+</p><p>Note: The text is copyied to the clipboard, too!
+</p><p><b><code>:M LineScroll: &nbsp;( n -- )
+</code></b><br>scroll n lines
+</p><p><b><code>;Class
+</code></b><br>End of MultiLineTextBox class
+</p><a name="RichEditControl"></a>
+<h2>RichEditControl class
+</h2><p><b><code>:Class RichEditControl &nbsp;&lt;Super MultiLineTextBox
+</code></b><br>Class for rich edit controls.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M GetSelText: &nbsp;( addr -- n )
+</code></b><br>Retrieves the currently selected text from the edit control.
+</p><p><i>&nbsp;addr </i>&nbsp;is the address of the a buffer that receives the selected text.
+The calling application must ensure that the buffer is large enough to hold
+the selected text.
+</p><p><b><code>:M GetLines: &nbsp;&nbsp;&nbsp;( -- nr )
+</code></b><br>Depreacted method. Use <i>&nbsp;GetLineCount: </i>&nbsp;instead.
+</p><p><b><code>;Class
+</code></b><br>End of RichEditControl class
+</p><a name="ComboBox"></a>
+<h2>ComboBox class
+</h2><p><b><code>:Class ComboBox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super ComboControl
+</code></b><br>ComboBox control
+(enhanced Version of the ComboControl class)
+</p><p><b><code>:M SetDir: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( dirz$ attrib -- )
+</code></b><br>Add the names of directories and files that match a specified string and
+set of file attributes. SetDir: can also add mapped drive letters to the list.
+</p><p><i>&nbsp;attrib </i>&nbsp;Specifies the attributes of the files or directories to be added to
+the combo box. This parameter can be one or more of the following values:
+</p><table><tr><th>DDL_ARCHIVE
+</th>
+<th>Includes archived files.
+</th>
+</tr>
+<tr><td>DDL_DIRECTORY
+</td>
+<td>Includes subdirectories, which are enclosed in square brackets ([ ]).
+</td>
+</tr>
+<tr><td>DDL_DRIVES All
+</td>
+<td>mapped drives are added to the list. Drives are listed in the form [-x-], where x is the drive letter.
+</td>
+</tr>
+<tr><td>DDL_EXCLUSIVE
+</td>
+<td>Includes only files with the specified attributes. By default, read-write files are listed even if DDL_READWRITE is not specified.
+</td>
+</tr>
+<tr><td>DDL_HIDDEN
+</td>
+<td>Includes hidden files.
+</td>
+</tr>
+<tr><td>DDL_READONLY
+</td>
+<td>Includes read-only files.
+</td>
+</tr>
+<tr><td>DDL_READWRITE
+</td>
+<td>Includes read-write files with no additional attributes. This is the default.
+</td>
+</tr>
+<tr><td>DDL_SYSTEM
+</td>
+<td>Includes system files.
+</td>
+</tr>
+</table><p><i>&nbsp;dirz$ </i>&nbsp;specifies an absolute path, relative path, or file name. An absolute path
+can begin with a drive letter (for example, d:\) or a UNC name (for example, \machinename\sharename).
+If the string specifies a file name or directory that has the attributes specified by
+the wParam parameter, the file name or directory is added to the list. If the file name
+or directory name contains wildcard characters (? or *), all files or directories that
+match the wildcard expression and have the attributes specified by the wParam parameter
+are added to the list displayed in the combo box.
+</p><p><b><code>:M AddStringTo: ( z&quot;string&quot; -- )
+</code></b><br>Add a string to the list box of a combo box. If the combo box does not have the
+CBS_SORT style, the string is added to the end of the list. Otherwise, the string
+is inserted into the list, and the list is sorted.
+</p><p><b><code>:M SetSelection: ( n -- )
+</code></b><br>Select a string in the list of a combo box.
+</p><p><b><code>:M GetSelection: ( -- n )
+</code></b><br>Retrieve the index of the currently selected item, if any.
+</p><p>The return value is the zero-based index of the currently selected item. If there is no
+selection, the return value is CB_ERR.
+</p><p><b><code>:M GetString: &nbsp;&nbsp;&nbsp;( index -- addr n )
+</code></b><br>Retrieve a string from the combo box.
+</p><p>The return value is the address and length of the string.
+If <i>&nbsp;n </i>&nbsp;does not specify a valid index, the length is CB_ERR.
+</p><p><b><code>:M GetSelectedString: ( -- addr cnt )
+</code></b><br>Retrieve the currently selected string from the combo box.
+Note: The string is returned in a dynamicly allocated buffer of medium persistance. If a
+permenant copy is needed it should be moved.
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>:M InsertStringAt: ( lpszString posn -- )
+</code></b><br>Insert string at the specified position.
+</p><p><i>&nbsp;posn </i>&nbsp;specifies the zero-based index of the position at which to insert
+the string. If this parameter is -1, the string is added to the end of the list.
+</p><p><i>&nbsp;lpszString </i>&nbsp;is a null-terminated string to be inserted.
+</p><p><b><code>:M DeleteString: ( index -- )
+</code></b><br>Delete a string.
+</p><p><i>&nbsp;index </i>&nbsp;specifies the zero-based index of the string to delete.
+</p><p><b><code>:M Clear: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Remove all strings from the combo box
+</p><p><b><code>:M Find: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lpszString -- index )
+</code></b><br>Search the list for an item beginning with the string (case-insensitive)
+</p><p><b><code>:M FindExact: &nbsp;&nbsp;( lpszString -- index )
+</code></b><br>Find the first item that matches the string exactly (case-insensitive)
+</p><p><b><code>:M GetCount: &nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Return count of items in list
+</p><p><b><code>:M SelectString: ( lpszString -- index )
+</code></b><br>Select item beginning with string
+</p><p><b><code>:M GetStringAt: ( index -- a n )
+</code></b><br>Return string of specified item.
+</p><p><b><code>:M GetCurrent: &nbsp;( -- index )
+</code></b><br>return current selection item
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>;Class
+</code></b><br>End of ComboBox class
+</p><a name="ComboListBox"></a>
+<h2>ComboListBox class
+</h2><p><b><code>:Class ComboListBox &nbsp;&nbsp;&nbsp;&nbsp;&lt;super ComboBox
+</code></b><br>ComboBox list control
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is: CBS_DROPDOWNLIST
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of ComboListBox class
+</p><a name="ListBox"></a>
+<h2>ListBox class
+</h2><p><b><code>:Class ListBox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super ListControl
+</code></b><br>ListBox control (single selection)
+(enhanced Version of the ListControl class)
+</p><p><b><code>:M SetDir: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( dirz$ attrib -- )
+</code></b><br>Add the names of directories and files that match a specified string and
+set of file attributes. SetDir: can also add mapped drive letters to the list.
+</p><p><i>&nbsp;attrib </i>&nbsp;Specifies the attributes of the files or directories to be added to
+the combo box. This parameter can be one or more of the following values:
+</p><table><tr><th>DDL_ARCHIVE
+</th>
+<th>Includes archived files.
+</th>
+</tr>
+<tr><td>DDL_DIRECTORY
+</td>
+<td>Includes subdirectories, which are enclosed in square brackets ([ ]).
+</td>
+</tr>
+<tr><td>DDL_DRIVES All
+</td>
+<td>mapped drives are added to the list. Drives are listed in the form [-x-], where x is the drive letter.
+</td>
+</tr>
+<tr><td>DDL_EXCLUSIVE
+</td>
+<td>Includes only files with the specified attributes. By default, read-write files are listed even if DDL_READWRITE is not specified.
+</td>
+</tr>
+<tr><td>DDL_HIDDEN
+</td>
+<td>Includes hidden files.
+</td>
+</tr>
+<tr><td>DDL_READONLY
+</td>
+<td>Includes read-only files.
+</td>
+</tr>
+<tr><td>DDL_READWRITE
+</td>
+<td>Includes read-write files with no additional attributes. This is the default.
+</td>
+</tr>
+<tr><td>DDL_SYSTEM
+</td>
+<td>Includes system files.
+</td>
+</tr>
+</table><p><i>&nbsp;dirz$ </i>&nbsp;specifies an absolute path, relative path, or file name. An absolute path
+can begin with a drive letter (for example, d:\) or a UNC name (for example, \machinename\sharename).
+If the string specifies a file name or directory that has the attributes specified by
+the wParam parameter, the file name or directory is added to the list. If the file name
+or directory name contains wildcard characters (? or *), all files or directories that
+match the wildcard expression and have the attributes specified by the wParam parameter
+are added to the list displayed in the combo box.
+</p><p><b><code>:M Clear: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Remove all items from the list box.
+</p><p><b><code>:M AddStringTo: ( z&quot;string&quot; -- )
+</code></b><br>Add a string to a list box. If the list box does not have the LBS_SORT style,
+the string is added to the end of the list. Otherwise, the string is inserted
+into the list and the list is sorted.
+</p><p><b><code>:M SetSelection: ( n -- )
+</code></b><br>Select a string and scroll it into view, if necessary. When the new string is
+selected, the list box removes the highlight from the previously selected string.
+</p><p><i>&nbsp;n </i>&nbsp;specifies the zero-based index of the string that is selected. If this parameter
+is -1, the list box is set to have no selection.
+</p><p>Windows 95/98: The <i>&nbsp;n </i>&nbsp;parameter is limited to 16-bit values. This means list boxes
+cannot contain more than 32,767 items. Although the number of items is restricted, the
+total size in bytes of the items in a list box is limited only by available memory.
+</p><p><b><code>:M GetSelection: ( -- n )
+</code></b><br>Retrieve the index of the currently selected item, if any.
+</p><p>The return value is the zero-based index of the currently selected item. If there is no
+selection, the return value is LB_ERR.
+</p><p><b><code>:M GetString: &nbsp;&nbsp;&nbsp;( index -- addr n )
+</code></b><br>Retrieve a string from the list box.
+</p><p>The return value is the address and length of the string.
+If <i>&nbsp;n </i>&nbsp;does not specify a valid index, the length is LB_ERR.
+</p><p><b><code>:M GetSelectedString: ( -- addr cnt )
+</code></b><br>Retrieve the currently selected string from the list box.
+Note: The string is returned in a dynamicly allocated buffer of medium persistance. If a
+permenant copy is needed it should be moved.
+</p><p><b><code>:M GetCount: &nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Retrieve the number of items in the list box.
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>:M AddString: &nbsp;&nbsp;( lpszString -- )
+</code></b><br>Add a string to a list box. If the list box does not have the LBS_SORT style,
+the string is added to the end of the list. Otherwise, the string is inserted
+into the list and the list is sorted.
+Note: This method ABORT's on error.
+</p><p><b><code>:M InsertString: ( lpszString index -- )
+</code></b><br>Insert a string into the list box. Unlike the AddString: method, the InsertString: method
+does not cause a list with the LBS_SORT style to be sorted.
+Note: This method ABORT's on error.
+</p><p><i>&nbsp;index </i>&nbsp;specifies the zero-based index of the position at which to insert
+the string. If this parameter is -1, the string is added to the end of the list.
+</p><p>Windows 95/98: The <i>&nbsp;index </i>&nbsp;parameter is limited to 16-bit values. This means list
+boxes cannot contain more than 32,767 items. Although the number of items is restricted,
+the total size in bytes of the items in a list box is limited only by available memory.
+</p><p><b><code>:M DeleteString: ( index -- )
+</code></b><br>Delete a string from the list box.
+</p><p><i>&nbsp;index </i>&nbsp;specifies the zero-based index of the string to be deleted.
+</p><p>Windows 95/98: The <i>&nbsp;index </i>&nbsp;parameter is limited to 16-bit values. This means list boxes
+cannot contain more than 32,767 items. Although the number of items is restricted, the total
+size in bytes of the items in a list box is limited only by available memory.
+</p><p><b><code>:M Find: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lpszString -- index )
+</code></b><br>Find the first string in the list box that begins with the specified string.
+The entire list box is searched from the beginning.
+The search is case independent, so the string (<i> lpszString </i>) can contain any combination of
+uppercase and lowercase letters.
+</p><p>The return value is the zero-based index of the matching item, or LB_ERR if the search was unsuccessful.
+</p><p><b><code>:M FindExact: &nbsp;&nbsp;( lpszString -- index )
+</code></b><br>Find the first list box string that exactly matches the specified string, except that the search
+is not case sensitive.
+The entire list box is searched from the beginning.
+</p><p>The return value is the zero-based index of the matching item, or LB_ERR if the search was unsuccessful.
+</p><p><b><code>:M GetCurrent: &nbsp;( -- index )
+</code></b><br>Retrieve the index of the currently selected item, if any.
+</p><p>The return value is the zero-based index of the currently selected item. If there is no
+selection, the return value is LB_ERR.
+</p><p><b><code>:M SelectString: ( lpszString -- index )
+</code></b><br>Search the list box for an item that begins with the characters in a specified string.
+If a matching item is found, the item is selected.
+The entire list box is searched from the beginning.
+</p><p>If the search is successful, the return value is the index of the selected item. If the
+search is unsuccessful, the return value is LB_ERR and the current selection is not changed.
+</p><p><b><code>:M GetState: &nbsp;&nbsp;&nbsp;( index -- f )
+</code></b><br>Retrieve the selection state of an item.
+If an item is selected, the return value is true; otherwise, it is false.
+Note: This method ABORT's on error.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>:M SetTabStops: ( addr cnt -- )
+</code></b><br>Set the tab-stop positions in the list box.
+</p><p><i>&nbsp;cnt </i>&nbsp;Specifies the number of tab stops in the list box.
+</p><p><i>&nbsp;addr </i>&nbsp;is a pointer to the first member of an array of integers containing the tab
+stops. The integers represent the number of quarters of the average character width for
+the font that is selected into the list box. For example, a tab stop of 4 is placed at
+1.0 character units, and a tab stop of 6 is placed at 1.5 average character units. However,
+if the list box is part of a dialog box, the integers are in dialog template units. The tab
+stops must be sorted in ascending order; backward tabs are not allowed.
+</p><p>The list box must have been created with the LBS_USETABSTOPS style.
+</p><p><b><code>;Class
+</code></b><br>End of ListBox class
+</p><a name="MultiListbox"></a>
+<h2>MultiListbox class
+</h2><p><b><code>:Class MultiListbox &nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Listbox
+</code></b><br>ListBox control
+MultiListbox allows multiple selections to be made.
+Click once on an item to select it. &nbsp;Click again to deselect.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is: LBS_MULTIPLESEL
+</p><p><b><code>:M Select: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( index -- )
+</code></b><br>Select a string in the list box.
+</p><p><i>&nbsp;index </i>&nbsp;specifies the zero-based index of the string to set. If this parameter
+is -1, the selection is added to all strings.
+Note: This method ABORT's on error.
+</p><p><b><code>:M Unselect: &nbsp;&nbsp;&nbsp;( index -- )
+</code></b><br>Deselect a string in the list box.
+</p><p><i>&nbsp;index </i>&nbsp;specifies the zero-based index of the string to set. If this parameter
+is -1, the selection is removed from all strings.
+Note: This method ABORT's on error.
+</p><p><b><code>:M GetSelCount: ( -- n )
+</code></b><br>Retrieve the total number of selected items in the list box.
+</p><p><b><code>:M GetSelectedItems: ( array cnt -- count )
+</code></b><br>Fill a buffer with an array of integers that specify the item numbers of selected
+items in the list box.
+</p><p><i>&nbsp;array </i>&nbsp;is a pointer to a buffer large enough for the number of integers specified
+by the <i>&nbsp;cnt </i>&nbsp;parameter.
+</p><p><i>&nbsp;cnt </i>&nbsp;specifies the maximum number of selected items whose item numbers are to be placed
+in the buffer. Windows 95/98: The <i>&nbsp;cnt </i>&nbsp;parameter is limited to 16-bit values. This means
+list boxes cannot contain more than 32,767 items. Although the number of items is restricted,
+the total size in bytes of the items in a list box is limited only by available memory.
+</p><p><b><code>;Class
+</code></b><br>End of MultiListbox class
+</p><a name="MultiExListbox"></a>
+<h2>MultiExListbox class
+</h2><p><b><code>:Class MultiExListbox &nbsp;&nbsp;&lt;Super MultiListbox
+</code></b><br>ListBox control
+Also allows multiple selections to be made.
+The difference is that Ctrl-Click selects and unselects
+individual items and Shift-Click will select a range (as will
+Shift-Drag.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is: LBS_EXTENDEDSEL
+</p><p><b><code>;Class
+</code></b><br>End of MultiExListbox class
+</p><a name="DragListbox"></a>
+<h2>DragListbox class
+</h2><p><b><code>:Class DragListbox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Listbox
+</code></b><br>ListBox control
+Allows dragging of items in list box to re-order them
+requires processing of drag list notification messages by the
+application to actually do the dragging.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. The default style is: LBS_EXTENDEDSEL
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of DragListbox class
+</p><a name="UpDownControl"></a>
+<h2>Up-Down Control class
+</h2><p><b><code>:Class UpDownControl &nbsp;&nbsp;&nbsp;&lt;Super Control
+</code></b><br>Up-Down control
+</p><p>An up-down control is a pair of arrow buttons that the user can click to
+increment or decrement a value, such as a scroll position or a number displayed
+in a companion control.
+</p><p>For 16 Bit values only.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is:
+WS_BORDER, UDS_ARROWKEYS, UDS_SETBUDDYINT and UDS_ALIGNRIGHT.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M StartSize: &nbsp;&nbsp;( -- cx cy )
+</code></b><br>default window size
+</p><p><b><code>:M StartPos: &nbsp;&nbsp;&nbsp;( -- x y )
+</code></b><br>default window position
+</p><p><b><code>:M SetBuddy: &nbsp;&nbsp;&nbsp;( hBuddy -- )
+</code></b><br>Sets the buddy window for the up-down control.
+</p><p><b><code>:M GetValue: &nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Retrieves the current position of the up-down control.
+Note: This method ABORT's on error.
+</p><p><b><code>:M SetValue: &nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Set the current position for the up-down control.
+</p><p><b><code>:M SetDecimal: &nbsp;( -- )
+</code></b><br>Sets the radix base for the control to decimal.
+Decimal numbers are signed.
+</p><p><b><code>:M SetHex: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Sets the radix base for the control to hexadecimal.
+Hexadecimal numbers are always unsigned.
+</p><p><b><code>:M GetBase: &nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Get the current radix base (that is, either base 10 or 16).
+</p><p><b><code>:M SetRange: &nbsp;&nbsp;&nbsp;( lower upper -- )
+</code></b><br>Sets the minimum and maximum positions (range) the control.
+Neither position can be greater than the UD_MAXVAL value or less than
+the UD_MINVAL value. In addition, the difference between the two positions
+cannot exceed UD_MAXVAL.
+</p><p><b><code>:M GetRange: &nbsp;&nbsp;&nbsp;( -- lower upper )
+</code></b><br>Retrieves the minimum and maximum positions (range) for the control.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>;Class
+</code></b><br>End of Up-Down Control Class
+</p><a name="SpinnerControl"></a>
+<h2>Spinner Control class
+</h2><p><b><code>:Class SpinnerControl &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super UpDownControl
+</code></b><br>Spinner Control Class.
+</p><p>This class is a combination of an up-down control and a Text Box (the buddy).
+</p><p><b><code>:M start: &nbsp;&nbsp;&nbsp;&nbsp;( parent -- )
+</code></b><br>Start the control.
+</p><p><b><code>:M TheBox: &nbsp;&nbsp;( -- spinbox )
+</code></b><br>Object address of the text box for directly manipulating it (though it shouldn't really be done).
+</p><p><b><code>:M Move: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x y w h -- )
+</code></b><br>Move the text box to the specified positon and the up-down control as well.
+</p><p><b><code>:M Select: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Selects the text inside the spinner
+</p><p><b><code>:M SetFont: &nbsp;&nbsp;( hndl -- )
+</code></b><br>Set the font of the text box.
+</p><p><b><code>:M Close: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Close the control.
+</p><p><b><code>
+</code></b><br>End of Spinner Control Class.
+</p><a name="CheckBox"></a>
+<h2>CheckBox class
+</h2><p><b><code>:Class CheckBox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super CheckControl
+</code></b><br>Class for check buttons
+(enhanced Version of the CheckControl class)
+</p><p><b><code>:M IsButtonChecked?: &nbsp;&nbsp;&nbsp;( -- f )
+</code></b><br>send message to self through parent
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>;Class
+</code></b><br>End of CheckBox class
+</p><a name="RadioButton"></a>
+<h2>RadioButton class
+</h2><p><b><code>:Class RadioButton &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super RadioControl
+</code></b><br>Class for radio buttons
+(enhanced Version of the RadioControl class)
+</p><p><b><code>:M IsButtonChecked?: ( -- f )
+</code></b><br>Check if the radio button is checked or unchecked.
+</p><p><b><code>:M CheckButton: ( -- )
+</code></b><br>Set the button state to checked.
+</p><p><b><code>:M UnCheckButton: ( -- )
+</code></b><br>Set the button state to unchecked.
+</p><p><b><code>:M Check: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Set the button state to either checked or unchecked.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>;Class
+</code></b><br>End of RadioButton class
+</p><a name="GroupRadioButton"></a>
+<h2>GroupRadioButton class
+</h2><p><b><code>:Class GroupRadioButton &lt;super RadioButton
+</code></b><br>Class for radio buttons.
+Use a GroupRadioButton object for the first radio button in every group
+of radio buttons within your dialog.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default is BS_GROUP.
+</p><p><b><code>;Class
+</code></b><br>End of GroupRadioButton class
+</p><a name="PushButton"></a>
+<h2>PushButton class
+</h2><p><b><code>:Class PushButton &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super ButtonControl
+</code></b><br>Class for push buttons
+(enhanced Version of the ButtonControl class)
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>;Class
+</code></b><br>End of PushButton class
+</p><a name="DefPushButton"></a>
+<h2>DefPushButton class
+</h2><p><b><code>:Class DefPushButton &nbsp;&nbsp;&nbsp;&lt;Super PushButton
+</code></b><br>Class for the default push buttons
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: BS_DEFPUSHBUTTON.
+</p><p><b><code>;Class
+</code></b><br>End of DefPushButton class
+</p><a name="BitmapButton"></a>
+<h2>BitmapButton class
+</h2><p><b><code>:Class BitmapButton &nbsp;&nbsp;&nbsp;&nbsp;&lt;Super PushButton
+</code></b><br>BitmapButton control
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: BS_BITMAP.
+</p><p><b><code>;Class
+</code></b><br>End of BitmapButton class
+</p><a name="IconButton"></a>
+<h2>IconButton class
+</h2><p><b><code>:Class IconButton &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super PushButton
+</code></b><br>IconButton control
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: BS_ICON.
+</p><p><b><code>:M SetIcon: &nbsp;&nbsp;&nbsp;&nbsp;( hIcon -- )
+</code></b><br>set the icon image to use with the button
+</p><p><b><code>:M GetIcon: &nbsp;&nbsp;&nbsp;&nbsp;( -- hIcon)
+</code></b><br>get the icon image used with the button
+</p><p><b><code>;Class
+</code></b><br>End of IconButton class
+</p><a name="GroupBox"></a>
+<h2>GroupBox class
+</h2><p><b><code>:Class GroupBox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super GroupControl
+</code></b><br>GroupBox control
+(enhanced Version of the GroupControl class)
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>;Class
+</code></b><br>End of GroupBox class
+</p><a name="Label"></a>
+<h2>Label class
+</h2><p><b><code>:Class Label &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super StaticControl
+</code></b><br>Class for static controls
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>;Class
+</code></b><br>End of Label class
+</p><a name="StaticImage"></a>
+<h2>StaticImage class
+</h2><p><b><code>|Class StaticImage &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Label
+</code></b><br>Base class for static control showing an image.
+This is an internal class; don't use it directly.
+</p><p><b><code>:M ImageType: &nbsp;&nbsp;( -- ImageType )
+</code></b><br>Get the image type of the control. <i>&nbsp;ImageType </i>&nbsp;is IMAGE_BITMAP.
+</p><p><b><code>:M GetImage: &nbsp;&nbsp;&nbsp;( -- hImage )
+</code></b><br>Retrieve a handle to the image associated with the control.
+</p><p><b><code>:M SetImage: &nbsp;&nbsp;&nbsp;( hImage -- )
+</code></b><br>Associate a new image (icon or bitmap) with the control.
+</p><p><b><code>:M SetFont: &nbsp;&nbsp;&nbsp;&nbsp;( fhndl -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>;Class
+</code></b><br>End of StaticImage class
+</p><a name="StaticBitmap"></a>
+<h2>StaticBitmap class
+</h2><p><b><code>:Class StaticBitmap &nbsp;&nbsp;&nbsp;&nbsp;&lt;Super StaticImage
+</code></b><br>Static control showing a bitmap.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: SS_BITMAP.
+</p><p><b><code>;Class
+</code></b><br>End of StaticImage class
+</p><a name="StaticIcon"></a>
+<h2>StaticIcon class
+</h2><p><b><code>:Class StaticIcon &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super StaticImage
+</code></b><br>Static control showing an icon.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: SS_ICON.
+</p><p><b><code>:M ImageType: &nbsp;&nbsp;( -- ImageType )
+</code></b><br>Get the image type of the control. <i>&nbsp;ImageType </i>&nbsp;is IMAGE_ICON.
+</p><p><b><code>;Class
+</code></b><br>End of StaticIcon class
+</p><a name="StaticMetafile"></a>
+<h2>StaticMetafile class
+</h2><p><b><code>:Class StaticMetafile &nbsp;&nbsp;&lt;Super StaticImage
+</code></b><br>Static control showing an enhanced metafile.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: SS_ENHMETAFILE.
+</p><p><b><code>:M ImageType: &nbsp;&nbsp;( -- ImageType )
+</code></b><br>Get the image type of the control. <i>&nbsp;ImageType </i>&nbsp;is IMAGE_ENHMETAFILE.
+</p><p><b><code>;Class
+</code></b><br>End of StaticMetafile class
+</p><a name="StaticFrame"></a>
+<h2>StaticFrame class
+</h2><p><b><code>:Class StaticFrame &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Label
+</code></b><br>Static control showing a frame.
+</p><p><b><code>:M BlackRect: &nbsp;&nbsp;( -- )
+</code></b><br>Rectangle in the window frame color (default is black).
+</p><p><b><code>:M GrayRect: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Rectangle in the screen background color (default is gray).
+</p><p><b><code>:M WhiteRect: &nbsp;&nbsp;( -- )
+</code></b><br>Rectangle in the window background color (default is white).
+</p><p><b><code>:M BlackFrame: &nbsp;( -- )
+</code></b><br>Frame in the window frame color (default is black).
+</p><p><b><code>:M GrayFrame: &nbsp;&nbsp;( -- )
+</code></b><br>Frame in the screen background color (default is gray).
+</p><p><b><code>:M WhiteFrame: &nbsp;( -- )
+</code></b><br>Frame in the window background color (default is white).
+</p><p><b><code>:M EtchedFrame: ( -- )
+</code></b><br>draws an etched frame (frame appears lower than background)
+</p><p><b><code>:M SunkenFrame: ( -- )
+</code></b><br>Draws frame with half-sunken border.
+</p><p><b><code>;Class
+</code></b><br>End of StaticFrame class
+</p><a name="Progressbar"></a>
+<h2>Progressbar class
+</h2><p><b><code>:Class Progressbar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Control
+</code></b><br>Progressbar control
+A progress bar is a window that an application can use to indicate the progress
+of a lengthy operation. It consists of a rectangle that is gradually filled with
+the system highlight color as an operation progresses.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M +Value: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Advances the current position of the progress bar by a specified increment
+and redraws the bar to reflect the new position.
+</p><p><b><code>:M GetValue: &nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Returns the current position of the progress bar.
+</p><p><b><code>:M SetValue: &nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Sets the current position for the progress bar and redraws the bar to
+reflect the new position.
+</p><p><b><code>:M SetRange: &nbsp;&nbsp;&nbsp;( min max -- )
+</code></b><br>Sets the minimum and maximum values for the progress bar and redraws the
+bar to reflect the new range.
+</p><p><i>&nbsp;min </i>&nbsp;is the minimum range value. By default, the minimum value is zero.
+</p><p><i>&nbsp;max </i>&nbsp;is the maximum range value. By default, the maximum value is 100.
+</p><p><b><code>:M SetStep: &nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Specifies the step increment for the progress bar. The step increment is
+</p><p><b><code>:M GetStep: &nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Returns the current step increment for the progress bar.
+</p><p><b><code>:M StepIt: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Advances the current position for the progress bar by the step increment
+and redraws the bar to reflect the new position.
+</p><p>When the position exceeds the maximum range value, this method resets the current
+position so that the progress indicator starts over again from the beginning.
+</p><p><b><code>;Class
+</code></b><br>End of Progressbar class
+</p><a name="SmoothProgressbar"></a>
+<h2>SmoothProgressbar class
+</h2><p><b><code>:Class SmoothProgressbar &lt;Super Progressbar
+</code></b><br>Progressbar control
+A progress bar is a window that an application can use to indicate the progress
+of a lengthy operation. It consists of a rectangle that is gradually filled with
+the system highlight color as an operation progresses.
+</p><p>The progress bar displays progress status in a smooth scrolling bar instead of the
+default segmented bar.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: PBS_SMOOTH.
+</p><p><b><code>;Class
+</code></b><br>End of SmoothProgressbar class
+</p><a name="Trackbar"></a>
+<h2>Trackbar class
+</h2><p><b><code>:Class Trackbar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Control
+</code></b><br>Trackbar control (horizontal)
+</p><p>A trackbar is a window that contains a slider and optional tick marks.
+When the user moves the slider, using either the mouse or the direction keys,
+the trackbar sends notification messages to indicate the change.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M GetLineSize: ( -- n )
+</code></b><br>Retrieves the number of logical positions the trackbar's slider moves in
+response to keyboard input from the arrow keys, such as the RIGHT ARROW or
+DOWN ARROW keys. The logical positions are the integer increments in the
+trackbar's range of minimum to maximum slider positions.
+</p><p><b><code>:M SetLineSize: ( n -- )
+</code></b><br>Sets the number of logical positions the trackbar's slider moves in
+response to keyboard input from the arrow keys, such as the RIGHT ARROW or
+DOWN ARROW keys. The logical positions are the integer increments in the
+trackbar's range of minimum to maximum slider positions.
+</p><p><b><code>:M GetPageSize: ( -- n )
+</code></b><br>Retrieves the number of logical positions the trackbar's slider moves in
+response to keyboard input, such as the PAGE UP or PAGE DOWN keys, or mouse
+input, such as clicks in the trackbar's channel. The logical positions are the
+integer increments in the trackbar's range of minimum to maximum slider positions.
+</p><p><b><code>:M SetPageSize: ( n -- )
+</code></b><br>Sets the number of logical positions the trackbar's slider moves in response to
+keyboard input, such as the PAGE UP or PAGE DOWN keys, or mouse input, such as clicks
+in the trackbar's channel. The logical positions are the integer increments in the
+trackbar's range of minimum to maximum slider positions.
+</p><p><b><code>:M GetValue: &nbsp;&nbsp;&nbsp;( -- n)
+</code></b><br>Retrieves the current logical position of the slider in the trackbar. The logical positions
+are the integer values in the trackbar's range of minimum to maximum slider positions.
+</p><p><b><code>:M SetValue: &nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Sets the current logical position of the slider in the trackbar.
+</p><p><b><code>:M GetRangeMax: ( -- n )
+</code></b><br>Retrieves the maximum position for the slider in the trackbar.
+</p><p><b><code>:M SetRangeMax: ( max f -- )
+</code></b><br>Sets the maximum logical position for the slider in the trackbar.
+</p><p>If the <i>&nbsp;f </i>&nbsp;is TRUE, the trackbar is redrawn after the range is set.
+If this parameter is FALSE, the message sets the range but does not redraw
+the trackbar.
+</p><p><b><code>:M GetRangeMin: ( -- n )
+</code></b><br>Retrieves the minimum position for the slider in the trackbar.
+</p><p><b><code>:M SetRangeMin: ( min f -- )
+</code></b><br>Sets theminimum logical position for the slider in the trackbar.
+</p><p>If the <i>&nbsp;f </i>&nbsp;is TRUE, the trackbar is redrawn after the range is set.
+If this parameter is FALSE, the message sets the range but does not redraw
+the trackbar.
+</p><p><b><code>:M GetSelEnd: &nbsp;&nbsp;( -- n )
+</code></b><br>Retrieves the ending position of the current selection range in the trackbar.
+A trackbar can have a selection range only if you specified the TBS_ENABLESELRANGE
+style when you created it.
+</p><p><b><code>:M SetSelEnd: &nbsp;&nbsp;( end f -- )
+</code></b><br>Sets the ending logical position of the current selection range in a trackbar.
+This message is ignored if the trackbar does not have the TBS_ENABLESELRANGE style.
+</p><p>If the <i>&nbsp;f </i>&nbsp;is TRUE, the trackbar is redrawn after the range is set.
+If this parameter is FALSE, the message sets the range but does not redraw
+the trackbar.
+</p><p><b><code>:M GetSelStart: ( -- n)
+</code></b><br>Retrieves the starting position of the current selection range in the trackbar.
+A trackbar can have a selection range only if you specified the TBS_ENABLESELRANGE
+style when you created it.
+</p><p><b><code>:M SetSelStart: ( start f -- )
+</code></b><br>Sets the starting logical position of the current selection range in the trackbar.
+This message is ignored if the trackbar does not have the TBS_ENABLESELRANGE style.
+</p><p>If the <i>&nbsp;f </i>&nbsp;is TRUE, the trackbar is redrawn after the range is set.
+If this parameter is FALSE, the message sets the range but does not redraw
+the trackbar.
+</p><p><b><code>:M GetThumbLength: ( -- n )
+</code></b><br>Retrieves the length (in Pixel) of the slider in the trackbar.
+</p><p><b><code>:M SetThumbLength: ( n -- )
+</code></b><br>Set the length (in Pixel) of the slider in the trackbar.
+</p><p><b><code>:M GetChannelRect: ( lpRect -- )
+</code></b><br>Retrieves the size and position of the bounding rectangle for the
+trackbar's channel. (The channel is the area over which the slider
+moves. It contains the highlight when a range is selected.)
+</p><p><b><code>:M GetThumbRect: ( lpRect -- )
+</code></b><br>Retrieves the size and position of the bounding rectangle for the slider
+in the trackbar.
+</p><p><b><code>:M GetTick: &nbsp;&nbsp;&nbsp;&nbsp;( iTic -- n )
+</code></b><br>Retrieves the logical position of a tick mark in a trackbar. The logical
+position can be any of the integer values in the trackbar's range of minimum
+to maximum slider positions.
+</p><p><b><code>:M SetTick: &nbsp;&nbsp;&nbsp;&nbsp;( pos -- )
+</code></b><br>Sets a tick mark in a trackbar at the specified logical position.
+</p><p><b><code>:M ClearTicks: &nbsp;( f -- )
+</code></b><br>Removes the current tick marks from a trackbar. This message does not remove
+the first and last tick marks, which are created automatically by the trackbar.
+</p><p>If the <i>&nbsp;f </i>&nbsp;is TRUE, the trackbar is redrawn after the tick marks are cleared.
+If this parameter is FALSE, the message clears the tick marks but does not redraw
+the trackbar.
+</p><p><b><code>:M GetTickPos: &nbsp;( iTic -- n )
+</code></b><br>Retrieves the current physical position of a tick mark in a trackbar.
+</p><p><b><code>:M GetTicksPtr: ( -- pointer )
+</code></b><br>Retrieves the address of an array that contains the positions of the tick marks
+for a trackbar.
+</p><p>Returns the address of an array of DWORD values. The elements of the array specify
+the logical positions of the trackbar's tick marks, not including the first and last
+tick marks created by the trackbar. The logical positions can be any of the integer
+values in the trackbar's range of minimum to maximum slider positions.
+</p><p>The number of elements in the array is two less than the tick count returned by the
+GetNumTicks: method. Note that the values in the array may include duplicate positions
+and may not be in sequential order. The returned pointer is valid until you change the
+trackbar's tick marks.
+</p><p><b><code>:M SetTickFreq: ( pos freq -- )
+</code></b><br>Sets the interval frequency for tick marks in a trackbar. For example, if the frequency
+is set to two, a tick mark is displayed for every other increment in the trackbar's range.
+The default setting for the frequency is one; that is, every increment in the range is
+associated with a tick mark.
+</p><p>The trackbar must have the TBS_AUTOTICKS style to use this method.
+</p><p><b><code>:M GetNumTicks: ( -- n )
+</code></b><br>Retrieves the number of tick marks in the trackbar.
+</p><p>The GetNumTicks: method counts all of the tick marks, including the first and last tick
+marks created by the trackbar.
+</p><p><b><code>:M SetRange: &nbsp;&nbsp;&nbsp;( min max f -- )
+</code></b><br>Sets the range of minimum and maximum logical positions for the slider in the trackbar.
+</p><p>If the <i>&nbsp;f </i>&nbsp;parameter is TRUE, the trackbar is redrawn after the range is set. If this
+parameter is FALSE, the message sets the range but does not redraw the trackbar.
+</p><p><b><code>:M SetSel: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( min max f -- )
+</code></b><br>Sets the starting and ending positions for the available selection range in the trackbar.
+</p><p>If the <i>&nbsp;f </i>&nbsp;is TRUE, the message redraws the trackbar after the selection range is set.
+If this parameter is FALSE, the message sets the selection range but does not redraw the trackbar.
+</p><p>This method is ignored if the trackbar does not have the TBS_ENABLESELRANGE style.
+</p><p><b><code>:M ClearSel: &nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Clears the current selection range in the trackbar.
+</p><p>If the <i>&nbsp;f </i>&nbsp;is TRUE, the trackbar is redrawn after the selection is cleared.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>;Class
+</code></b><br>End of Trackbar class
+</p><a name="VTrackBar"></a>
+<h2>VTrackBar class
+</h2><p><b><code>:Class VTrackBar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;super TrackBar
+</code></b><br>Trackbar control (vertical)
+</p><p>A trackbar is a window that contains a slider and optional tick marks.
+When the user moves the slider, using either the mouse or the direction keys,
+the trackbar sends notification messages to indicate the change.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: TBS_VERT.
+</p><p><b><code>;Class
+</code></b><br>End of VTrackBar class
+</p><a name="ScrollBar"></a>
+<h2>ScrollBar class
+</h2><p><b><code>|Class ScrollBar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Control
+</code></b><br>Scrollbar control
+Note: this is an internal class. Don't use it directly.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M SetFont: &nbsp;&nbsp;&nbsp;&nbsp;( hndl -- )
+</code></b><br>Set the font in the control.
+Note that this is a dummy method in this class.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><a name="HorizScroll"></a>
+<h2>HorizScroll class
+</h2><p><b><code>:Class HorizScroll &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super ScrollBar
+</code></b><br>Scrollbar control (vorizontal).
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: SBS_HORZ.
+</p><p><b><code>;Class
+</code></b><br>End of HorizScroll class
+</p><a name="VertScroll"></a>
+<h2>VertScroll class
+</h2><p><b><code>:Class VertScroll &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super ScrollBar
+</code></b><br>Scrollbar control (vertical).
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: SBS_VERT.
+</p><p><b><code>;Class
+</code></b><br>End of VertScroll class
+</p><a name="SizeBox"></a>
+<h2>SizeBox class
+</h2><p><b><code>:Class SizeBox &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super ScrollBar
+</code></b><br>Size box control.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: SBS_SIZEGRIP.
+</p><p><b><code>;Class
+</code></b><br>End of SizeBox class
+</p><p>The MonthCalendar and TimeDatePicker controls both use a structure, the members
+of which are;
+</p><h3><i>Year
+</i></h3><p>The year (1601 - 30827).
+
+Month
+
+January = 1
+February = 2
+March = 3
+April = 4
+May = 5
+June = 6
+July = 7
+August = 8
+September = 9
+October = 10
+November = 11
+December = 12
+
+DayOfWeek
+
+Sunday = 0
+Monday = 1
+Tuesday = 2
+Wednesday = 3
+Thursday = 4
+Friday = 5
+Saturday = 6
+
+Day
+The day of the month (0-31).
+Hour
+The hour (0-23).
+Minute
+The minute(s) (0-59).
+Second
+The second(s) (0-59).
+Milliseconds
+The millisecond(s) (0-999).
+</p><a name="MonthCalendar"></a>
+<h2>MonthCalendar class
+</h2><p><b><code>:Class MonthCalendar &nbsp;&nbsp;&nbsp;&lt;Super DateTimeControl
+</code></b><br>Month Calendar control.
+A month calendar control implements a calendar-like user interface. This
+provides the user with a very intuitive and recognizable method of entering
+or selecting a date.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>:M MinSize: &nbsp;&nbsp;&nbsp;&nbsp;( -- x y )
+</code></b><br>Return minimum size required to display a month.
+</p><p><b><code>:M GetDate: &nbsp;&nbsp;&nbsp;&nbsp;( -- day month year )
+</code></b><br>Retrieves the currently selected date.
+</p><p><i>&nbsp;day </i>&nbsp;is the day of the month (0-31).
+</p><p><i>&nbsp;Month </i>&nbsp;is the month (January = 1; December = 12)
+</p><p><i>&nbsp;year </i>&nbsp;is the year (1601 - 30827).
+</p><p><b><code>:M GetToday: &nbsp;&nbsp;&nbsp;( -- day month year )
+</code></b><br>Retrieves the date information for the date specified as &quot;today&quot;.
+</p><p><i>&nbsp;day </i>&nbsp;is the day of the month (0-31).
+</p><p><i>&nbsp;Month </i>&nbsp;is the month (January = 1; December = 12)
+</p><p><i>&nbsp;year </i>&nbsp;is the year (1601 - 30827).
+</p><p><b><code>;Class
+</code></b><br>End of MonthCalendar class
+</p><a name="DateTimePicker"></a>
+<h2>DateTimePicker class
+</h2><p><b><code>:Class DateTimePicker &nbsp;&nbsp;&lt;Super DateTimeControl
+</code></b><br>Date and Time Picker control
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p>Date and Time Picker Control Styles <br />
+
+The window styles listed here are specific to date and time picker controls. <br />
+
+Constants <br />
+DTS_APPCANPARSE <br />
+Allows the owner to parse user input and take necessary action. It enables users
+to edit within the client area of the control when they press the F2 key.
+The control sends DTN_USERSTRING notification messages when users are finished. <br />
+
+DTS_LONGDATEFORMAT <br />
+Displays the date in long format. The default format string for this style is
+defined by LOCALE_SLONGDATEFORMAT, which produces output like &quot;Friday, April
+19, 1996&quot;. <br />
+
+DTS_RIGHTALIGN <br />
+The drop-down month calendar will be right-aligned with the control instead of
+left-aligned, which is the default. <br />
+
+DTS_SHOWNONE <br />
+It is possible to have no date currently selected in the control. With this style,
+the control displays a check box that users can check once they have entered or
+selected a date. Until this check box is checked, the application will not be
+able to retrieve the date from the control because, in essence, the control has
+no date. This state can be set with the DTM_SETSYSTEMTIME message or queried
+with the DTM_GETSYSTEMTIME message. <br />
+
+DTS_SHORTDATEFORMAT <br />
+Displays the date in short format. The default format string for this style is
+defined by LOCALE_SSHORTDATE, which produces output like &quot;4/19/96&quot;. <br />
+
+DTS_SHORTDATECENTURYFORMAT <br />
+Version 5.80. Similar to the DTS_SHORTDATEFORMAT style, except the year is a
+four-digit field. The default format string for this style is based on
+LOCALE_SSHORTDATE. The output looks like: &quot;4/19/1996&quot;. <br />
+
+DTS_TIMEFORMAT <br />
+Displays the time. The default format string for this style is defined by
+LOCALE_STIMEFORMAT, which produces output like &quot;5:31:42 PM&quot;. <br />
+
+DTS_UPDOWN <br />
+Places an up-down control to the right of the DTP control to modify date-time
+values. This style can be used in place of the drop-down month calendar, which
+is the default style. <br />
+
+Remarks <br />
+
+The DTS_XXXFORMAT styles that define the display format cannot be combined.
+If none of the format styles are suitable, use a DTM_SETFORMAT message to
+define a custom format.
+</p><p><b><code>:M SetCustomFormat: &nbsp;&nbsp;( z&quot;format&quot; &nbsp;-- )
+</code></b><br>set the display format for time or date
+</p><p>Format Strings
+A DTP format string consists of a series of elements that represent a particular
+piece of information and define its display format. The elements will be displayed
+in the order they appear in the format string. <br />
+
+Date and time format elements will be replaced by the actual date and time. They are
+defined by the following groups of characters: <br />
+
+Element &nbsp;&nbsp;&nbsp;&nbsp;Description <br />
+&quot;d&quot; &nbsp;&nbsp;&nbsp;&nbsp;The one- or two-digit day. <br />
+&quot;dd&quot; &nbsp;&nbsp;&nbsp;The two-digit day. Single-digit day values are preceded by a zero. <br />
+&quot;ddd&quot; &nbsp;&nbsp;The three-character weekday abbreviation. <br />
+&quot;dddd&quot; &nbsp;The full weekday name. <br />
+&quot;h&quot; &nbsp;&nbsp;&nbsp;&nbsp;The one- or two-digit hour in 12-hour format. <br />
+&quot;hh&quot; &nbsp;&nbsp;&nbsp;The two-digit hour in 12-hour format. Single-digit values are preceded by
+a zero. <br />
+&quot;H&quot; &nbsp;&nbsp;&nbsp;&nbsp;The one- or two-digit hour in 24-hour format. <br />
+&quot;HH&quot; &nbsp;&nbsp;&nbsp;The two-digit hour in 24-hour format. Single-digit values are preceded by
+a zero. <br />
+&quot;m&quot; &nbsp;&nbsp;&nbsp;&nbsp;The one- or two-digit minute. <br />
+&quot;mm&quot; &nbsp;&nbsp;&nbsp;The two-digit minute. Single-digit values are preceded by a zero. <br />
+&quot;M&quot; &nbsp;&nbsp;&nbsp;&nbsp;The one- or two-digit month number. <br />
+&quot;MM&quot; &nbsp;&nbsp;&nbsp;The two-digit month number. Single-digit values are preceded by a zero. <br />
+&quot;MMM&quot; &nbsp;&nbsp;The three-character month abbreviation. <br />
+&quot;MMMM&quot; &nbsp;The full month name. <br />
+&quot;t&quot; &nbsp;&nbsp;&nbsp;&nbsp;The one-letter AM/PM abbreviation (that is, AM is displayed as &quot;A&quot;). <br />
+&quot;tt&quot; &nbsp;&nbsp;&nbsp;The two-letter AM/PM abbreviation (that is, AM is displayed as &quot;AM&quot;). <br />
+&quot;yy&quot; &nbsp;&nbsp;&nbsp;The last two digits of the year (that is, 1996 would be displayed as &quot;96&quot;). <br />
+&quot;yyyy&quot; &nbsp;The full year (that is, 1996 would be displayed as &quot;1996&quot;). <br />
+
+To make the information more readable, you can add body text to the format string
+by enclosing it in single quotes. Spaces and punctuation marks do not need to be
+quoted. <br />
+
+<b>&nbsp;Note </b>&nbsp;&nbsp;&nbsp;Nonformat characters that are not delimited by single quotes will
+result in unpredictable display by the DTP control. <br />
+
+For example, to display the current date with the format
+&quot;'Today is: 04:22:31 Tuesday Mar 23, 1996&quot;, the format string is
+&quot;'Today is: 'hh':'m':'s dddd MMM dd', 'yyyy&quot;. To include a single quote in your
+body text, use two consecutive single quotes. For example,
+&quot;'Don''t forget' MMM dd',' yyyy&quot; produces output that looks like: <br />
+Don't forget Mar 23, 1996. <br />
+It is not necessary to use quotes with the comma, so
+&quot;'Don''t forget' MMM dd, yyyy&quot; is also valid, and produces the same output.
+</p><p><b><code>:M GetTime: &nbsp;&nbsp;&nbsp;&nbsp;( -- hrs min secs )
+</code></b><br>get user selected time
+</p><p><b><code>:M SetTime: &nbsp;&nbsp;&nbsp;&nbsp;( hr min sec -- )
+</code></b><br>set time for user to edit
+</p><p><b><code>:M GetDate: &nbsp;&nbsp;&nbsp;&nbsp;( -- day month year )
+</code></b><br>get user selected date
+</p><p><b><code>;Class
+</code></b><br>End of DateTimePicker class
+</p><a name="TabControl"></a>
+<h2>TabControl class
+</h2><p><b><code>:Class TabControl &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super Control
+</code></b><br>Tab control.
+</p><p>A tab control is analogous to the dividers in a notebook or the labels in a
+file cabinet. By using a tab control, an application can define multiple pages
+for the same area of a window or dialog box. Each page consists of a certain
+type of information or a group of controls that the application displays when
+the user selects the corresponding tab.
+</p><p><b><code>Record: tc_Item
+</code></b><br>The TCITEM struct.
+</p><p><b><code>:M IsMask: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Set the <i>&nbsp;mask </i>&nbsp;member of the TCITEM struct. Possible values are:
+</p><table><tr><th>TCIF_TEXT
+</th>
+<th>The pszText member is valid.
+</th>
+</tr>
+<tr><td>TCIF_IMAGE
+</td>
+<td>The iImage member is valid.
+</td>
+</tr>
+<tr><td>TCIF_PARAM
+</td>
+<td>The lParam member is valid.
+</td>
+</tr>
+<tr><td>TCIF_RTLREADING
+</td>
+<td>Displays the text of pszText using right-to-left reading order on Hebrew or Arabic systems.
+</td>
+</tr>
+</table><p><b><code>:M Mask: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Get the <i>&nbsp;mask </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M IsPszText: &nbsp;&nbsp;( addr -- )
+</code></b><br>Set the <i>&nbsp;mask </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M PszText: &nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Get the <i>&nbsp;pszText </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M IscchTextMax: ( n -- )
+</code></b><br>Set the <i>&nbsp;pszText </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M cchTextMax: &nbsp;( -- n )
+</code></b><br>Get the <i>&nbsp;cchTextmax </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M IsiImage: &nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Set the <i>&nbsp;iImage </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M iImage: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Get the <i>&nbsp;iImage </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M IsLparam: &nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Set the <i>&nbsp;lparam </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M LParam: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- n )
+</code></b><br>Get the <i>&nbsp;lparam </i>&nbsp;member of the TCITEM struct.
+</p><p><b><code>:M WindowStyle: ( -- style )
+</code></b><br>Get the window style of the control. Default style is: TCS_FOCUSONBUTTONDOWN.
+</p><p><b><code>\ :M AddStyle: &nbsp;&nbsp;&nbsp;( n -- )
+</code></b><br>Set any additional style of the control. Must be done before the control
+is created. Possible values are:
+</p><table><tr><th>TCS_BOTTOM
+</th>
+<th>Tabs appear at the bottom of the control. This value equals TCS_RIGHT.
+</th>
+</tr>
+<tr><td>TCS_BUTTONS
+</td>
+<td>Tabs appear as buttons, and no border is drawn around the display area.
+</td>
+</tr>
+<tr><td>TCS_FIXEDWIDTH
+</td>
+<td>All tabs are the same width. This style cannot be combined with the TCS_RIGHTJUSTIFY style.
+</td>
+</tr>
+<tr><td>TCS_FLATBUTTONS
+</td>
+<td>Selected tabs appear as being indented into the background while other tabs appear as being on the same plane as the background. This style only affects tab controls with the TCS_BUTTONS style.
+</td>
+</tr>
+<tr><td>TCS_FOCUSNEVER
+</td>
+<td>The tab control does not receive the input focus when clicked.
+</td>
+</tr>
+<tr><td>TCS_FOCUSONBUTTONDOWN
+</td>
+<td>The tab control receives the input focus when clicked.
+</td>
+</tr>
+<tr><td>TCS_FORCEICONLEFT
+</td>
+<td>Icons are aligned with the left edge of each fixed-width tab. This style can only be used with the TCS_FIXEDWIDTH style.
+</td>
+</tr>
+<tr><td>TCS_FORCELABELLEFT
+</td>
+<td>Labels are aligned with the left edge of each fixed-width tab; that is, the label is displayed immediately to the right of the icon instead of being centered.
+</td>
+</tr>
+<tr><td>TCS_HOTTRACK
+</td>
+<td>Items under the pointer are automatically highlighted. You can check whether or not hot tracking is enabled by calling SystemParametersInfo.
+</td>
+</tr>
+<tr><td>TCS_MULTILINE
+</td>
+<td>Multiple rows of tabs are displayed, if necessary, so all tabs are visible at once.
+</td>
+</tr>
+<tr><td>TCS_MULTISELECT
+</td>
+<td>Multiple tabs can be selected by holding down CTRL when clicking. This style must be used with the TCS_BUTTONS style.
+</td>
+</tr>
+<tr><td>TCS_OWNERDRAWFIXED
+</td>
+<td>The parent window is responsible for drawing tabs.
+</td>
+</tr>
+<tr><td>TCS_RAGGEDRIGHT
+</td>
+<td>Rows of tabs will not be stretched to fill the entire width of the control. This style is the default.
+</td>
+</tr>
+<tr><td>TCS_RIGHT
+</td>
+<td>Tabs appear vertically on the right side of controls that use the TCS_VERTICAL style. This value equals TCS_BOTTOM.
+</td>
+</tr>
+<tr><td>TCS_RIGHTJUSTIFY
+</td>
+<td>The width of each tab is increased, if necessary, so that each row of tabs fills the entire width of the tab control.
+</td>
+</tr>
+<tr><td>TCS_SCROLLOPPOSITE
+</td>
+<td>Unneeded tabs scroll to the opposite side of the control when a tab is selected.
+</td>
+</tr>
+<tr><td>TCS_SINGLELINE
+</td>
+<td>Only one row of tabs is displayed. The user can scroll to see more tabs, if necessary. This style is the default.
+</td>
+</tr>
+<tr><td>TCS_TABS
+</td>
+<td>Tabs appear as tabs, and a border is drawn around the display area. This style is the default.
+</td>
+</tr>
+<tr><td>TCS_TOOLTIPS
+</td>
+<td>The tab control has a tooltip control associated with it.
+</td>
+</tr>
+<tr><td>TCS_VERTICAL
+</td>
+<td>Tabs appear at the left side of the control, with tab text displayed vertically. This style is valid only when used with the TCS_MULTILINE style. To make tabs appear on the right side of the control, also use the TCS_RIGHT style.
+</td>
+</tr>
+</table><p><b><code>:M TC_Item: &nbsp;&nbsp;&nbsp;&nbsp;( -- addr )
+</code></b><br>Get the address of the TCITEM struct.
+</p><p><b><code>:M InsertTab: &nbsp;&nbsp;( index -- )
+</code></b><br>Inserts a new tab into the tab control.
+</p><p><i>&nbsp;mask </i>&nbsp;and other members of the TCITEM struct must be set.
+</p><p><b><code>:M GetTabInfo: &nbsp;( index -- )
+</code></b><br>Retrieves information about a tab in the tab control.
+</p><p><b><code>:M SetTabInfo: &nbsp;( index -- )
+</code></b><br>Sets some or all of a tab's attributes.
+</p><p><i>&nbsp;mask </i>&nbsp;and other members of the TCITEM struct must be set.
+</p><p><b><code>:M GetTabCount: ( -- n )
+</code></b><br>Retrieves the number of tabs in the tab control.
+</p><p><b><code>:M DeleteTab: &nbsp;&nbsp;( index -- )
+</code></b><br>Removes an item from the tab control.
+</p><p><b><code>:M DeleteAllTabs: &nbsp;&nbsp;( -- )
+</code></b><br>Removes all items from the tab control.
+</p><p><b><code>:M AdjustRect: &nbsp;( rect flag -- )
+</code></b><br>Calculates a tab control's display area given a window rectangle, or
+calculates the window rectangle that would correspond to a specified
+display area.
+</p><p><i>&nbsp;rect </i>&nbsp;is the address of a RECT structure that specifies the given rectangle
+and receives the calculated rectangle.
+</p><p><i>&nbsp;flag </i>&nbsp;If this parameter is TRUE, prc specifies a display rectangle and receives
+the corresponding window rectangle. If this parameter is FALSE, prc specifies a window
+rectangle and receives the corresponding display area.
+</p><p><b><code>:M ClientSize: &nbsp;( -- l t r b )
+</code></b><br>Return size of display area of the tab control.
+</p><p><b><code>:M WindowSize: &nbsp;( l t r t -- l t r b )
+</code></b><br>Given display area return window size required.
+</p><p><b><code>:M GetSelectedTab: ( -- index )
+</code></b><br>Determines the currently selected tab in the tab control.
+</p><p><b><code>:M SetSelectedTab: ( index -- &nbsp;)
+</code></b><br>Selects a tab in the tab control.
+</p><p>Note: A tab control does not send a TCN_SELCHANGING or TCN_SELCHANGE
+notification message when a tab is selected using this message.
+</p><p><b><code>:M GetRowCount: ( -- n )
+</code></b><br>Retrieves the current number of rows of tabs in a tab control.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( f -- )
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>:M Setfont: &nbsp;&nbsp;&nbsp;&nbsp;( handle -- )
+</code></b><br>Set the font in the control.
+</p><p><b><code>:M WindowTitle: ( -- null$ )
+</code></b><br>SintillaControl asks for window title of parent
+</p><p><b><code>:M Handle_Notify: &nbsp;{ w l \ ncode tabid -- f }
+</code></b><br>Handle the notification messages of the tab control. This method must
+be called within the WM_NOTIFY handler of the parent window.
+</p><p>Currently only these notification messages are handled:
+</p><table><tr><th>TCN_SELCHANGE
+</th>
+<th>Notifies a tab control's parent window that the currently selected tab has changed.
+</th>
+</tr>
+<tr><td>TCN_SELCHANGING
+</td>
+<td>Notifies a tab control's parent window that the currently selected tab is about to change.
+</td>
+</tr>
+</table><p><b><code>:M On_SelChanged: &nbsp;( l -- f )
+</code></b><br>Handle the TCN_SELCHANGE notification message.
+Default calls the <i>&nbsp;change function </i>&nbsp;set with the <i>&nbsp;IsChangeFunc: </i>&nbsp;method.
+</p><p><b><code>:M On_SelChanging: ( l -- f )
+</code></b><br>Handle the TCN_SELCHANGING notification message.
+Default calls the <i>&nbsp;changeing function </i>&nbsp;set with the <i>&nbsp;IsChangingFunc: </i>&nbsp;method.
+</p><p><b><code>:M IsChangeFunc: &nbsp;&nbsp;( cfa -- )
+</code></b><br>Set the <i>&nbsp;change function </i>. This function es executed when
+the currently selected tab has changed.
+</p><p><b><code>:M IsChangingFunc: ( cfa -- )
+</code></b><br>Set the <i>&nbsp;changeing function </i>. This function es executed when
+the currently selected tab is about to change.
+</p><p><b><code>: default-func &nbsp;&nbsp;&nbsp;&nbsp;( lParam obj -- false )
+</code></b><br>The default <i>&nbsp;change(-ing) function </i>.
+</p><p><i>&nbsp;lParam </i>&nbsp;is the adress of the Address of an NMHDR structure.
+<i>&nbsp;obj </i>&nbsp;is the address of the TabControl object that has send the
+notification message.
+</p><p><b><code>:M ClassInit: &nbsp;&nbsp;( -- )
+</code></b><br>Initialise the class.
+</p><p><b><code>:M Start: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( Parent -- )
+</code></b><br>Create the control.
+</p><p><b><code>;Class
+</code></b><br>End of TabControl class
+</p><a name="MultiLineTabControl"></a>
+<h2>MultiLineTabControl class
+</h2><p><b><code>:Class MultiLineTabControl &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;Super TabControl
+</code></b><br>Multiline Tab control.
+Multiple rows of tabs are displayed, if necessary, so all tabs are visible at once.
+</p><p><b><code>;class
+</code></b><br>End of MultiLineTabControl class
+</p><p>For a demo how to use the TabControl see: TabControlDemo.f
+</p><h1>ExControls -- More (enhanced) classes for non-standard windows controls.
+</h1><a name="VertButtonBar"></a>
+<h2>VertButtonBar class
+</h2><p><b><code>:Class VertButtonBar &nbsp;&nbsp;&nbsp;&lt;super VButtonBar
+</code></b><br>VertButtonBar control
+</p><p>This is an enhanced Version of the VButtonBar class.
+</p><p>Note: this control isn't one of the standard control of MS windows.
+</p><p><b><code>:M SetFont: &nbsp;&nbsp;&nbsp;&nbsp;{ fonthndl \ hb1 -- }
+</code></b><br>Set the font in the control.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ flag \ hb1 -- }
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>;Class
+</code></b><br>End of VertButtonBar class
+</p><a name="HorizButtonBar"></a>
+<h2>HorizButtonBar class
+</h2><p><b><code>:Class HorizButtonBar &nbsp;&nbsp;&lt;super HButtonBar
+</code></b><br>HorizButtonBar control
+</p><p>This is an enhanced Version of the HButtonBar class.
+</p><p>Note: this control isn't one of the standard control of MS windows.
+</p><p><b><code>:M SetFont: &nbsp;&nbsp;&nbsp;&nbsp;{ fonthndl \ hb1 -- }
+</code></b><br>Set the font in the control.
+</p><p><b><code>:M Enable: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{ flag \ hb1 -- }
+</code></b><br>Enable the control.
+</p><p><b><code>:M Disable: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Disable the control.
+</p><p><b><code>;Class
+</code></b><br>End of HorizButtonBar class
+</p></body></html>

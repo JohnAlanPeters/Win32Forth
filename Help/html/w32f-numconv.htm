@@ -1,0 +1,144 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Number Conversion</h1>
+
+<h2>Introduction</h2>
+
+<p>Part of the job of the
+interpreter in Forth is to look up words in the dictionary. When a word is not
+found, the interpreter attempts to convert the word to a number and put it on
+the stack. Win32Forth has a simple but effective number conversion system that
+allows pluggable words to process numbers. Several number conversions are
+provided with the installed system.</p>
+
+<h2>Standard number conversions</h2>
+
+<p><a href="dpans/DPANS3.HTM#3.2.1.2">Standard numbers</a> and
+<a href="dpans/DPANS8.HTM">double numbers</a> (base 2 through 36) are supported, and the
+maximum values for each is specified in ENVIRON.F (environment word set). Optionally,
+numbers may be prefixed with a negative sign (-).
+<a href="dpans/DPANS12.HTM#12.3.7">Floating point numbers</a> are
+supported in base 10 ( <code>DECIMAL</code> ).</p>
+
+<h2>Extended numbers</h2>
+
+<p>Win32Forth supports a set of extended numbers, commonly supported by Forths such as gforth.</p>
+
+<h3>Base modifiers % &amp; $</h3>
+
+<h4>Binary % modifier (in any base)</h4>
+
+<p>Binary numbers can be
+entered in any base by prefixing the number with a % sign, and an optional
+negative sign (-) either before or after the %. The following are valid binary
+numbers with their equivalent in decimal; </p>
+
+<pre>    %0 (0)
+    %10101 (21)
+    -%01 (-1)
+    -101 (-5)</pre>
+
+<h4>Decimal &amp; modifier (in any base)</h4>
+
+<p>Decimal numbers can be
+entered in any base by prefixing the number with an &amp; sign, and an optional
+negative sign (-) either before or after the &amp;. The following are valid
+decimal numbers; </p>
+
+<pre>    &amp;193
+    &amp;-22
+    -&amp;35</pre>
+
+
+<h4>Hex $ modifier (in any base)</h4>
+
+<p>Hex numbers can be entered
+in any base by prefixing the number with a $ sign, and an optional negative
+sign (-) either before or after the $. The following are valid hex numbers with
+their equivalent in decimal; </p>
+
+<pre>    $123 (291)
+    $FFFFFFFF (-1)
+    $-245 (-581)
+    -$34 (-52)</pre>
+
+<p>Additionally, any hex
+string followed with an h or H, or the string 0x followed by a hex string are
+interpreted as hex numbers. The hex string can be prefixed with an optional
+negative sign (-). The following are valid hex numbers with their equivalent in
+decimal; </p>
+
+
+<pre>     0x123 (291)
+    FFFFFFFFh (-1)
+    -245h (-581)
+    -0x34 (-52)
+    0x-34 (-52)</pre>
+
+<h3>Floating point (in any base)</h3>
+
+<p>Floating point numbers can
+be entered in any base by prefixing the number with the F# word (not a leading
+string, but a separate word). For example; <code>F# 1.0e-2</code> .</p>
+
+<h3>Dotted IP notation (a.b.c.d)</h3>
+
+<p>IP addresses of the form
+a.b.c.d can be entered in any base. However, they must not be signed, and they
+must not have a leading base modifier (as in %, $ or &amp;). </p>
+
+<h2>Adding your own conversion words</h2>
+
+<p>The chain number conversion
+technique allow number conversion to be easily extended to support additional
+forms of number conversion. </p>
+
+<p>Win32Forth uses <a href="w32f-chains.htm">chains</a> to provide a pluggable number
+conversion system. The number conversion chain is called <code>number?-chain</code> . Each
+number conversion routine on the chain is sent a string <code>( addr len )</code>and can
+attempt to convert the number. If the conversion fails the word
+performs a <code>-1 THROW</code> to indicate that it can't convert the string;
+the next word is then tried until success or the chain is exhausted. If the
+chain is exhausted, then a <code>-13 THROW</code> (undefined) is executed.</p>
+
+<p>If conversion succeeds, then a double number <b>must</b> be returned. If the
+number is truly a double, then set the <code>DOUBLE?</code> flag to true, otherwise the number
+will be considered a single, and the high order cell will be discarded. For
+numbers with a decimal point, the value <code>DP-LOCATION</code> can be set to indicate
+where it's located in the input string. If desired, the flag <code>-VE-NUM?</code> can
+be set to true; the number will be negated before it is used. This is to avoid keeping
+flags to indicate that the sign has been detected in each routine separately.</p>
+
+<p>Floating point numbers are returned in the floating point stack; there is no
+return value, and the variable <code>FLOAT?</code> is set. See FLOAT.F for details. <b>NOTE</b>
+- even floating point routines must return a double value; it's ignored and
+dropped if <code>FLOAT?</code> is set.</p>
+
+<p>The stack effects of any number conversion word must be <code>( addr len -- d )</code> where
+ <code>addr len</code> is the input string, and <code>d</code> is the
+double number output. If you can't convert your form of string input, then
+execute a <code>-1 THROW</code> . To install your routine, you will need to
+specify</p>
+
+<pre>    number?-chain chain-add &lt;your-number-conversion-word&gt;</pre>
+
+<p>to add your word to the end
+of the chain. Your word will be called after all the built-in number
+conversions have been executed; to be executed before any of the standard
+words, specify</p>
+
+<pre>    number?-chain chain-add-before &lt;your-number-conversion-word&gt;</pre>
+
+<hr>
+
+<p>Document : w32f-numconv.htm -- 2005/05/16 -- alex_mcdonald</p>
+
+</body>
+
+</html>

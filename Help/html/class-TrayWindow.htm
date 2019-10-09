@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+TrayWindow.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>TrayWindow class
+</h1><p>Windows that are created with this class will hide themself
+in the windows traybar when they are minimized, rather than on the task bar.
+</p><a name="TrayWindow"></a>
+<h2>Glossary
+</h2><p><b><code>:class TrayWindow &lt;super window
+</code></b><br>TrayWindow class
+</p><p><b><code>:M GetTooltip: &nbsp;( -- addr len )
+</code></b><br>Get the tooltip text for the traybar icon. Default is to print the title of the window
+</p><p><b><code>:M AddIcon: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Add our icon to the traybar
+</p><p><b><code>:M DeleteIcon: &nbsp;( -- )
+</code></b><br>Remove our icon from the traybar
+</p><p><b><code>:M ShowWindow: &nbsp;( -- )
+</code></b><br>Show the window and remove the icon from the traybar.
+</p><p><b><code>:M HideWindow: &nbsp;( -- )
+</code></b><br>Hide the window and add the icon to the traybar.
+</p><p><b><code>:M WM_SIZE &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( hWnd uMsg wParam lParam -- res )
+</code></b><br>Handle the WM_SIZE message. If the window is minimized
+it will be hidden and the icon will be added to the traybar.
+</p><p><b><code>:M WM_SYSCOMMAND ( hWnd uMsg wParam lParam -- res )
+</code></b><br>Handle the WM_SYSCOMMAND message. If the window is minimized
+it will be hidden and the icon will be added to the traybar.
+</p><p><b><code>:M On_IconNotify: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( hWnd uMsg wParam lParam -- res )
+</code></b><br>Handle the messages from the traybar icon.
+</p><p>The default handler removes the icon for the traybar and shows the window,
+when the user click's with the left mouse button on the tray icon.
+</p><p>If the right mouse button is used the popup menu of the window is shown.
+Use the <b>&nbsp;SetPopupBar: </b>&nbsp;method to assign a popup menu to the window.
+</p><p><b><code>;class
+</code></b><br>End of TrayWindow class
+</p><h2>Example
+</h2><pre>
+\&nbsp;Create a tray window
+:object TestWindow &lt;super TrayWindow
+
+:M GetTooltip: &nbsp;( -- addr len )
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s&quot; TrayWindow Test&quot; ;M
+
+;object
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Start: TestWindow \&nbsp;open the window
+SW_MINIMIZE Show: TestWindow \&nbsp;minimize it to hide it in the TrayBar
+</pre></body></html>

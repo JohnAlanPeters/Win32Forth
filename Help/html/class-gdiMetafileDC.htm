@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+gdiMetafileDC.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>gdiMetafileDC -- Metafile device context class
+</h1><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><h2>Glossary
+</h2><p><b><code>:class gdiMetafileDC &lt;super gdiDC
+</code></b><br>Metafile device context class
+</p><p><b><code>:M SetRect: &nbsp;&nbsp;&nbsp;&nbsp;( left top right bottom -- )
+</code></b><br>Specify the dimensions (in .01-millimeter units) of the picture to be
+stored in the enhanced metafile.
+</p><p><b><code>:M CalcMetaRect: { left top right bottom hDC \ iWidthMM iHeightMM iWidthPels iHeightPels -- }
+</code></b><br>Calc the dimensions (in .01-millimeter units) of the picture to be
+stored in the enhanced metafile.
+</p><p><b><code>:M StartRecording: ( hRefDC -- f )
+</code></b><br>Start recording of a Metafile
+</p><p><b><code>:M StopRecording: &nbsp;( -- f )
+</code></b><br>Stop recording of a Metafile
+</p><p><b><code>:M Load: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f )
+</code></b><br>Load a metafile from a file
+</p><p><b><code>:M Save: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( addr len -- f )
+</code></b><br>Save the metafile in a file
+</p><p><b><code>:M Destroy: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>Destroy the metafile.
+</p><p><b><code>:M Draw: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( left top right bottom hDestDC -- )
+</code></b><br>Play the metafile in a rectangle
+</p><p><b><code>:M GetMetafile: ( -- MetafileObject )
+</code></b><br>Return the address of the metafile object used by this class
+</p><p><b><code>;class
+</code></b><br>End of gdiMetafileDC class
+</p></body></html>

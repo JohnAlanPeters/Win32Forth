@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/xml; charset=iso-8859-1" />
+<meta name="GENERATOR" content="Forth2HTML 0.6" />
+<style type="text/css">
+body {background: #FFFFEE;}
+h1 {color: #000000;}
+h4 {color: #000000;}
+p {font-family: monospace;}
+a {text-decoration:none;}
+</style>
+<title>
+g:\vector1.f</title></head><body><hr /><h1><a href="vector1.f">vector1.f
+</a></h1><hr /><p><a href="../dpans6.htm#6.2.1485"><span style="color:#990000">FALSE</span></a><a href="../dpans15.htm#15.6.2.2532"><span style="color:#0000FF">&nbsp;[IF]</span></a><span style="color:#008000"><br />
+<br />
+Vectoring package: use for<br />
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;1. passing function xt's as arguments;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;2. deferred definitions (instead of DEFER...IS)<br />
+<br />
+Usage: &nbsp;v: dummy<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: )test &nbsp;&nbsp;( xt --) &nbsp;defines &nbsp;dummy &nbsp;dummy &nbsp;;<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3 4 use( * )test &nbsp;. &nbsp;12 &nbsp;ok<br />
+<br />
+\ ---------------------------------------------------<br />
+\ &nbsp;&nbsp;&nbsp;&nbsp;(c) Copyright 2001 &nbsp;Julian V. Noble. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\<br />
+\ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Permission is granted by the author to &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\<br />
+\ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use this software for any application pro- &nbsp;\<br />
+\ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vided this copyright notice is preserved. &nbsp;&nbsp;\<br />
+\ ---------------------------------------------------<br />
+<br />
+This is an ANS Forth program requiring the<br />
+&nbsp;&nbsp;&nbsp;&nbsp;CORE wordset<br />
+<br />
+</span><a href="../dpans15.htm#15.6.2.2533"><span style="color:#0000FF">[THEN]</span></a><br />
+<br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xuseltparen"><span style="color:#000000">&nbsp;use(</span></a><a href="../dpans6.htm#6.1.0070"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\&nbsp;state-smart ' for syntactic sugar</span><br />
+<a href="../dpans6.htm#6.1.2250"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;STATE</span></a><a href="../dpans6.htm#6.1.0650"><span style="color:#0000FF">&nbsp;@</span></a><a href="../dpans6.htm#6.1.1700"><span style="color:#0000FF">&nbsp;&nbsp;IF</span></a><a href="../dpans6.htm#6.1.2033"><span style="color:#0000FF">&nbsp;&nbsp;POSTPONE</span></a><a href="../dpans6.htm#6.1.1780"><span style="color:#0000FF">&nbsp;LITERAL</span></a><a href="../dpans6.htm#6.1.2270"><span style="color:#0000FF">&nbsp;&nbsp;THEN</span></a><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;;</span></a><a href="../dpans6.htm#6.1.1710"><span style="color:#0000FF">&nbsp;&nbsp;IMMEDIATE</span></a><br />
+<br />
+<a href="../dpans6.htm#6.1.0070"><span style="color:#0000FF">'</span></a><span style="color:#808080">&nbsp;NOOP</span><a href="../dpans6.htm#6.1.0950"><span style="color:#0000FF">&nbsp;&nbsp;CONSTANT</span></a><span style="color:#990000">&nbsp;&nbsp;'noop</span><a name="xaposnoop"></a><br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xv:"><span style="color:#000000">&nbsp;v:</span></a><a href="../dpans6.htm#6.1.1000"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;CREATE</span></a><a href="#xaposnoop"><span style="color:#990000">&nbsp;&nbsp;'noop</span></a><a href="../dpans6.htm#6.1.0150"><span style="color:#0000FF">&nbsp;&nbsp;,</span></a><a href="../dpans6.htm#6.1.1250"><span style="color:#0000FF">&nbsp;&nbsp;DOES&gt;</span></a><a href="../dpans6.htm#6.1.0650"><span style="color:#0000FF">&nbsp;@</span></a><a href="../dpans6.htm#6.1.1370"><span style="color:#0000FF">&nbsp;&nbsp;EXECUTE</span></a><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;;</span></a><span style="color:#008000">&nbsp;&nbsp;&nbsp;\&nbsp;create dummy def'n</span><br />
+<br />
+<a href="../dpans6.htm#6.1.0450"><span style="color:#0000FF">:</span></a><a name="xdefines"><span style="color:#000000">&nbsp;defines</span></a><a href="../dpans6.htm#6.1.0070"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;'</span></a><a href="../dpans6.htm#6.1.0550"><span style="color:#0000FF">&nbsp;&gt;BODY</span></a><a href="../dpans6.htm#6.1.2250"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;STATE</span></a><a href="../dpans6.htm#6.1.0650"><span style="color:#0000FF">&nbsp;@</span></a><br />
+<a href="../dpans6.htm#6.1.1700"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IF</span></a><a href="../dpans6.htm#6.1.2033"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;POSTPONE</span></a><a href="../dpans6.htm#6.1.1780"><span style="color:#0000FF">&nbsp;&nbsp;LITERAL</span></a><a href="../dpans6.htm#6.1.2033"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;POSTPONE</span></a><a href="../dpans6.htm#6.1.0010"><span style="color:#0000FF">&nbsp;&nbsp;!</span></a><br />
+<a href="../dpans6.htm#6.1.1310"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELSE</span></a><a href="../dpans6.htm#6.1.0010"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;!</span></a><a href="../dpans6.htm#6.1.2270"><span style="color:#0000FF">&nbsp;&nbsp;&nbsp;THEN</span></a><a href="../dpans6.htm#6.1.0460"><span style="color:#0000FF">&nbsp;&nbsp;;</span></a><a href="../dpans6.htm#6.1.1710"><span style="color:#0000FF">&nbsp;&nbsp;IMMEDIATE</span></a><br />
+<br />
+</p></body></html>

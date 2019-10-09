@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Wordlists & Vocabularies</h1>
+
+<p>In the ANS standard, wordlists have replaced vocabularies. They represent the same
+concept but wordlists are handled via unique identifiers ("wid" or wordlists ids) and vocabularies
+are handled by names, which is more handy. That is why we still use vocabularies in
+Win32Forth (They are internally defined as wordlists however).Win32Forth Vocabularies follow the Forth-83 model
+ (the same as g Forth). In the following, we will
+consider wordlists and vocabularies as synonyms, which they are not.</p>
+
+
+<h2>Wordlists/Vocabularies</h2>
+
+<p>Vocabularies are subsets of the Forth dictionary.
+They can be used to gather words for a special usage (eg: the <code>ASSEMBLER</code>
+wordlist), to hide building words (eg: <code>HIDDEN</code>) or even to encapsulate
+words (eg: <code>CLASSES</code> wordlists). How is this achieved ? When compiling, Forth
+searches words in "context" wordlists and compile words in a "current" wordlist. This
+means that only context words can be used and all new words go in the current wordlist.</p>
+
+<p>One or more wordlists can be declared as "context" at the same time. They are
+stored in a list called "search order". The "order" is important because if a word is
+defined in several different wordlists, the one that will be compiled will be the one
+found in the first wordlist that contains this word. The current contents of the
+search order list (and also the current "current" vocabulary can be displayed with the
+word <code>ORDER</code>.</p>
+
+<pre>     ORDER
+     Context: FORTH FORTH ROOT
+     Current: FORTH  ok</pre>
+
+<p>Note : this is the initial order. If you accidentally remove the <code>FORTH</code> vocabulary
+just before <code>ROOT</code> , you will not have any words left but <code>FORTH</code>
+, <code>FORTH-WORDLIST</code> and <code>SET-ORDER</code>(these are the only words defined in
+<code>ROOT</code>) and you will have to execute one or more of them in order to restore the order
+to :</p>
+<pre>     ORDER
+     Context: FORTH ROOT
+     Current: FORTH  ok</pre>
+
+<p>You can deliberately clean the search order by invoking the word <code>ONLY</code>. For
+the reason given above, you will then be obliged to invoke <code>FORTH</code> to
+obtain the same result. So remember that you have to use the sequence <code>ONLY FORTH</code>
+to clean the search order.</p>
+
+<p>To ADD a vocabulary on top of <code>ORDER</code> , use <code>ALSO</code> . Given
+the initial order, here is an example :</p>
+<pre>     ALSO ASSEMBLER
+     ORDER
+     Context: ASSEMBLER FORTH FORTH ROOT
+     Current: FORTH   </pre>
+
+<p>To remove the top of <code>ORDER</code> , use <code>PREVIOUS</code> . Given the
+previous example :</p>
+<pre>     PREVIOUS
+     ORDER
+     Context: FORTH FORTH ROOT
+     Current: FORTH   </pre>
+
+<p>Invoking a vocabulary name replaces the top of <code>ORDER</code> with that vocabulary.
+Still with the previous example :</p>
+<pre>     ASSEMBLER
+     ORDER
+     Context: ASSEMBLER FORTH ROOT
+     Current: FORTH   </pre>
+
+<p>To modify the current vocabulary (the vocabulary we want the currently compiled words
+to go in), the word <code>DEFINITIONS</code> makes current the top of the search order as in :</p>
+
+<pre>     DEFINITIONS
+     ORDER
+     Context: ASSEMBLER FORTH ROOT
+     Current: ASSEMBLER  </pre>
+
+<p>Finally you can create a new vocabulary with :</p>
+
+<pre>     VOCABULARY MYVOC</pre>
+
+
+<h3>Example</h3>
+
+<p>Here is a simple example putting all together. You want to create a new
+application that will compile in your own vocabulary. You expect some <code>CODE</code>
+definitions in your program, so you will need the assembler. When compiling, you want
+of course to use first your own vocabulary, then the <code>ASSEMBLER</code> then
+<code>FORTH</code> : Given the initial search order :</p>
+
+<pre>     ORDER
+     Context: FORTH FORTH ROOT
+     Current: FORTH  ok</pre>
+
+<p>You have to do :</p>
+
+<pre>     VOCABULARY MYVOC</pre>
+<pre>     ALSO ASSEMBLER ALSO MYVOC DEFINITIONS</pre>
+
+<p>Which gives the following search order : </p>
+
+<pre>     ORDER
+     Context: MYVOC ASSEMBLER FORTH FORTH ROOT
+     Current: MYVOC  </pre>
+
+<p>When finished, restore previous ORDER with :</p>
+
+<pre>     PREVIOUS PREVIOUS DEFINITIONS</pre>
+
+<p>And you obtain : </p>
+
+<pre>     ORDER
+     Context: FORTH FORTH ROOT
+     Current: FORTH  </pre>
+
+
+<p>Next help page is about modules, this is an easy way to handle wordlists to hide
+building words (bricks) and show only terminal, useful words in the basic wordlist
+<code>FORTH</code> .</p>
+
+
+
+<h3>Glossary</h3>
+
+<p><code>WORDLIST      ( -- wid )</code> give next wordlist id available for a new wordlist</p>
+<p><code>FORTH-WORDLIST ( -- wid )</code> give the wordlist id of vocabulary FORTH</p>
+<p><code>VOCABULARY    ( <name> -- )</code> create a new vocabulary</p>
+<p><code>GET-CURRENT   ( -- wid )</code> get current compilation wordlist id</p>
+<p><code>SET-CURRENT   ( wid -- )</code> set current compilation wordlist</p>
+<p><code>DEFINITIONS   ( -- )</code> Sets the topmost context vocabulary as current</p>
+<p><code>ALSO          ( -- )</code> Duplicates topmost vocabulary in the search order</p>
+<p><code>ONLY          ( -- )</code> Removes all vocs from search order down to ROOT</p>
+<p><code>PREVIOUS      ( -- )</code> Removes the topmost vocabulary from the search order</p>
+<p><code>ORDER         ( -- )</code> print the search order</p>
+<p><code>GET-ORDER     ( -- widn .. wid1 n )</code> get the whole search-order</p>
+<p><code>SET-ORDER     ( widn .. wid1 n -- )</code> set the whole search-order</p>
+<p><code>+ORDER        ( wid - )</code> add wid to search order</p>
+
+
+<p><hr>Document : w32f-vocabulary -- 2008/06/09 -- Camille Doiteau</p>
+</body>
+</html>

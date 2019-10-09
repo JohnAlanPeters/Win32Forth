@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+ansfile.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>File and directory searching words.
+</h1><p>These words are extensions to the ANSI file words for finding files.
+</p>If ior = 0, operation is O.K.; Otherwse, it is a failure.
+<h2>Glossary
+</h2><p><b><code>cell newuser _hdl-search ( -- addr )
+</code></b><br>Variable holding handle.
+</p><p><b><code>0 &nbsp;newuser _systemtime
+</code></b><br>Structure FileTimeToSystemTime
+function; this struc is same as time-buf in kernel.tom
+</p><p><b><code>: CAPS-SEARCH &nbsp;( c-addr1 u1 c-addr2 u2 -- c-addr3 u3 flag )
+</code></b><br>Search the string specified by c-addr1 u1 for the string specified by c-addr2 u2,
+using a case-insensitive search. <br />
+If flag is true, a match was found at c-addr3 with u3 characters remaining. <br />
+If flag is false there was no match and c-addr3 is c-addr1 and u3 is u1.
+</p><p><b><code>: get-fspace { zroot \ clus freclus b/sec s/clus -- as bs cs ds }
+</code></b><br>Get a drive's free space, cluster and sector information
+&quot;zroot&quot; is the root directory spec zString for the desired drive in the
+format z&quot; x:\", where x can be a, b, c, d or e etc...
+</p><p><b><code>: find-first-file ( addr1 len1 -- addr2 ior )
+</code></b><br>addr1 len1 is a string that specifies a valid directory or path
+and filename, which can contain wildcard characters (* and ?).
+This string must not exceed MAX_PATH characters.
+addr2 is the address of the _win32-find-data structure.
+ior is 0 for success in which case _hdl-search contains a valid handle.
+</p><p>Find-First-File searches a directory for a file whose name matches the
+specified filename. Find-First-File examines subdirectory names as well as filenames.
+</p><p>Find-First-File opens a search handle and returns information about the first
+file whose name matches the specified pattern. Once the search handle is established, you
+can use Find-Next-File to search for other files that match the same pattern.
+When the search handle is no longer needed, close it by using Find-Close.
+Find-First-File searches for files by name only; it cannot be used for attribute-based
+searches.
+</p><p><b><code>: find-next-file ( -- addr ior )
+</code></b><br>Find-first-file word must be called
+before this word can be called due to the fact that _hdl-search is needed
+</p><p><b><code>: find-close ( -- ior )
+</code></b><br>Close the _hdl-search handle.
+</p><p><b><code>: get-DOS-create-datetime ( -- ;convert 64 bit file time to MS_DOS )
+</code></b><br>Date and time values of creation. <br />
+You need to call find-first-file or find-next-file word in the current task
+before using this word.
+</p><p><b><code>: get-DOS-access-datetime ( -- ;convert 64 bit file time to MS_DOS )
+</code></b><br>date and time values of last access. <br />
+You need to call find-first-file or find-next-file word in the current task
+before using this word.
+</p><p><b><code>: get-DOS-write-datetime ( -- ;convert 64 bit file time to MS_DOS )
+</code></b><br>Date and time values of last write. <br />
+You need to call find-first-file or find-next-file word in the current task
+before using this word.
+</p><p><b><code>: get-file-size ( -- size ) &nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Files Extra
+</code></b><br>Size of the last found file. <br />
+You need to call find-first-file or find-next-file word in the current task
+before using this word.
+</p><p><b><code>: get-file-name ( -- adr; address for file name )
+</code></b><br>get the name of the last found file. <br />
+You need to call find-first-file or find-next-file word in the current task
+before using this word.
+</p><p><b><code>: dir-attribute? &nbsp;( - flag )
+</code></b><br>Returns true when a file is a directory. <br />
+You need to call find-first-file or find-next-file word in the current task
+before using this word. <br />
+Can be used in combination with ForAllFileNames
+</p><p><b><code>2 cells newuser file-time-buf
+</code></b><br>2Variable to hold the FILETIME structure, which is a little endian (i.e. reversed order)
+64-bit value representing the number of 100-nanosecond intervals since January 1, 1601.
+</p><p><b><code>: dir-&gt;file-name ( -- adr count )
+</code></b><br>Returns the address and count of a file in a directory. <br />
+Need to call find-first-file or find-next-file word before using this word. <br />
+Can be used in combination with ForAllFileNames
+</p><p><b><code>: ForAllFileNames { cfa } ( adr slen cfa -- )
+</code></b><br>Executes the CFA for each found file in a directory. <br />
+A file specification adr slen may contain wildcards <br />
+NOTE: Directory names are also considered to be a file-name. <br />
+Directory names can be detected by dir-attribute?
+</p><p><b><code>: ForAllFiles &nbsp;&nbsp;&nbsp;&nbsp;( &nbsp;cfa -- )
+</code></b><br>Executes the CFA on ALL found files in a directory. <br />
+NOTE: Directory names are also considered to be a file-name. <br />
+Directory names can be detected by dir-attribute? <br />
+</p><p><b><code>: .dir-&gt;file-size ( -- )
+</code></b><br>Print the size or directory indication of a file <br />
+Need to call find-first-file or find-next-file word before using this word. <br />
+Can be used in combination with ForAllFileNames
+</p><p><b><code>: .file-size-name &nbsp;( adr len - )
+</code></b><br>Print the size or directory indication and the name of file.
+It also formats the line. <br />
+Need to call find-first-file or find-next-file word before using this word. <br />
+Can be used in combination with ForAllFileNames
+</p><p><b><code>: print-dir-files ( adr slen -- ) \ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Files Extra
+</code></b><br>Print all the files and sub-directories in a directory that match a specific
+pattern.
+</p><p><b><code>: dir &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( &quot;name&quot; -- ) &nbsp;&nbsp;\ W32F &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Files Extra
+</code></b><br>Print all the files and sub-directories in a directory that match a specific
+pattern. <br />
+If &quot;name&quot; is missing or ends in \ or / search for all files that match *.* <br />
+If &quot;name&quot; contains a relative path then it's relative to the current directory. <br />
+If &quot;name&quot; ends in : assume a drive use &quot;name&quot;\*.* for the search pattern. <br />
+</p><p>The pattern can contain the standard Windows wildcards.
+</p></body></html>

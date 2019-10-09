@@ -1,0 +1,1507 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta name="GENERATOR" content="DexH v03" />
+<title>
+gdiDC.f</title>
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<h1>gdiDC -- Base device context class
+</h1><h3><i>Version 1.0
+</i></h3><p>This GDI class library was written and placed in the Public Domain
+in 2005 by Dirk Busch
+</p><h2>Glossary
+</h2><p><b><code>:class gdiDC &lt;super gdiObject
+</code></b><br>Base device context class
+</p><p><b><code>:M SelectObject: ( hGdiObject -- hOldObject )
+</code></b><br>The SelectObject method selects an object into the device context.
+The new object replaces the previous object of the same type.
+</p><p>If the selected object is not a region and the method succeeds, the
+return value is a handle to the object being replaced. If the selected
+object is a region and the method succeeds, the return value is one
+of the following values:
+</p><table><tr><th>SIMPLEREGION
+</th>
+<th>Region consists of a single rectangle.
+</th>
+</tr>
+<tr><td>COMPLEXREGION
+</td>
+<td>Region consists of more than one rectangle.
+</td>
+</tr>
+<tr><td>NULLREGION
+</td>
+<td>Region is empty.
+</td>
+</tr>
+</table><p>If an error occurs and the selected object is not a region, the return
+value is NULL. Otherwise, it is GDI_ERROR.
+</p><p>Note: <i>&nbsp;hGdiObject </i>&nbsp;can be a valid GDI object handle or the address of a
+GdiObject class !
+</p><p><b><code>:M GetCurrentObject: ( ObjectType -- hObject )
+</code></b><br>The GetCurrentObject method retrieves a handle to an object of the
+specified type that has been selected into the specified device context.
+</p><p><i>&nbsp;ObjectType </i>&nbsp;Specifies the object type to be queried. This parameter can be
+one of the following values.
+</p><table><tr><th>OBJ_BITMAP
+</th>
+<th>Returns the current selected bitmap.
+</th>
+</tr>
+<tr><td>OBJ_BRUSH
+</td>
+<td>Returns the current selected brush.
+</td>
+</tr>
+<tr><td>OBJ_COLORSPACE
+</td>
+<td>Returns the current color space.
+</td>
+</tr>
+<tr><td>OBJ_FONT
+</td>
+<td>Returns the current selected font.
+</td>
+</tr>
+<tr><td>OBJ_PAL
+</td>
+<td>Returns the current selected palette.
+</td>
+</tr>
+<tr><td>OBJ_PEN
+</td>
+<td>Returns the current selected pen.
+</td>
+</tr>
+</table><p><b><code>:M GetStockObject: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( nObject -- hObject )
+</code></b><br>The GetStockObject method retrieves a handle to one of the stock pens, brushes,
+fonts, or palettes.
+<i>&nbsp;nObject </i>&nbsp;Specifies the type of stock object. This parameter can be one of the following
+values:
+</p><table><tr><th>BLACK_BRUSH
+</th>
+<th>Black brush.
+</th>
+</tr>
+<tr><td>DKGRAY_BRUSH
+</td>
+<td>Dark gray brush.
+</td>
+</tr>
+<tr><td>DC_BRUSH
+</td>
+<td>Windows 98, Windows 2000: Solid color brush. The default color is white. The color can be changed by using the SetDCBrushColor method.
+</td>
+</tr>
+<tr><td>GRAY_BRUSH
+</td>
+<td>Gray brush.
+</td>
+</tr>
+<tr><td>HOLLOW_BRUSH
+</td>
+<td>Hollow brush (equivalent to NULL_BRUSH).
+</td>
+</tr>
+<tr><td>LTGRAY_BRUSH
+</td>
+<td>Light gray brush.
+</td>
+</tr>
+<tr><td>NULL_BRUSH
+</td>
+<td>Null brush (equivalent to HOLLOW_BRUSH).
+</td>
+</tr>
+<tr><td>WHITE_BRUSH
+</td>
+<td>White brush.
+</td>
+</tr>
+<tr><td>BLACK_PEN
+</td>
+<td>Black pen.
+</td>
+</tr>
+<tr><td>DC_PEN
+</td>
+<td>Windows 98, Windows 2000: Solid pen color. The default color is white. The color can be changed by using the SetDCPenColor method.
+</td>
+</tr>
+<tr><td>WHITE_PEN
+</td>
+<td>White pen.
+</td>
+</tr>
+<tr><td>ANSI_FIXED_FONT
+</td>
+<td>Windows fixed-pitch (monospace) system font.
+</td>
+</tr>
+<tr><td>ANSI_VAR_FONT
+</td>
+<td>Windows variable-pitch (proportional space) system font.
+</td>
+</tr>
+<tr><td>DEVICE_DEFAULT_FONT
+</td>
+<td>Windows NT/2000: Device-dependent font.
+</td>
+</tr>
+<tr><td>DEFAULT_GUI_FONT
+</td>
+<td>Default font for user interface objects such as menus and dialog boxes. This is MS Sans Serif. Compare this with SYSTEM_FONT.
+</td>
+</tr>
+<tr><td>OEM_FIXED_FONT
+</td>
+<td>Original equipment manufacturer (OEM) dependent fixed-pitch (monospace) font.
+</td>
+</tr>
+<tr><td>SYSTEM_FONT
+</td>
+<td>System font. By default, the system uses the system font to draw menus, dialog box controls, and text. Windows 95/98 and NT: The system font is MS Sans Serif. Windows 2000: The system font is Tahoma
+</td>
+</tr>
+<tr><td>SYSTEM_FIXED_FONT
+</td>
+<td>Fixed-pitch (monospace) system font. This stock object is provided only for compatibility with 16-bit Windows versions earlier than 3.0.
+</td>
+</tr>
+<tr><td>DEFAULT_PALETTE
+</td>
+<td>Default palette. This palette consists of the static colors in the system palette.
+</td>
+</tr>
+</table><p><b><code>:M SelectStockObject: ( nObject -- hOldObject )
+</code></b><br>The SelectStockObject method selects one of the stock pens, brushes, fonts, or
+palettes into the the device context.
+</p><p><i>&nbsp;nObject </i>&nbsp;Specifies the type of stock object. This parameter can be one of the following
+values. (see GetStockObject:)
+</p><p><b><code>:M SetPenColor: ( colorref -- previous-colorref )
+</code></b><br>SetPenColor method sets the current device context pen color to the
+specified color value. If the device cannot represent the specified color value,
+the color is set to the nearest physical color.
+If the method succeeds, the return value specifies the previous DC pen color
+as a COLORREF value. If the method fails, the return value is CLR_INVALID.
+</p><p>Only for Windows 2000 and later
+</p><p><b><code>:M GetPenColor: ( -- colorref )
+</code></b><br>The GetPenColor method retrieves the current pen color for the specified
+device context.
+</p><p>Only for Windows 2000 and later
+</p><p><b><code>:M SetBrushColor: ( colorref -- previous-colorref )
+</code></b><br>SetBrushColor method sets the current device context brush color to the
+specified color value. If the device cannot represent the specified color value,
+the color is set to the nearest physical color.
+If the method succeeds, the return value specifies the previous DC brush color
+as a COLORREF value. If the method fails, the return value is CLR_INVALID.
+</p><p>Only for Windows 2000 and later
+</p><p><b><code>:M GetBrushColor: ( -- colorref )
+</code></b><br>The GetBrushColor method retrieves the current brush color for the specified
+device context.
+</p><p>Only for Windows 2000 and later
+</p><p><b><code>:M Save: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- SavedState )
+</code></b><br>The Save method saves the current state of the device context by copying
+data describing selected objects and graphic modes (such as the bitmap,
+brush, palette, font, pen, region, drawing mode, and mapping mode) to a
+context stack.
+</p><p><b><code>:M Restore: &nbsp;&nbsp;&nbsp;&nbsp;( SavedState -- )
+</code></b><br>The Restore method restores the device context to the specified state.
+The DC is restored by popping state information off a stack created by
+earlier calls to the Save method.
+</p><p><b><code>:M Cancel: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>The Cancel method cancels any pending operation on the specified device
+context. <br />
+The Cancel method is used by multithreaded applications to cancel lengthy
+drawing operations. If thread A initiates a lengthy drawing operation,
+thread B may cancel that operation by calling this method.
+</p><p><b><code>:M GetDeviceCaps: ( Index -- n )
+</code></b><br>The GetDeviceCaps method retrieves device-specific information for the
+specified device.
+</p><p><i>&nbsp;Index </i>&nbsp;Specifies the item to return. This parameter can be one of the
+following values:
+</p><p><b>&nbsp;DRIVERVERSION </b>&nbsp;The device driver version.
+</p><p><b>&nbsp;TECHNOLOGY </b>&nbsp;Device technology. It can be any one of the following values.
+</p><table><tr><th>DT_PLOTTER
+</th>
+<th>Vector plotter
+</th>
+</tr>
+<tr><td>DT_RASDISPLAY
+</td>
+<td>Raster display
+</td>
+</tr>
+<tr><td>DT_RASPRINTER
+</td>
+<td>Raster printer
+</td>
+</tr>
+<tr><td>DT_RASCAMERA
+</td>
+<td>Raster camera
+</td>
+</tr>
+<tr><td>DT_CHARSTREAM
+</td>
+<td>Character stream
+</td>
+</tr>
+<tr><td>DT_METAFILE
+</td>
+<td>Metafile
+</td>
+</tr>
+<tr><td>DT_DISPFILE
+</td>
+<td>Display file
+</td>
+</tr>
+</table><p>If the DC is the DC of an enhanced metafile,
+the device technology is that of the referenced device as specified
+to the CreateEnhMetaFile method. To determine whether it is an
+enhanced metafile DC, use the GetObjectType method.
+</p><p><b>&nbsp;HORZSIZE </b>&nbsp;Width, in millimeters, of the physical screen.
+</p><p><b>&nbsp;VERTSIZE </b>&nbsp;Height, in millimeters, of the physical screen.
+</p><p><b>&nbsp;HORZRES </b>&nbsp;Width, in pixels, of the screen.
+</p><p><b>&nbsp;VERTRES </b>&nbsp;Height, in raster lines, of the screen.
+</p><p><b>&nbsp;LOGPIXELSX </b>&nbsp;Number of pixels per logical inch along the screen width. In a system
+with multiple display monitors, this value is the same for all monitors.
+</p><p><b>&nbsp;LOGPIXELSY </b>&nbsp;Number of pixels per logical inch along the screen height. In a system
+with multiple display monitors, this value is the same for all monitors.
+</p><p><b>&nbsp;BITSPIXEL </b>&nbsp;Number of adjacent color bits for each pixel.
+</p><p><b>&nbsp;PLANES </b>&nbsp;Number of color planes.
+</p><p><b>&nbsp;NUMBRUSHES </b>&nbsp;Number of device-specific brushes.
+</p><p><b>&nbsp;NUMPENS </b>&nbsp;Number of device-specific pens.
+</p><p><b>&nbsp;NUMFONTS </b>&nbsp;Number of device-specific fonts.
+</p><p><b>&nbsp;NUMCOLORS </b>&nbsp;Number of entries in the device's color table, if the device has a color
+depth of no more than 8 bits per pixel. For devices with greater color depths,
+1 is returned.
+</p><p><b>&nbsp;ASPECTX </b>&nbsp;Relative width of a device pixel used for line drawing.
+</p><p><b>&nbsp;ASPECTY </b>&nbsp;Relative height of a device pixel used for line drawing.
+</p><p><b>&nbsp;ASPECTXY </b>&nbsp;Diagonal width of the device pixel used for line drawing.
+</p><p><b>&nbsp;PDEVICESIZE </b>&nbsp;Reserved.
+</p><p><b>&nbsp;CLIPCAPS </b>&nbsp;Flag that indicates the clipping capabilities of the device. If the device
+can clip to a rectangle, it is 1. Otherwise, it is 0.
+</p><p><b>&nbsp;SIZEPALETTE </b>&nbsp;Number of entries in the system palette. This index is valid only if the
+device driver sets the RC_PALETTE bit in the RASTERCAPS index and is available
+only if the driver is compatible with 16-bit Windows.
+</p><p><b>&nbsp;NUMRESERVED </b>&nbsp;Number of reserved entries in the system palette. This index is valid only if
+the device driver sets the RC_PALETTE bit in the RASTERCAPS index and is
+available only if the driver is compatible with 16-bit Windows.
+</p><p><b>&nbsp;COLORRES </b>&nbsp;Actual color resolution of the device, in bits per pixel. This index is valid
+only if the device driver sets the RC_PALETTE bit in the RASTERCAPS index and
+is available only if the driver is compatible with 16-bit Windows.
+</p><p><b>&nbsp;PHYSICALWIDTH </b>&nbsp;For printing devices: the width of the physical page, in device units. For
+example, a printer set to print at 600 dpi on 8.5-x11-inch paper has a physical
+width value of 5100 device units. Note that the physical page is almost always
+greater than the printable area of the page, and never smaller.
+</p><p><b>&nbsp;PHYSICALHEIGHT </b>&nbsp;For printing devices: the height of the physical page, in device units. For
+example, a printer set to print at 600 dpi on 8.5-by-11-inch paper has a physical
+height value of 6600 device units. Note that the physical page is almost always
+greater than the printable area of the page, and never smaller.
+</p><p><b>&nbsp;PHYSICALOFFSETX </b>&nbsp;For printing devices: the distance from the left edge of the physical page to the
+left edge of the printable area, in device units. For example, a printer set to
+print at 600 dpi on 8.5-by-11-inch paper, that cannot print on the leftmost
+0.25-inch of paper, has a horizontal physical offset of 150 device units.
+</p><p><b>&nbsp;PHYSICALOFFSETY </b>&nbsp;For printing devices: the distance from the top edge of the physical page to the
+top edge of the printable area, in device units. For example, a printer set to
+print at 600 dpi on 8.5-by-11-inch paper, that cannot print on the topmost 0.5-inch
+of paper, has a vertical physical offset of 300 device units.
+</p><p><b>&nbsp;VREFRESH </b>&nbsp;Windows NT/2000: For display devices: the current vertical refresh rate of the device,
+in cycles per second (Hz).
+A vertical refresh rate value of 0 or 1 represents the display hardware's default
+refresh rate. This default rate is typically set by switches on a display card or
+computer motherboard, or by a configuration program that does not use Win32 display
+methods such as ChangeDisplaySettings.
+</p><p><b>&nbsp;SCALINGFACTORX </b>&nbsp;Scaling factor for the x-axis of the printer.
+</p><p><b>&nbsp;SCALINGFACTORY </b>&nbsp;Scaling factor for the y-axis of the printer.
+</p><p><b>&nbsp;BLTALIGNMENT </b>&nbsp;Windows NT/2000: Preferred horizontal drawing alignment, expressed as a multiple of
+pixels. For best drawing performance, windows should be horizontally aligned to a
+multiple of this value. A value of zero indicates that the device is accelerated,
+and any alignment may be used.
+</p><p><b>&nbsp;SHADEBLENDCAPS </b>&nbsp;Windows 98, Windows 2000: Value that indicates the shading and blending capabilities
+of the device.
+</p><p><b>&nbsp;SB_CONST_ALPHA </b>&nbsp;Handles the SourceConstantAlpha member of the BLENDFUNCTION structure,
+which is referenced by the blendFunction parameter of the AlphaBlend method.
+</p><table><tr><th>SB_GRAD_RECT
+</th>
+<th>Capable of doing GradientFill rectangles.
+</th>
+</tr>
+<tr><td>SB_GRAD_TRI
+</td>
+<td>Capable of doing GradientFill triangles.
+</td>
+</tr>
+<tr><td>SB_NONE
+</td>
+<td>Device does not support any of these capabilities.
+</td>
+</tr>
+<tr><td>SB_PIXEL_ALPHA
+</td>
+<td>Capable of handling per-pixel alpha in AlphaBlend.
+</td>
+</tr>
+<tr><td>SB_PREMULT_ALPHA
+</td>
+<td>Capable of handling premultiplied alpha in AlphaBlend.
+</td>
+</tr>
+</table><p><b>&nbsp;RASTERCAPS </b>&nbsp;Value that indicates the raster capabilities of the device,
+as shown in the following table.
+</p><table><tr><th>RC_BANDING
+</th>
+<th>Requires banding support.
+</th>
+</tr>
+<tr><td>RC_BITBLT
+</td>
+<td>Capable of transferring bitmaps.
+</td>
+</tr>
+<tr><td>RC_BITMAP64
+</td>
+<td>Capable of supporting bitmaps larger than 64 KB.
+</td>
+</tr>
+<tr><td>RC_DI_BITMAP
+</td>
+<td>Capable of supporting the SetDIBits and GetDIBits methods.
+</td>
+</tr>
+<tr><td>RC_DIBTODEV
+</td>
+<td>Capable of supporting the SetDIBitsToDevice method.
+</td>
+</tr>
+<tr><td>RC_FLOODFILL
+</td>
+<td>Capable of performing flood fills.
+</td>
+</tr>
+<tr><td>RC_GDI20_OUTPUT
+</td>
+<td>Capable of supporting features of 16-bit Windows 2.0.
+</td>
+</tr>
+<tr><td>RC_PALETTE
+</td>
+<td>Specifies a palette-based device.
+</td>
+</tr>
+<tr><td>RC_SCALING
+</td>
+<td>Capable of scaling.
+</td>
+</tr>
+<tr><td>RC_STRETCHBLT
+</td>
+<td>Capable of performing the StretchBlt method.
+</td>
+</tr>
+<tr><td>RC_STRETCHDIB
+</td>
+<td>Capable of performing the StretchDIBits method.
+</td>
+</tr>
+</table><p><b>&nbsp;CURVECAPS </b>&nbsp;Value that indicates the curve capabilities of the device, as shown
+in the following table:
+</p><table><tr><th>CC_NONE
+</th>
+<th>Device does not support curves.
+</th>
+</tr>
+<tr><td>CC_CHORD
+</td>
+<td>Device can draw chord arcs.
+</td>
+</tr>
+<tr><td>CC_CIRCLES
+</td>
+<td>Device can draw circles.
+</td>
+</tr>
+<tr><td>CC_ELLIPSES
+</td>
+<td>Device can draw ellipses.
+</td>
+</tr>
+<tr><td>CC_INTERIORS
+</td>
+<td>Device can draw interiors.
+</td>
+</tr>
+<tr><td>CC_PIE
+</td>
+<td>Device can draw pie wedges.
+</td>
+</tr>
+<tr><td>CC_ROUNDRECT
+</td>
+<td>Device can draw rounded rectangles.
+</td>
+</tr>
+<tr><td>CC_STYLED
+</td>
+<td>Device can draw styled borders.
+</td>
+</tr>
+<tr><td>CC_WIDE
+</td>
+<td>Device can draw wide borders.
+</td>
+</tr>
+<tr><td>CC_WIDESTYLED
+</td>
+<td>Device can draw borders that are wide and styled.
+</td>
+</tr>
+</table><p><b>&nbsp;LINECAPS </b>&nbsp;Value that indicates the line capabilities of the device, as
+shown in the following table:
+</p><table><tr><th>LC_NONE
+</th>
+<th>Device does not support lines.
+</th>
+</tr>
+<tr><td>LC_INTERIORS
+</td>
+<td>Device can draw interiors.
+</td>
+</tr>
+<tr><td>LC_MARKER
+</td>
+<td>Device can draw a marker.
+</td>
+</tr>
+<tr><td>LC_POLYLINE
+</td>
+<td>Device can draw a polyline.
+</td>
+</tr>
+<tr><td>LC_POLYMARKER
+</td>
+<td>Device can draw multiple markers.
+</td>
+</tr>
+<tr><td>LC_STYLED
+</td>
+<td>Device can draw styled lines.
+</td>
+</tr>
+<tr><td>LC_WIDE
+</td>
+<td>Device can draw wide lines.
+</td>
+</tr>
+<tr><td>LC_WIDESTYLED
+</td>
+<td>Device can draw lines that are wide and styled.
+</td>
+</tr>
+</table><p><b>&nbsp;POLYGONALCAPS </b>&nbsp;Value that indicates the polygon capabilities of the device, as
+shown in the following table.
+</p><table><tr><th>PC_NONE
+</th>
+<th>Device does not support polygons.
+</th>
+</tr>
+<tr><td>PC_INTERIORS
+</td>
+<td>Device can draw interiors.
+</td>
+</tr>
+<tr><td>PC_POLYGON
+</td>
+<td>Device can draw alternate-fill polygons.
+</td>
+</tr>
+<tr><td>PC_RECTANGLE
+</td>
+<td>Device can draw rectangles.
+</td>
+</tr>
+<tr><td>PC_SCANLINE
+</td>
+<td>Device can draw a single scanline.
+</td>
+</tr>
+<tr><td>PC_STYLED
+</td>
+<td>Device can draw styled borders.
+</td>
+</tr>
+<tr><td>PC_WIDE
+</td>
+<td>Device can draw wide borders.
+</td>
+</tr>
+<tr><td>PC_WIDESTYLED
+</td>
+<td>Device can draw borders that are wide and styled.
+</td>
+</tr>
+<tr><td>PC_WINDPOLYGON
+</td>
+<td>Device can draw winding-fill polygons.
+</td>
+</tr>
+</table><p><b>&nbsp;TEXTCAPS </b>&nbsp;Value that indicates the text capabilities of the device, as shown
+in the following table.
+</p><table><tr><th>TC_OP_CHARACTER
+</th>
+<th>Device is capable of character output precision.
+</th>
+</tr>
+<tr><td>TC_OP_STROKE
+</td>
+<td>Device is capable of stroke output precision.
+</td>
+</tr>
+<tr><td>TC_CP_STROKE
+</td>
+<td>Device is capable of stroke clip precision.
+</td>
+</tr>
+<tr><td>TC_CR_90
+</td>
+<td>Device is capable of 90-degree character rotation.
+</td>
+</tr>
+<tr><td>TC_CR_ANY
+</td>
+<td>Device is capable of any character rotation.
+</td>
+</tr>
+<tr><td>TC_SF_X_YINDEP
+</td>
+<td>Device can scale independently in the x- and y-directions.
+</td>
+</tr>
+<tr><td>TC_SA_DOUBLE
+</td>
+<td>Device is capable of doubled character for scaling.
+</td>
+</tr>
+<tr><td>TC_SA_INTEGER
+</td>
+<td>Device uses integer multiples only for character scaling.
+</td>
+</tr>
+<tr><td>TC_SA_CONTIN
+</td>
+<td>Device uses any multiples for exact character scaling.
+</td>
+</tr>
+<tr><td>TC_EA_DOUBLE
+</td>
+<td>Device can draw double-weight characters.
+</td>
+</tr>
+<tr><td>TC_IA_ABLE
+</td>
+<td>Device can italicize.
+</td>
+</tr>
+<tr><td>TC_UA_ABLE
+</td>
+<td>Device can underline.
+</td>
+</tr>
+<tr><td>TC_SO_ABLE
+</td>
+<td>Device can draw strikeouts.
+</td>
+</tr>
+<tr><td>TC_RA_ABLE
+</td>
+<td>Device can draw raster fonts.
+</td>
+</tr>
+<tr><td>TC_VA_ABLE
+</td>
+<td>Device can draw vector fonts.
+</td>
+</tr>
+<tr><td>TC_RESERVED
+</td>
+<td>Reserved; must be zero.
+</td>
+</tr>
+<tr><td>TC_SCROLLBLT
+</td>
+<td>Device cannot scroll using a bit-block transfer. Note that this meaning may be the opposite of what you expect.
+</td>
+</tr>
+</table><p><b>&nbsp;COLORMGMTCAPS </b>&nbsp;Windows 2000: Value that indicates the color management capabilities of the device.
+</p><table><tr><th>CM_CMYK_COLOR
+</th>
+<th>Device can accept CMYK color space ICC color profile.
+</th>
+</tr>
+<tr><td>CM_DEVICE_ICM
+</td>
+<td>Device can perform ICM on either the device driver or the device itself.
+</td>
+</tr>
+<tr><td>CM_GAMMA_RAMP
+</td>
+<td>Device supports GetDeviceGammaRamp and SetDeviceGammaRamp
+</td>
+</tr>
+<tr><td>CM_NONE
+</td>
+<td>Device does not support ICM.
+</td>
+</tr>
+</table><p><b><code>:M SetBackgroundMode: ( fMode -- fPreviousMode )
+</code></b><br>The SetBackgroundMode method sets the background mix mode of the specified
+device context. The background mix mode is used with text, hatched brushes,
+and pen styles that are not solid lines. Possible values for <i>&nbsp;fMode </i>&nbsp;are:
+</p><table><tr><th>OPAQUE
+</th>
+<th>Background is filled with the current background color before the text, hatched brush, or pen is drawn.
+</th>
+</tr>
+<tr><td>TRANSPARENT
+</td>
+<td>Background remains untouched.
+</td>
+</tr>
+</table><p><b><code>:M GetBackgroundMode: ( -- fMode )
+</code></b><br>The GetBackgroundMode method returns the current background mix mode for a
+specified device context. The background mix mode of a device context affects
+text, hatched brushes, and pen styles that are not solid lines.
+</p><p><b><code>:M SetBackgroundColor: ( colorref -- PreviousColorref )
+</code></b><br>The SetBackgroundColor method sets the current background color to the
+specified color value, or to the nearest physical color if the device cannot
+represent the specified color value.
+</p><p>Note: <i>&nbsp;colorref </i>&nbsp;can be a 'simple' colorref or the address of a pPen Object class !
+</p><p><b><code>:M GetBackgroundColor: ( -- colorref )
+</code></b><br>The GetBackgroundColor method returns the current background color for the
+specified device context.
+</p><p><b><code>:M SetROP: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( nDrawMode -- nPreviousDrawMode )
+</code></b><br>The SetROP method sets the current foreground mix mode. GDI uses the foreground
+mix mode to combine pens and interiors of filled objects with the colors already
+on the screen. The foreground mix mode defines how colors from the brush or pen
+and the colors in the existing image are to be combined.
+</p><p><i>&nbsp;nDrawMode </i>&nbsp;Specifies the mix mode. This parameter can be one of the following values. Mix mode Description
+</p><table><tr><th>R2_BLACK
+</th>
+<th>Pixel is always 0.
+</th>
+</tr>
+<tr><td>R2_COPYPEN
+</td>
+<td>Pixel is the pen color.
+</td>
+</tr>
+<tr><td>R2_MASKNOTPEN
+</td>
+<td>Pixel is a combination of the colors common to both the screen and the inverse of the pen.
+</td>
+</tr>
+<tr><td>R2_MASKPEN
+</td>
+<td>Pixel is a combination of the colors common to both the pen and the screen.
+</td>
+</tr>
+<tr><td>R2_MASKPENNOT
+</td>
+<td>Pixel is a combination of the colors common to both the pen and the inverse of the screen.
+</td>
+</tr>
+<tr><td>R2_MERGENOTPEN
+</td>
+<td>Pixel is a combination of the screen color and the inverse of the pen color.
+</td>
+</tr>
+<tr><td>R2_MERGEPEN
+</td>
+<td>Pixel is a combination of the pen color and the screen color.
+</td>
+</tr>
+<tr><td>R2_MERGEPENNOT
+</td>
+<td>Pixel is a combination of the pen color and the inverse of the screen color.
+</td>
+</tr>
+<tr><td>R2_NOP
+</td>
+<td>Pixel remains unchanged.
+</td>
+</tr>
+<tr><td>R2_NOT
+</td>
+<td>Pixel is the inverse of the screen color.
+</td>
+</tr>
+<tr><td>R2_NOTCOPYPEN
+</td>
+<td>Pixel is the inverse of the pen color.
+</td>
+</tr>
+<tr><td>R2_NOTMASKPEN
+</td>
+<td>Pixel is the inverse of the R2_MASKPEN color.
+</td>
+</tr>
+<tr><td>R2_NOTMERGEPEN
+</td>
+<td>Pixel is the inverse of the R2_MERGEPEN color.
+</td>
+</tr>
+<tr><td>R2_NOTXORPEN
+</td>
+<td>Pixel is the inverse of the R2_XORPEN color.
+</td>
+</tr>
+<tr><td>R2_WHITE
+</td>
+<td>Pixel is always 1.
+</td>
+</tr>
+<tr><td>R2_XORPEN
+</td>
+<td>Pixel is a combination of the colors in the pen and in the screen, but not in both.
+</td>
+</tr>
+</table><p><b><code>:M GetROP: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( -- nDrawMode )
+</code></b><br>The GetROP method retrieves the foreground mix mode of the specified device context.
+The mix mode specifies how the pen or interior color and the color already on the screen
+are combined to yield a new color.
+</p><p><b><code>:M SetArcDirection: ( Direction -- OldDirection )
+</code></b><br>SetArcDirection sets the drawing direction to be used for arc and
+rectangle methods. Possible value for <i>&nbsp;Direction </i>&nbsp;are:
+</p><table><tr><th>AD_COUNTERCLOCKWISE
+</th>
+<th>Figures drawn counterclockwise.
+</th>
+</tr>
+<tr><td>AD_CLOCKWISE
+</td>
+<td>Figures drawn clockwise.
+</td>
+</tr>
+</table><p>Only for Windows 98 and better.
+</p><p><b><code>:M GetArcDirection: ( -- Direction )
+</code></b><br>The GetArcDirection method retrieves the current arc direction for the
+specified device context. Arc and rectangle methods use the arc direction.
+</p><p>Only for Windows 98 and better.
+</p><h2>Coordinate Space and Transformation
+</h2><p><b><code>:M DPtoLP: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lpPoints nCount -- )
+</code></b><br>The DPtoLP method converts device coordinates into logical coordinates.
+The conversion depends on the mapping mode of the device context, the settings
+of the origins and extents for the window and viewport, and the world transformation.
+</p><p><i>&nbsp;lpPoints </i>&nbsp;[in/out] Pointer to an array of POINT structures. The x- and y-coordinates
+contained in each POINT structure will be transformed.
+</p><p><i>&nbsp;nCount </i>&nbsp;[in] Specifies the number of points in the array.
+</p><p>The DPtoLP method fails if the device coordinates exceed 27 bits, or if the
+converted logical coordinates exceed 32 bits. In the case of such an overflow,
+the results for all the points are undefined.
+</p><p><b><code>:M LPtoDP: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( lpPoints nCount -- )
+</code></b><br>The LPtoDP method converts logical coordinates into device coordinates. The
+conversion depends on the mapping mode of the device context, the settings of the
+origins and extents for the window and viewport, and the world transformation.
+</p><p><i>&nbsp;lpPoints </i>&nbsp;[in/out] Pointer to an array of POINT structures. The x- and y-coordinates
+contained in each POINT structure will be transformed.
+</p><p><i>&nbsp;nCount </i>&nbsp;[in] Specifies the number of points in the array.
+</p><p>This method fails if the logical coordinates exceed 32 bits, or if the converted
+device coordinates exceed 27 bits. In the case of such an overflow, the results for
+all the points are undefined.
+</p><p><b><code>:M SetGraphicsMode: ( Mode -- PreviousMode )
+</code></b><br>The SetGraphicsMode method sets the graphics mode for the specified device context.
+Possible Values for Mode:
+</p><p><b>&nbsp;GM_COMPATIBLE </b>&nbsp;Sets the graphics mode that is compatible with 16-bit Windows. This is
+the default mode. If this value is specified, the application can only
+modify the world-to-device transform by calling methods that set window
+and viewport extents and origins, but not by using SetWorldTransform or
+ModifyWorldTransform; calls to those methods will fail. Examples of
+methods that set window and viewport extents and origins are SetViewportExtEx
+and SetWindowExt.
+</p><p><b>&nbsp;GM_ADVANCED </b>&nbsp;Windows NT/ 2000: Sets the advanced graphics mode that allows world
+transformations. This value must be specified if the application will set
+or modify the world transformation for the specified device context. In
+this mode all graphics, including text output, fully conform to the
+world-to-device transformation specified in the device context.
+Windows 95/98: The GM_ADVANCED value is not supported. When playing enhanced
+metafiles, Windows 95/98 attempts to make enhanced metafiles on Windows 95/98
+look the same as they do on Windows NT/Windows 2000. To accomplish this, Windows
+95/98 may simulate GM_ADVANCED mode when playing specific enhanced metafile records.
+</p><p>NOTE: Currently this class libary doesn't support wold transformation for the DC !
+That means: CombineTransform(), GetWorldTransform(), ModifyWorldTransform() and
+SetWorldTransform() are not supported at the moment.
+</p><p><b><code>:M GetGraphicsMode: ( -- mode )
+</code></b><br>The GetGraphicsMode method retrieves the current graphics mode for the
+specified device context.
+</p><p><b><code>:M SetMapMode: &nbsp;( MapMode -- PerviousMapMode )
+</code></b><br>The SetMapMode method sets the mapping mode of the specified device context.
+The mapping mode defines the unit of measure used to transform page-space units
+into device-space units, and also defines the orientation of the device's x and y
+axes. Possible Values for MapMode are:
+</p><p><b>&nbsp;MM_ANISOTROPIC </b>&nbsp;Logical units are mapped to arbitrary units with arbitrarily scaled
+axes. Use the SetWindowExt and SetViewportExt methods to specify
+the units, orientation, and scaling.
+</p><p><b>&nbsp;MM_HIENGLISH </b>&nbsp;Each logical unit is mapped to 0.001 inch. Positive x is to the right;
+positive y is up.
+</p><p><b>&nbsp;MM_HIMETRIC </b>&nbsp;Each logical unit is mapped to 0.01 millimeter. Positive x is to the
+right; positive y is up.
+</p><p><b>&nbsp;MM_ISOTROPIC </b>&nbsp;Logical units are mapped to arbitrary units with equally scaled axes;
+that is, one unit along the x-axis is equal to one unit along the y-axis.
+Use the SetWindowExt and SetViewportExt methods to specify the units
+and the orientation of the axes. Graphics device interface (GDI) makes
+adjustments as necessary to ensure the x and y units remain the same size
+(When the window extent is set, the viewport will be adjusted to keep the
+units isotropic).
+</p><p><b>&nbsp;MM_LOENGLISH </b>&nbsp;Each logical unit is mapped to 0.01 inch. Positive x is to the right;
+positive y is up.
+</p><p><b>&nbsp;MM_LOMETRIC </b>&nbsp;Each logical unit is mapped to 0.1 millimeter. Positive x is to the right;
+positive y is up.
+</p><p><b>&nbsp;MM_TEXT </b>&nbsp;Each logical unit is mapped to one device pixel. Positive x is to the right;
+positive y is down.
+</p><p><b>&nbsp;MM_TWIPS </b>&nbsp;Each logical unit is mapped to one twentieth of a printer's point (1/1440 inch,
+also called a twip). Positive x is to the right; positive y is up.
+</p><p><b><code>:M GetMapMode: &nbsp;( -- MapMode )
+</code></b><br>The GetMapMode method retrieves the current mapping mode.
+</p><p><b><code>:M SetWindowOrg: &nbsp;( x y -- x1 y1 )
+</code></b><br>The SetWindowOrg method specifies which window point maps to the viewport origin (0,0).
+</p><p>This helps define the mapping from the logical coordinate space (also known as a window) to
+the device coordinate space (the viewport). SetWindowOrg specifies which logical point maps
+to the device point (0,0). It has the effect of shifting the axes so that the logical point
+(0,0) no longer refers to the upper-left corner.
+</p><p>This is related to the SetViewportOrg method. Generally, you will use one method or the
+other, but not both. Regardless of your use of SetWindowOrg and SetViewportOrg, the device
+point (0,0) is always the upper-left corner.
+</p><p><b><code>:M GetWindowOrg: &nbsp;( -- x y )
+</code></b><br>The GetWindowOrg method retrieves the x-coordinates and y-coordinates of the window
+origin for the specified device context.
+</p><p><b><code>:M SetViewportOrg: ( x y - x1 y1 )
+</code></b><br>The SetViewportOrg method specifies which device point maps to the window origin (0,0).
+</p><p>This method (along with SetViewportExt and SetWindowExt) helps define the mapping from
+the logical coordinate space (also known as a window) to the device coordinate space (the
+viewport). SetViewportOrg specifies which device point maps to the logical point (0,0).
+It has the effect of shifting the axes so that the logical point (0,0) no longer refers to
+the upper-left corner.
+</p><p>This is related to the SetViewportOrg method. Generally, you will use one method or the
+other, but not both. Regardless of your use of SetWindowOrg and SetViewportOrg, the device
+point (0,0) is always the upper-left corner.
+</p><p><b><code>:M GetViewportOrg: ( -- x y )
+</code></b><br>The GetViewportOrg method retrieves the x-coordinates and y-coordinates of the viewport
+origin for the specified device context.
+</p><p><b><code>:M OffsetViewportOrg: ( xOffest yOffset - xOffset1 yOffset1 )
+</code></b><br>The OffsetViewportOrg method modifies the viewport origin for a device context using
+the specified horizontal and vertical offsets.
+The new origin is the sum of the current origin and the horizontal and vertical offsets.
+</p><p><i>&nbsp;xOffset </i>&nbsp;Specifies the horizontal offset, in device units.
+</p><p><i>&nbsp;YOffset </i>&nbsp;Specifies the vertical offset, in device units.
+</p><p><b><code>:M OffsetWindowOrg: ( xOffest yOffset - xOffset1 yOffset1 )
+</code></b><br>The OffsetWindowOrg method modifies the window origin for a device context using the
+specified horizontal and vertical offsets.
+</p><p><i>&nbsp;XOffset </i>&nbsp;Specifies the horizontal offset, in logical units.
+</p><p><i>&nbsp;YOffset </i>&nbsp;Specifies the vertical offset, in logical units.
+</p><p><b><code>:M ScaleViewportExt: ( Xnum Xdenom Ynum Ydenom -- x y )
+</code></b><br>The ScaleViewportExt method modifies the viewport for a device context using the
+ratios formed by the specified multiplicands and divisors.
+It returns the the previous viewport extents, in device units.
+</p><p>The viewport extents are modified as follows:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xNewVE = (xOldVE * Xnum) / Xdenom
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yNewVE = (yOldVE * Ynum) / Ydenom
+</p><p><b><code>:M ScaleWindowExtEx: ( Xnum Xdenom Ynum Ydenom -- x y )
+</code></b><br>The ScaleWindowExt method modifies the window for a device context using the ratios
+formed by the specified multiplicands and divisors.
+It returns the the previous window extents, in logical units.
+</p><p>The window extents are modified as follows:
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xNewWE = (xOldWE * Xnum) / Xdenom
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;yNewWE = (yOldWE * Ynum) / Ydenom
+</p><p><b><code>:M SetViewportExt: ( XExtent yExtent -- XExtent1 yExtent1 )
+</code></b><br>The SetViewportExt method sets the horizontal and vertical extents of the viewport
+for a device context by using the specified values.
+</p><p><b><code>:M GetViewportExt: ( -- x y )
+</code></b><br>The GetViewportExt method retrieves the x-extent and y-extent of the current viewport
+for the specified device context.
+</p><p><b><code>:M SetWindowExt: ( XExtent YExtent -- XExtent1 YExtent1 )
+</code></b><br>The SetWindowExt method sets the horizontal and vertical extents of the window for
+a device context by using the specified values.
+</p><p><i>&nbsp;XExtent </i>&nbsp;Specifies the window's horizontal extent in logical units.
+</p><p><i>&nbsp;YExtent </i>&nbsp;Specifies the window's vertical extent in logical units.
+</p><h2>Drawing
+</h2><p><b><code>:M InvertRect: &nbsp;( left top right bottom &nbsp;-- )
+</code></b><br>The InvertRect method inverts a rectangle in a window by performing a
+logical NOT operation on the color values for each pixel in the rectangle's
+interior.
+</p><p><b>&nbsp;Filled Shapes </b>
+Filled shapes are geometric forms that are outlined by using the
+current pen and filled by using the current brush.
+</p><p><b><code>:M Chord: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( nLeftRect nTopRect nRightRect nBottomRect nXRadial1 nXRadial1 nYRadial1 nXRadial2 nYRadial2 -- )
+</code></b><br>The Chord method draws a chord (a region bounded by the intersection of
+an ellipse and a line segment, called a secant).
+</p><p><i>&nbsp;nLeftRect </i>&nbsp;x-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nTopRect </i>&nbsp;y-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nRightRect </i>&nbsp;x-coord of lower-right corner of rectangle
+</p><p><i>&nbsp;nBottomRect </i>&nbsp;y-coord of lower-right corner of rectangle
+</p><p><i>&nbsp;nXRadial1 </i>&nbsp;x-coord of first radial's endpoint
+</p><p><i>&nbsp;nYRadial1 </i>&nbsp;y-coord of first radial's endpoint
+</p><p><i>&nbsp;nXRadial2 </i>&nbsp;x-coord of second radial's endpoint
+</p><p><i>&nbsp;nYRadial2 </i>&nbsp;y-coord of second radial's endpoint
+</p><p><b><code>:M Ellipse: &nbsp;&nbsp;&nbsp;&nbsp;( nLeftRect nTopRect nRightRect nBottomRect -- )
+</code></b><br>The Ellipse method draws an ellipse. The center of the ellipse is the
+center of the specified bounding rectangle.
+</p><p><i>&nbsp;nLeftRect </i>&nbsp;x-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nTopRect </i>&nbsp;y-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nRightRect </i>&nbsp;x-coord of lower-right corner of rectangle
+</p><p><i>&nbsp;nBottomRect </i>&nbsp;y-coord of lower-right corner of rectangle
+</p><p><b><code>:M Pie: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( nLeftRect nTopRect nRightRect nBottomRect nXRadial1 nYRadial1 nXRadial2 nYRadial2 -- )
+</code></b><br>The Pie method draws a pie-shaped wedge bounded by the intersection of
+an ellipse and two radials.
+</p><p><i>&nbsp;nLeftRect </i>&nbsp;x-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nTopRect </i>&nbsp;y-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nRightRect </i>&nbsp;x-coord of lower-right corner of rectangle
+</p><p><i>&nbsp;nBottomRect </i>&nbsp;y-coord of lower-right corner of rectangle
+</p><p><i>&nbsp;nXRadial1 </i>&nbsp;x-coord of first radial's endpoint
+</p><p><i>&nbsp;nYRadial1 </i>&nbsp;y-coord of first radial's endpoint
+</p><p><i>&nbsp;nXRadial2 </i>&nbsp;x-coord of second radial's endpoint
+</p><p><i>&nbsp;nYRadial2 </i>&nbsp;y-coord of second radial's endpoint
+</p><p><b><code>:M Rectangle: &nbsp;&nbsp;( nLeftRect nTopRect nRightRect nBottomRect -- )
+</code></b><br>The Rectangle method draws a rectangle.
+</p><p><i>&nbsp;nLeftRect </i>&nbsp;x-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nTopRect </i>&nbsp;y-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nRightRect </i>&nbsp;x-coord of lower-right corner of rectangle
+</p><p><i>&nbsp;nBottomRect </i>&nbsp;y-coord of lower-right corner of rectangle
+</p><p><b><code>:M RoundRect: &nbsp;&nbsp;( nLeftRect nTopRect nRightRect nBottomRect nWidth nHeight -- )
+</code></b><br>The RoundRect method draws a rectangle with rounded corners.
+</p><p><i>&nbsp;nLeftRect </i>&nbsp;x-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nTopRect </i>&nbsp;y-coord of upper-left corner of rectangle
+</p><p><i>&nbsp;nRightRect </i>&nbsp;x-coord of lower-right corner of rectangle
+</p><p><i>&nbsp;nBottomRect </i>&nbsp;y-coord of lower-right corner of rectangle
+</p><p><i>&nbsp;nWidth </i>&nbsp;width of ellipse
+</p><p><i>&nbsp;nHeight </i>&nbsp;height of ellipse
+</p><p><b><code>:M SetPolyFillMode: ( iPolyFillMode -- )
+</code></b><br>The SetPolyFillMode method sets the polygon fill mode for methods
+that fill polygons.
+</p><p><i>&nbsp;iPolyFillMode </i>&nbsp;Specifies the new fill mode. This parameter can be one
+of the following values.
+</p><table><tr><th>ALTERNATE
+</th>
+<th>Selects alternate mode (fills the area between odd-numbered and even-numbered polygon sides on each scan line).
+</th>
+</tr>
+<tr><td>WINDING
+</td>
+<td>Selects winding mode (fills any region with a nonzero winding value).
+</td>
+</tr>
+</table><p><b><code>:M GetPolyFillMode: ( -- iPolyFillMode )
+</code></b><br>The GetPolyFillMode method retrieves the current polygon fill mode.
+</p><p>If the method succeeds, the return value specifies the polygon fill mode,
+which can be one of the following values.
+</p><table><tr><th>ALTERNATE
+</th>
+<th>Selects alternate mode (fills the area between odd-numbered and even-numbered polygon sides on each scan line).
+</th>
+</tr>
+<tr><td>WINDING
+</td>
+<td>Selects winding mode (fills any region with a nonzero winding value).
+</td>
+</tr>
+</table><p>If an error occurs, the return value is zero.
+</p><p><b><code>:M Polygon: &nbsp;&nbsp;&nbsp;&nbsp;( lpPoints nCount -- )
+</code></b><br>The Polygon method draws a polygon consisting of two or more vertices
+connected by straight lines. The polygon is outlined by using the current
+pen and filled by using the current brush and polygon fill mode.
+</p><p><i>&nbsp;lpPoints </i>&nbsp;polygon vertices
+</p><p><i>&nbsp;nCount </i>&nbsp;count of polygon vertices
+</p><p><b><code>:M PolyPolygon: ( lpPoints lpPolyCounts nCount -- )
+</code></b><br>The PolyPolygon method draws a series of closed polygons. Each polygon
+is outlined by using the current pen and filled by using the current brush
+and polygon fill mode. The polygons drawn by this method can overlap.
+</p><p><i>&nbsp;lpPoints </i>&nbsp;array of vertices
+</p><p><i>&nbsp;lpPolyCounts </i>&nbsp;array of count of vertices
+</p><p><i>&nbsp;nCount </i>&nbsp;count of polygons
+</p><p><b>&nbsp;The following methods are using an extra hBrush for filling </b>
+</p><p><b><code>:M FillRect: &nbsp;&nbsp;&nbsp;( left top right bottom hBrush -- )
+</code></b><br>The FillRect method fills a rectangle by using the specified brush.
+This method includes the left and top borders, but excludes the right
+and bottom borders of the rectangle.
+</p><p>Note: <i>&nbsp;hBrush </i>&nbsp;can be a valid brush handle or the address of a GdiBrush class !
+</p><p><b><code>:M FrameRect: &nbsp;&nbsp;( left top right bottom hBrush -- )
+</code></b><br>The FrameRect method draws a border around the specified rectangle
+by using the specified brush. The width and height of the border are
+always one logical unit.
+</p><p>Note: <i>&nbsp;hBrush </i>&nbsp;can be a valid brush handle or the address of a GdiBrush class !
+</p><p><b>&nbsp;Text output </b>
+</p><p><b><code>:M SetTextAlign: ( fMode -- fPreviousMode )
+</code></b><br>The SetTextAlign method sets the text-alignment flags for the
+device context.
+</p><p><i>&nbsp;fMode </i>&nbsp;Specifies the text alignment by using a mask of the values in the
+following list. Only one flag can be chosen from those that affect horizontal
+and vertical alignment. In addition, only one of the two flags that alter
+the current position can be chosen.
+</p><table><tr><th>TA_BASELINE
+</th>
+<th>The reference point will be on the base line of the text.
+</th>
+</tr>
+<tr><td>TA_BOTTOM
+</td>
+<td>The reference point will be on the bottom edge of the bounding rectangle.
+</td>
+</tr>
+<tr><td>TA_TOP
+</td>
+<td>The reference point will be on the top edge of the bounding rectangle.
+</td>
+</tr>
+<tr><td>TA_CENTER
+</td>
+<td>The reference point will be aligned horizontally with the center of the bounding rectangle.
+</td>
+</tr>
+<tr><td>TA_LEFT
+</td>
+<td>The reference point will be on the left edge of the bounding rectangle.
+</td>
+</tr>
+<tr><td>TA_RIGHT
+</td>
+<td>The reference point will be on the right edge of the bounding rectangle.
+</td>
+</tr>
+<tr><td>TA_NOUPDATECP
+</td>
+<td>The current position is not updated after each text output call. The reference point is passed to the text output method.
+</td>
+</tr>
+<tr><td>TA_RTLREADING
+</td>
+<td>Middle-Eastern Windows: The text is laid out in right to left reading order, as opposed to the default left to right order. This applies only when the font selected into the device context is either Hebrew or Arabic.
+</td>
+</tr>
+<tr><td>TA_UPDATECP
+</td>
+<td>The current position is updated after each text output call. The current position is used as the reference point.
+</td>
+</tr>
+</table><p>When the current font has a vertical default base line, as with Kanji, the following
+values must be used instead of TA_BASELINE and TA_CENTER.
+</p><table><tr><th>VTA_BASELINE
+</th>
+<th>The reference point will be on the base line of the text.
+</th>
+</tr>
+<tr><td>VTA_CENTER
+</td>
+<td>The reference point will be aligned vertically with the center of the bounding rectangle.
+</td>
+</tr>
+</table><p>The default values are TA_LEFT, TA_TOP, and TA_NOUPDATECP.
+</p><p>If the method fails, the return value is GDI_ERROR.
+</p><p><b><code>:M GetTextAlign: ( -- fMode )
+</code></b><br>The GetTextAlign method retrieves the text-alignment setting for the specified
+device context. If the method fails, the return value is GDI_ERROR.
+</p><p><b><code>:M SetTextColor: ( colorref -- PreviousColorref )
+</code></b><br>The SetTextColor method sets the text color for the specified device context
+to the specified color.
+</p><p>Note: <i>&nbsp;colorref </i>&nbsp;can be a 'simple' colorref or the address of a pPen Object class !
+</p><p><b><code>:M GetTextColor: ( -- colorref )
+</code></b><br>The GetTextColor method retrieves the current text color for the specified
+device context.
+</p><p><b><code>:M SetTextCharacterExtra: ( CharExtra -- OldCharExtra )
+</code></b><br>The SetTextCharacterExtra method sets the intercharacter spacing. Intercharacter
+spacing is added to each character, including break characters, when the system
+writes a line of text.
+</p><p><i>&nbsp;CharExtra </i>&nbsp;Specifies the amount of extra space, in logical units, to be added to
+each character. If the current mapping mode is not MM_TEXT, the nCharExtra parameter
+is transformed and rounded to the nearest pixel.
+</p><p><b><code>:M GetTextCharacterExtra: ( -- CharExtra )
+</code></b><br>The GetTextCharacterExtra method retrieves the current intercharacter spacing
+for the specified device context.
+</p><p><b><code>:M GetTextExtent: ( addr len -- width height )
+</code></b><br>The GetTextExtent method computes the width and height of the specified
+string of text.
+</p><p><b><code>:M GetTextMetrics: ( -- addr len )
+</code></b><br>The GetTextMetrics method fills the specified buffer with the metrics for the
+currently selected font.
+Returns the address and length of the textmetric struct.
+</p><p><b><code>:M TextOut: &nbsp;&nbsp;&nbsp;&nbsp;( x y addr len -- )
+</code></b><br>The TextOut method writes a character string at the specified location,
+using the currently selected font, background color, and text color.
+</p><p><b><code>:M DrawText: &nbsp;&nbsp;&nbsp;( addr len rect format -- )
+</code></b><br>The DrawText method draws formatted text in the specified rectangle.
+It formats the text according to the specified method (expanding tabs,
+justifying characters, breaking lines, and so forth).
+</p><p>Possible values for <i>&nbsp;Format </i>&nbsp;are:
+</p><p><b>&nbsp;DT_BOTTOM </b>&nbsp;Justifies the text to the bottom of the rectangle. This
+value is used only with the DT_SINGLELINE value.
+</p><p><b>&nbsp;DT_CALCRECT </b>&nbsp;Determines the width and height of the rectangle. If there
+are multiple lines of text, DrawText uses the width of the
+rectangle pointed to by the lpRect parameter and extends the
+base of the rectangle to bound the last line of text. If there
+is only one line of text, DrawText modifies the right side of
+the rectangle so that it bounds the last character in the line.
+In either case, DrawText returns the height of the formatted
+text but does not draw the text.
+</p><p><b>&nbsp;DT_CENTER </b>&nbsp;Centers text horizontally in the rectangle.
+</p><p><b>&nbsp;DT_EDITCONTROL </b>&nbsp;Duplicates the text-displaying characteristics of a multiline
+edit control. Specifically, the average character width is
+calculated in the same manner as for an edit control, and the
+method does not display a partially visible last line.
+</p><p><b>&nbsp;DT_END_ELLIPSIS </b>&nbsp;For displayed text, if the end of a string does not fit in the
+rectangle, it is truncated and ellipses are added. If a word that
+is not at the end of the string goes beyond the limits of the
+rectangle, it is truncated without ellipses.
+The string is not modified unless the DT_MODIFYSTRING flag is
+specified. Compare with DT_PATH_ELLIPSIS and DT_WORD_ELLIPSIS.
+</p><p><b>&nbsp;DT_EXPANDTABS </b>&nbsp;Expands tab characters. The default number of characters per
+tab is eight. The DT_WORD_ELLIPSIS, DT_PATH_ELLIPSIS, and
+DT_END_ELLIPSIS values cannot be used with the DT_EXPANDTABS value.
+</p><p><b>&nbsp;DT_EXTERNALLEADING </b>&nbsp;Includes the font external leading in line height. Normally,
+external leading is not included in the height of a line of text.
+</p><p><b>&nbsp;DT_HIDEPREFIX </b>&nbsp;Windows 2000: Ignores the ampersand (&amp;) prefix character in the
+text. The letter that follows will not be underlined, but other
+mnemonic-prefix characters are still processed. For example: <br />
+input string: &nbsp;&nbsp;&nbsp;&quot;A&amp;bc&amp;&amp;d&quot; <br />
+normal: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Abc&amp;d&quot; &nbsp;&nbsp;<br />
+DT_HIDEPREFIX: &nbsp;&nbsp;&quot;Abc&amp;d&quot;
+</p><p>Compare with DT_NOPREFIX and DT_PREFIXONLY.
+</p><p><b>&nbsp;DT_INTERNAL </b>&nbsp;Uses the system font to calculate text metrics.
+<b>&nbsp;DT_LEFT </b>&nbsp;Aligns text to the left.
+</p><p><b>&nbsp;DT_MODIFYSTRING </b>&nbsp;Modifies the specified string to match the displayed text.
+This value has no effect unless DT_END_ELLIPSIS or DT_PATH_ELLIPSIS
+is specified.
+</p><p><b>&nbsp;DT_NOCLIP </b>&nbsp;Draws without clipping. DrawText is somewhat faster when DT_NOCLIP
+is used.
+</p><p><b>&nbsp;DT_NOFULLWIDTHCHARBREAK </b>&nbsp;Windows 98, Windows 2000: Prevents a line break at a DBCS
+(double-wide character string), so that the line breaking rule is
+equivalent to SBCS strings. For example, this can be used in Korean
+windows, for more readability of icon labels. This value has no effect
+unless DT_WORDBREAK is specified.
+</p><p><b>&nbsp;DT_NOPREFIX </b>&nbsp;Turns off processing of prefix characters. Normally, DrawText interprets
+the mnemonic-prefix character &amp;&nbsp;as a directive to underscore the character
+that follows, and the mnemonic-prefix characters &amp;&amp;&nbsp;as a directive to
+print a single &amp;. By specifying DT_NOPREFIX, this processing is turned
+off. For example, <br />
+input string: &nbsp;&nbsp;&quot;A&amp;bc&amp;&amp;d&quot; &nbsp;<br />
+normal: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Abc&amp;d&quot; &nbsp;&nbsp;&nbsp;<br />
+DT_NOPREFIX: &nbsp;&nbsp;&nbsp;&quot;A&amp;bc&amp;&amp;d&quot;
+</p><p>Compare with DT_HIDEPREFIX and DT_PREFIXONLY.
+</p><p><b>&nbsp;DT_PATH_ELLIPSIS </b>&nbsp;For displayed text, replaces characters in the middle of the string with
+ellipses so that the result fits in the specified rectangle. If the string
+contains backslash (\) characters, DT_PATH_ELLIPSIS preserves as much as
+possible of the text after the last backslash. The string is not modified
+unless the DT_MODIFYSTRING flag is specified.
+Compare with DT_END_ELLIPSIS and DT_WORD_ELLIPSIS.
+</p><p><b>&nbsp;DT_PREFIXONLY </b>&nbsp;&nbsp;&nbsp;Windows 2000: Draws only an underline at the position of the character
+following the ampersand (&amp;) prefix character. Does not draw any other
+characters in the string. For example, <br />
+input string: &nbsp;&nbsp;&nbsp;&quot;A&amp;bc&amp;&amp;d&quot; <br />
+normal: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&quot;Abc&amp;d&quot; &nbsp;&nbsp;<br />
+DT_PREFIXONLY: &nbsp;&nbsp;&quot;&nbsp;_ &nbsp;&nbsp;&quot;
+</p><p>Compare with DT_HIDEPREFIX and DT_NOPREFIX.
+</p><p><b>&nbsp;DT_RIGHT </b>&nbsp;Aligns text to the right.
+</p><p><b>&nbsp;DT_RTLREADING </b>&nbsp;Layout in right-to-left reading order for bi-directional text when the font
+selected into the hdc is a Hebrew or Arabic font. The default reading order
+for all text is left-to-right.
+</p><p><b>&nbsp;DT_SINGLELINE </b>&nbsp;Displays text on a single line only. Carriage returns and line feeds do not
+break the line.
+</p><p><b>&nbsp;DT_TABSTOP </b>&nbsp;Sets tab stops. Bits 15–8 (high-order byte of the low-order word) of the
+uFormat parameter specify the number of characters for each tab. The default
+number of characters per tab is eight.The DT_CALCRECT, DT_EXTERNALLEADING,
+DT_INTERNAL, DT_NOCLIP, and DT_NOPREFIX values cannot be used with the
+DT_TABSTOP value.
+</p><p><b>&nbsp;DT_TOP </b>&nbsp;Justifies the text to the top of the rectangle.
+</p><p><b>&nbsp;DT_VCENTER </b>&nbsp;Centers text vertically. This value is used only with the DT_SINGLELINE value.
+</p><p><b>&nbsp;DT_WORDBREAK </b>&nbsp;Breaks words. Lines are automatically broken between words if a word would
+extend past the edge of the rectangle specified by the lpRect parameter. A
+carriage return-line feed sequence also breaks the line.
+</p><p><b>&nbsp;DT_WORD_ELLIPSIS </b>&nbsp;Truncates any word that does not fit in the rectangle and adds ellipses.
+Compare with DT_END_ELLIPSIS and DT_PATH_ELLIPSIS.
+</p><p><b><code>:M SetTabs: &nbsp;&nbsp;&nbsp;&nbsp;( a1 n1 -- )
+</code></b><br>Set tab positions. a1 is array of cells with offsets
+</p><p><b><code>:M SetTabSize: &nbsp;( n1 -- n2 )
+</code></b><br>Set the width of a tab. Returns the old width.
+</p><p><b><code>:M GetTabSize: &nbsp;( -- n1 )
+</code></b><br>Get the width of a tab.
+</p><p><b><code>:M TabbedTextOut: ( x y addr len -- width height )
+</code></b><br>The TabbedTextOut method writes a character string at a specified
+location, expanding tabs to the values specified in an array of tab-stop
+positions. Text is written in the currently selected font, background
+color, and text color.
+</p><p>If the method succeeds, the return value is the dimensions, in logical
+units, of the string.
+</p><p><b>&nbsp;Line and Curve methods </b>
+</p><p><b><code>:M Arc: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( nLeftRect nTopRect nRightRect nBottomRect nXStartArc nYStartArc nXEndArc nYEndArc -- )
+</code></b><br>The Arc method draws an elliptical arc.
+</p><p>The arc is drawn using the current pen; it is not filled.
+</p><p>The current position is neither used nor updated by Arc.
+</p><p>Windows 95/98: The drawing direction is always counterclockwise.
+</p><p>Windows NT/2000: Use the GetArcDirection: and SetArcDirection: methods
+to get and set the current drawing direction for a device
+context. The default drawing direction is counterclockwise.
+</p><p><i>&nbsp;nLeftRect </i>&nbsp;x-coord of rectangle's upper-left corner
+</p><p><i>&nbsp;nTopRect </i>&nbsp;y-coord of rectangle's upper-left corner
+</p><p><i>&nbsp;nRightRect </i>&nbsp;x-coord of rectangle's lower-right corner
+</p><p><i>&nbsp;nBottomRect </i>&nbsp;y-coord of rectangle's lower-right corner
+</p><p><i>&nbsp;nXStartArc </i>&nbsp;x-coord of first radial ending point
+</p><p><i>&nbsp;nYStartArc </i>&nbsp;y-coord of first radial ending point
+</p><p><i>&nbsp;nXEndArc </i>&nbsp;x-coord of second radial ending point
+</p><p><i>&nbsp;nYEndArc </i>&nbsp;y-coord of second radial ending point
+</p><p><b><code>:M ArcTo: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( nLeftRect nTopRect nRightRect nBottomRect nXRadial1 nYRadial1 nXRadial2 nYRadial2 -- )
+</code></b><br>The ArcTo method draws an elliptical arc.
+ArcTo is similar to the Arc method, except that the current position is
+updated.
+</p><p>The points (<i> nLeftRect </i>, <i>&nbsp;nTopRect </i>) and (<i> nRightRect </i>, <i>&nbsp;nBottomRect </i>)
+specify the bounding rectangle. An ellipse formed by the specified bounding
+rectangle defines the curve of the arc. The arc extends counterclockwise from
+the point where it intersects the radial line from the center of the bounding
+rectangle to the (<i> nXRadial1 </i>, <i>&nbsp;nYRadial1 </i>) point. The arc ends where it
+intersects the radial line from the center of the bounding rectangle to the
+(<i> nXRadial2, </i>&nbsp;<i>&nbsp;nYRadial2 </i>) point. If the starting point and ending point are the
+same, a complete ellipse is drawn.
+</p><p>A line is drawn from the current position to the starting point of the arc.
+</p><p>If no error occurs, the current position is set to the ending point of the arc.
+</p><p>The arc is drawn using the current pen; it is not filled.
+</p><p><i>&nbsp;nLeftRect </i>&nbsp;x-coord of rectangle's upper-left corner
+</p><p><i>&nbsp;nTopRect </i>&nbsp;y-coord of rectangle's upper-left corner
+</p><p><i>&nbsp;nRightRect </i>&nbsp;x-coord of rectangle's lower-right corner
+</p><p><i>&nbsp;nBottomRect </i>&nbsp;y-coord of rectangle's lower-right corner
+</p><p><i>&nbsp;nXRadial1 </i>&nbsp;x-coord of first radial ending point
+</p><p><i>&nbsp;nYRadial1 </i>&nbsp;y-coord of first radial ending point
+</p><p><i>&nbsp;nXRadial2 </i>&nbsp;x-coord of second radial ending point
+</p><p><i>&nbsp;nYRadial2 </i>&nbsp;y-coord of second radial ending point
+</p><p><b><code>:M LineTo: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( nXEnd nYEnd -- )
+</code></b><br>The LineTo method draws a line from the current position up to, but not
+including, the specified point.
+</p><p>The coordinates of the line's ending point are specified in logical units.
+</p><p>The line is drawn by using the current pen and, if the pen is a geometric pen,
+the current brush.
+</p><p>If LineTo succeeds, the current position is set to the specified ending point.
+</p><p><b><code>:M MoveTo: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( x y -- x1 x2 )
+</code></b><br>The MoveTo method updates the current position to the specified point and
+returns the previous position.
+</p><p><b><code>:M GetCurrentPosition: ( -- x y )
+</code></b><br>The GetCurrentPosition method retrieves the current position in logical
+coordinates.
+</p><p><b><code>:M PolyBezier: &nbsp;( pPoints cPoints -- )
+</code></b><br>The PolyBezier method draws one or more Bézier curves.
+</p><p><i>&nbsp;pPoints </i>&nbsp;Pointer to an array of POINT structures that contain the endpoints
+and control points of the curve(s).
+</p><p><i>&nbsp;cPoints </i>&nbsp;Specifies the number of points in the pPoints array. This value must
+be one more than three times the number of curves to be drawn, because each
+Bézier curve requires two control points and an endpoint, and the initial
+curve requires an additional starting point.
+</p><p>The Polybezier method draws cubic Bézier curves by using the endpoints and
+control points specified by the pPoints parameter. The first curve is drawn from
+the first point to the fourth point by using the second and third points as
+control points. Each subsequent curve in the sequence needs exactly three more
+points: the ending point of the previous curve is used as the starting point,
+the next two points in the sequence are control points, and the third is the
+ending point.
+</p><p>The current position is neither used nor updated by the PolyBezier method.
+The figure is not filled. This method draws lines by using the current pen.
+</p><p><b><code>:M PolyBezierTo: ( pPoints cPoints -- )
+</code></b><br>The PolyBezierTo method draws one or more Bézier curves.
+</p><p><i>&nbsp;pPoints </i>&nbsp;Pointer to an array of POINT structures that contains the endpoints
+and control points.
+</p><p><i>&nbsp;cPoints </i>&nbsp;Specifies the number of points in the pPoints array. This value must be
+three times the number of curves to be drawn, because each Bézier curve requires
+two control points and an ending point.
+</p><p>This method draws cubic Bézier curves by using the control points specified by
+the pPoints parameter. The first curve is drawn from the current position to the
+third point by using the first two points as control points. For each subsequent
+curve, the method needs exactly three more points, and uses the ending point
+of the previous curve as the starting point for the next.
+</p><p>PolyBezierTo moves the current position to the ending point of the last Bézier curve.
+The figure is not filled. This method draws lines by using the current pen.
+</p><p><b><code>:M Polyline: &nbsp;&nbsp;&nbsp;( pPoints cPoints -- )
+</code></b><br>The Polyline method draws a series of line segments by connecting the points
+in the specified array.
+</p><p><i>&nbsp;pPoints </i>&nbsp;Pointer to an array of POINT structures. Each structure in the array
+identifies a point in logical space.
+</p><p><i>&nbsp;cPoints </i>&nbsp;Specifies the number of points in the array. This number must be greater
+than or equal to two.
+</p><p>The lines are drawn from the first point through subsequent points by using the
+current pen. Unlike the LineTo method, the Polyline method neither uses nor
+updates the current position.
+</p><p><b><code>:M PolylineTo: &nbsp;( pPoints cPoints -- )
+</code></b><br>The PolylineTo method draws one or more straight lines.
+</p><p><i>&nbsp;pPoints </i>&nbsp;Pointer to an array of POINT structures that contains the vertices of
+the line.
+</p><p><i>&nbsp;cCount </i>&nbsp;Specifies the number of points in the array.
+</p><p>A line is drawn from the current position to the first point specified by the
+pPoints parameter by using the current pen. For each additional line, the method
+draws from the ending point of the previous line to the next point specified by
+pPoints.
+</p><p>PolylineTo moves the current position to the ending point of the last line.
+If the line segments drawn by this method form a closed figure, the figure is
+not filled.
+</p><p><b>&nbsp;Bitmap support </b>
+</p><p><b><code>:M CreateCompatibleDC: ( -- hDC )
+</code></b><br>The CreateCompatibleDC method creates a memory device context compatible
+with the device.
+</p><p><b><code>:M CreateCompatibleBitmap: ( width height -- hBitmap )
+</code></b><br>The CreateCompatibleBitmap method creates a bitmap compatible with the
+device that is associated with the device context.
+</p><p><b><code>:M BitBlt: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( nXDest nYDest nWidth nHeight hdcSrc nXSrc nYSrc dwRop -- )
+</code></b><br>The BitBlt method performs a bit-block transfer of the color data corresponding
+to a rectangle of pixels from the specified source device context into a
+destination device context.
+</p><p><i>&nbsp;nXDest </i>&nbsp;x-coord of destination upper-left corner
+</p><p><i>&nbsp;nYDest </i>&nbsp;y-coord of destination upper-left corner
+</p><p><i>&nbsp;nWidth </i>&nbsp;width of destination rectangle
+</p><p><i>&nbsp;nHeight </i>&nbsp;height of destination rectangle
+</p><p><i>&nbsp;hdcSrc </i>&nbsp;source DC
+</p><p><i>&nbsp;nXSrc </i>&nbsp;x-coordinate of source upper-left corner
+</p><p><i>&nbsp;nYSrc </i>&nbsp;y-coordinate of source upper-left corner
+</p><p><i>&nbsp;dwRop </i>
+</p><p><b><code>:M SetDIBColorTable: ( uStartIndex cEntries pColors -- )
+</code></b><br>The SetDIBColorTable method sets RGB (red, green, blue) color values in a range
+of entries in the color table of the DIB that is currently selected into a specified
+device context.
+</p><p><i>&nbsp;uStartIndex </i>&nbsp;A zero-based color table index that specifies the first color table
+entry to set.
+</p><p><i>&nbsp;cEntries </i>&nbsp;Specifies the number of color table entries to set.
+</p><p><i>&nbsp;pColors </i>&nbsp;Pointer to an array of RGBQUAD structures containing new color information
+for the DIB's color table.
+</p><p><b><code>:M GetDIBColorTable: ( uStartIndex cEntries pColors -- )
+</code></b><br>The GetDIBColorTable method retrieves RGB (red, green, blue) color values from
+a range of entries in the color table of the DIB section bitmap that is currently
+selected into a specified device context.
+</p><p><i>&nbsp;uStartIndex </i>&nbsp;A zero-based color table index that specifies the first color table
+entry to retrieve.
+</p><p><i>&nbsp;cEntries </i>&nbsp;Specifies the number of color table entries to retrieve.
+</p><p><i>&nbsp;pColors </i>&nbsp;Pointer to a buffer that receives an array of RGBQUAD data structures
+containing color information from the DIB's color table. The buffer must be large
+enough to contain as many RGBQUAD data structures as the value of cEntries.
+</p><p>The GetDIBColorTable method should be called to retrieve the color table for DIB
+section bitmaps that use 1, 4, or 8 bpp. The biBitCount member of a bitmap's associated
+BITMAPINFOHEADER structure specifies the number of bits-per-pixel. DIB section bitmaps
+with a biBitCount value greater than eight do not have a color table, but they do have
+associated color masks. Use the GetObject method to retrieve those color masks.
+</p><p><b><code>:M ExtFloodFill: ( nXStart nYStart crColor fuFillType -- )
+</code></b><br>The ExtFloodFill method fills an area of the display surface with the current brush.
+</p><p><i>&nbsp;nXStart </i>&nbsp;Specifies the logical x-coordinate of the point where filling is to start.
+</p><p><i>&nbsp;nYStart </i>&nbsp;Specifies the logical y-coordinate of the point where filling is to start.
+</p><p><i>&nbsp;crColor </i>&nbsp;Specifies the color of the boundary or of the area to be filled. The
+interpretation of crColor depends on the value of the fuFillType parameter.
+</p><p><i>&nbsp;fuFillType </i>&nbsp;Specifies the type of fill operation to be performed. This parameter must
+be one of the following values.
+</p><p><b>&nbsp;FLOODFILLBORDER </b>&nbsp;The fill area is bounded by the color specified by the crColor parameter.
+This style is identical to the filling performed by the FloodFill method.
+</p><p><b>&nbsp;FLOODFILLSURFACE </b>&nbsp;The fill area is defined by the color that is specified by
+crColor. Filling continues outward in all directions as long as the color is
+encountered. This style is useful for filling areas with multicolored boundaries.
+</p><p><b>&nbsp;Path methods </b>
+A path is one or more figures (or shapes) that are filled, outlined, or both filled and
+outlined. Win32-based applications use paths in many ways. Paths are used in drawing and
+painting applications. Computer-aided design (CAD) applications use paths to create unique
+clipping regions, to draw outlines of irregular shapes, and to fill the interiors of
+irregular shapes. An irregular shape is a shape composed of Bézier curves and straight
+lines. (A regular shape is an ellipse, a circle, a rectangle, or a polygon.)
+</p><p><b><code>:M BeginPath: &nbsp;&nbsp;( -- )
+</code></b><br>The BeginPath method opens a path bracket in the specified device context
+After a path bracket is open, an application can begin calling GDI drawing
+functions to define the points that lie in the path. An application can close
+an open path bracket by calling the EndPath method.
+</p><p><b><code>:M EndPath: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>The EndPath method closes a path bracket and selects the path defined by the
+bracket into the specified device context.
+</p><p><b><code>:M AbortPath: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>The AbortPath method closes and discards any paths in the specified device context.
+If there is an open path bracket in the given device context, the path bracket
+is closed and the path is discarded. If there is a closed path in the device context,
+the path is discarded.
+</p><p><b><code>:M CloseFigure: &nbsp;&nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>The CloseFigure method closes an open figure in a path.
+</p><p>The CloseFigure method closes the figure by drawing a line from the current position
+to the first point of the figure (usually, the point specified by the most recent call
+to the MoveToEx function) and then connects the lines by using the line join style.
+If a figure is closed by using the LineTo function instead of CloseFigure, end caps are
+used to create the corner instead of a join.
+</p><p>The CloseFigure function should only be called if there is an open path bracket in the
+specified device context.
+</p><p>A figure in a path is open unless it is explicitly closed by using this function. (A
+figure can be open even if the current point and the starting point of the figure are the
+same.)
+</p><p>After a call to CloseFigure, adding a line or curve to the path starts a new figure.
+</p><p><b><code>:M FillPath: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>The FillPath method closes any open figures in the current path and fills the path's
+interior by using the current brush and polygon-filling mode.
+After its interior is filled, the path is discarded from the DC
+</p><p><b><code>:M FlattenPath: ( -- )
+</code></b><br>The FlattenPath method transforms any curves in the path that is selected into the
+current device context (DC), turning each curve into a sequence of lines.
+</p><p><b><code>:M GetPath: &nbsp;&nbsp;&nbsp;&nbsp;( lpPoints lpTypes nSize -- n )
+</code></b><br>The GetPath method retrieves the coordinates defining the endpoints of lines and the
+control points of curves found in the path that is selected into the device context.
+<i>&nbsp;lpPoints </i>&nbsp;Pointer to an array of POINT structures that receives the line endpoints and
+curve control points.
+</p><p><i>&nbsp;lpTypes </i>&nbsp;Pointer to an array of bytes that receives the vertex types.
+This parameter can be one of the following values.
+</p><p><b>&nbsp;PT_MOVETO </b>&nbsp;Specifies that the corresponding point in the lpPoints parameter
+starts a disjoint figure.
+</p><p><b>&nbsp;PT_LINETO </b>&nbsp;Specifies that the previous point and the corresponding point in
+lpPoints are the endpoints of a line.
+</p><p><b>&nbsp;PT_BEZIERTO </b>&nbsp;Specifies that the corresponding point in lpPoints is a control
+point or ending point for a Bézier curve.
+PT_BEZIERTO values always occur in sets of three. The point in the path
+immediately preceding them defines the starting point for the Bézier curve.
+The first two PT_BEZIERTO points are the control points, and the third PT_BEZIERTO
+point is the ending (if hard-coded) point.
+</p><p>A PT_LINETO or PT_BEZIERTO value may be combined with the following value (by
+using the bitwise operator OR) to indicate that the corresponding point is the
+last point in a figure and the figure should be closed. Flag Description
+PT_CLOSEFIGURE Specifies that the figure is automatically closed after the
+corresponding line or curve is drawn. The figure is closed by drawing a line
+from the line or curve endpoint to the point corresponding to the last PT_MOVETO.
+</p><p><i>&nbsp;nSize </i>&nbsp;Specifies the total number of POINT structures that can be stored in the array pointed to
+by lpPoints. This value must be the same as the number of bytes that can be placed in the
+array pointed to by lpTypes.
+</p><p>If the nSize parameter is nonzero, the return value is the number of points enumerated. If nSize
+is 0, the return value is the total number of points in the path (and GetPath writes nothing to
+the buffers). If nSize is nonzero and is less than the number of points in the path, the return
+value is -1.
+</p><p><b><code>:M PathToRegion: &nbsp;( -- )
+</code></b><br>The PathToRegion method creates a region from the path that is selected into the specified
+device context. The resulting region uses device coordinates.
+After PathToRegion converts a path into a region, the system discards the closed path from the
+device context.
+</p><p><b><code>:M StrokePath: &nbsp;( -- )
+</code></b><br>The StrokePath method renders the specified path by using the current pen.
+</p><p><b><code>:M StrokeAndFillPath: &nbsp;&nbsp;&nbsp;( -- )
+</code></b><br>The StrokeAndFillPath method closes any open figures in a path, strokes the outline of the
+path by using the current pen, and fills its interior by using the current brush.
+The StrokeAndFillPath method has the same effect as closing all the open figures in the path,
+and stroking and filling the path separately, except that the filled region will not overlap the
+stroked region even if the pen is wide.
+</p><p><b><code>:M WidenPath: &nbsp;&nbsp;( -- )
+</code></b><br>The WidenPath function redefines the current path as the area that would be painted if the path
+were stroked using the pen currently selected into the given device context.
+The WidenPath function is successful only if the current pen is a geometric pen created by the
+ExtCreatePen function, or if the pen is created with the CreatePen function and has a width, in
+device units, of more than one.
+The device context must contain a closed path.
+Any Bézier curves in the path are converted to sequences of straight lines approximating the
+widened curves. As such, no Bézier curves remain in the path after WidenPath is called.
+</p><p><b>&nbsp;Missing methods: </b>
+SetPixel <br />
+GetPixel <br />
+GetStretchBltMode <br />
+AlphaBlend &nbsp;&nbsp;&nbsp;W98 and w2k or later <br />
+GradientFill &nbsp;W98 and w2k or later <br />
+SetDIBitsToDevice <br />
+SetStretchBltMode <br />
+StretchBlt <br />
+StretchDIBits <br />
+TransparentBlt W98 and w2k or later <br />
+PatBlt <br />
+AngleArc <br />
+SetMiterLimit <br />
+GetMiterLimit <br />
+</p><p><b><code>;class
+</code></b><br>End of gdiDC class
+</p></body></html>

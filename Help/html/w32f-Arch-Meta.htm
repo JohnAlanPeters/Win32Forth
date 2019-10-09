@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <title>Win32Forth Help</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<h1>Meta-Compilation &amp; FSAVE image</h1>
+
+
+
+
+<h2>Meta-Compilation</h2>
+
+<p>Win32Forth uses a meta-compiler to build a small kernel that can be extended to
+a full-blown WIN32FOR.EXE.
+This technique allows W32F to bootstrap itself form source; a small setup
+program (actually just the kernel and some supporting code that is FLOADed,
+rebuilds the kernel, extends the kernel into a full system, then compiles the
+applications that come with the system. </p>
+
+<h2>Image building internals</h2>
+
+<p>IMAGEMAN.F, IMAGERES.F and IMAGEHDS.F build Windows EXE images. </p>
+
+<h3>Supporting Documentation</h3>
+
+<p>For documentation on the PECOFF format, see
+<a href="http://www.microsoft.com/hwdev/hardware/PECOFF.asp">http://www.microsoft.com/hwdev/hardware/PECOFF.asp</a>
+<img border=0 width=16 height=16 id="_x0000_i1026" src=ONWEB.gif>.
+(Note: not included because of copyright restrictions, but freely
+downloadable.) Also see &quot;Peering Inside the PE: A Tour of the Win32
+Portable Executable File Format&quot; by Matt Pietrek, and &quot;An In-Depth
+Look into the Win32 Portable Executable File Format&quot;, same author, both
+findable on <a href="http://msdn.microsoft.com">http://msdn.microsoft.com</a>
+<img border=0 width=16 height=16 id="_x0000_i1027" src=ONWEB.gif>.
+There is very little documentation on the loader. An exception is &quot;What
+Goes On Inside Windows 2000: Solving the Mysteries of the Loader&quot; by Russ
+Osterlund, also from MSDN. </p>
+
+<p>This quite complex code has 6 major parts. </p>
+
+<ol start=1 type=1>
+ <li>Field definitions using FLDBASE and FLD words. </li>
+ <li>File handling for both .IMG and .EXE file words </li>
+ <li>Section building and writing words </li>
+ <li>Import library building and writing words </li>
+ <li>Header building and writing words</li>
+ <li>Resource generation (as of writing, still incomplete)</li>
+</ol>
+
+<h3>Example</h3>
+
+<pre>DEFER CONTYPE ' GUI IS CONTYPE
+
+: std-IMG2EXE ( addr len -- ) \ compose STD image, addr/len is name
+
+        COMPACT \ compact header
+        BUILD \ exe name
+
+        CONTYPE EXE SUBSYSTEM \ normally GUI
+        STD-LOADPOINT          LOADPOINT
+        0x100000 0xA000        STACKSIZE
+        0x100000 0x8000        HEAPSIZE
+        IMAGE-ENTRY            ENTRYPOINT
+
+        s&quot; .code&quot; SECTION
+               STD-DATA STD-CODE or           SECTIONTYPE
+               IMAGE-CODEPTR IMAGE-CACTUAL    SECTIONDATA
+               IMAGE-CSIZE                    SECTIONSIZE
+        ENDSECTION
+
+        s&quot; .app&quot; SECTION               STD-DATA
+                      SECTIONTYPE
+               IMAGE-APPPTR IMAGE-AACTUAL     SECTIONDATA
+               IMAGE-ASIZE                    SECTIONSIZE
+        ENDSECTION
+
+IMAGE-SACTUAL IF \ might be a TURNKEY, so don't write section
+        s&quot; .sys&quot; SECTION
+               STD-DATA                       SECTIONTYPE
+               IMAGE-SYSPTR IMAGE-SACTUAL     SECTIONDATA
+               IMAGE-SSIZE                    SECTIONSIZE
+        ENDSECTION
+THEN
+        s&quot; .idata&quot; SECTION
+               S-INIT S-READ OR               SECTIONTYPE
+               s&quot; W32FCONSOLE.DLL&quot;            IMPLIB
+                       0 s&quot; c_initconsole&quot;            IMPORT
+               s&quot; KERNEL32.DLL&quot;               IMPLIB
+                       0 s&quot; GetProcAddress&quot;           IMPORT
+                       0 s&quot; LoadLibraryA&quot;             IMPORT
+                                              ENDIMPORTS
+               SECTIONDATA
+        ENDSECTION
+        ENDBUILD
+; </pre>
+
+
+
+
+
+<h3>VIMAGE </h3>
+
+<p>IMAGEMAN has its own dictionary
+(because of possible name collisions) so a separate dictionary is used. </p>
+
+<table>
+  <tr>
+    <td><pre>COMPACT</pre></td>
+    <td>Standard file is built with 4096 (0x1000) file sections. COMPACT specifies
+        512 (0x200) file sections, which builds a smaller EXE file at possibly the expense
+        of slightly longer load times.</td>
+  </tr>
+  <tr>
+    <td><pre>s&quot; name&quot; BUILD</pre></td>
+    <td>Identifies the new image name.</td>
+  </tr>
+  <tr>
+    <td><pre>X T SUBSYSTEM</pre></td>
+    <td>where X is CUI (DOS application) or GUI | GRAPHICAL (Windows), and T is EXE or DLL</td>
+  </tr>
+  <tr>
+    <td><pre>n LOADPOINT   </pre></td>
+    <td>The loadpoint of the program (default is 0x400000). Must be aligned to a 64K boundary.</td>
+  </tr>
+  <tr>
+    <td><pre>n ENTRYPOINT   </pre></td>
+    <td>The (relative) entrypoint address in the section declared CODE</td>
+  </tr>
+  <tr>
+    <td><pre>N M STACKSIZE   </pre></td>
+    <td>The reserved and committed stack size. Default is 1Mb, 4K </td>
+  </tr>
+  <tr>
+    <td><pre>N M HEAPSIZE   </pre></td>
+    <td>The reserved and committed heap size. Default is 1Mb, 4K </td>
+  </tr>
+  <tr>
+    <td><pre>s&quot; name&quot; SECTION   </pre></td>
+    <td>The name of the section, case sensitive and 8 chars max. </td>
+  </tr>
+  <tr>
+  <td>n SECTIONTYPE </td>
+  <td><p>Section characterisics; default is none. Can appear multiple times for one section </p>
+
+    <table>
+      <tr>
+        <td>S-EXECUTE</td>
+        <td>section contains executable code</td>
+      </tr>
+      <tr>
+        <td>S-READ </td>
+        <td>section can be read</td>
+      </tr>
+      <tr>
+        <td>S-WRITE</td>
+        <td>section can be written</td>
+      </tr>
+      <tr>
+        <td>S-INIT </td>
+        <td>section contains initialised data </td>
+      </tr>
+      <tr style='mso-yfti-irow:4'>
+        <td>STD-CODE</td>
+        <td>is S-INIT S-CODE S-EXECUTE OR OR</td>
+     </tr>
+     <tr>
+       <td>STD-DATA</td>
+       <td>S-INIT S-READ S-WRITE OR OR </td>
+     </tr>
+     </table>
+
+   </tr>
+ <p></p>
+  </td>
+ </tr>
+ <tr>
+  <td>N M SECTIONDATA </td>
+  <td>is address and length of the section </td>
+ </tr>
+ <tr>
+  <td>N SECTIONRVA </td>
+  <td>Not normally used, but can set the (relative) address of the section </td>
+ </tr>
+ <tr>
+  <td>N SECTIONSIZE </td>
+  <td>Size of section. Must be equal to or longer than the sectiondata. When loaded, the
+      section will zeroed and padded out to this length with zeros. Optional,
+      set to size of the section data</td>
+ </tr>
+ <tr>
+  <td>ENDSECTION </td>
+  <td>Required to end a section</td>
+ </tr>
+ <tr>
+  <td>s&quot; implib&quot; IMPLIB </td>
+  <td>Import library name </td>
+ </tr>
+ <tr>
+  <td>N s&quot; name&quot; IMPORT</td>
+  <td>Import the procedure &lt;-name-&gt; with a hint of N. N can be zero, but the correct
+      hint will speed (marginally) load time.</td>
+ </tr>
+ <tr>
+  <td>ENDIMPORTS ( -- N M ) </td>
+  <td>Required to end the imports sections, follow with SECTIONDATA </td>
+ </tr>
+ <tr>
+  <td>ENDBUILD  </td>
+  <td>Creates the image from the information given above. </td>
+ </tr>
+</table>
+
+
+
+
+
+<h3>Other words</h3>
+
+<table>
+ <tr>
+  <td><pre>s&quot; name&quot; IMAGE-COPY   </pre></td>
+  <td>Copies the current executable for
+      subsequent saving. Sets the following words as a side effect : </p>
+
+  <table>
+   <tr>
+    <td>IMAGE-PTR</td>
+    <td>pointer to the loaded image </td>
+   </tr>
+   <tr>
+    <td>IMAGE-CODEPTR </td>
+    <td>pointer to the code section </td>
+   </tr>
+   <tr>
+    <td>IMAGE-CACTUAL</td>
+    <td>real size of code section </td>
+   </tr>
+   <tr>
+    <td>IMAGE-CSIZE</td>
+    <td>virtual size of code section</td>
+   </tr>
+   <tr>
+    <td>IMAGE-APPPTR<br> IMAGE-AACTUAL<br>  IMAGE-ASIZE  </td>
+    <td>ditto APP values</td>
+   </tr>
+   <tr>
+    <td>IMAGE-SYSPTR<br>  IMAGE-SACTUAL<br> IMAGE-SSIZE </td>
+    <td>ditto SYS values </td>
+   </tr>
+   <tr>
+    <td>IMAGE-ENTRY </td>
+    <td>relative offset of entry point </td>
+   </tr>
+  </table>
+
+  </td>
+ </tr>
+</table>
+
+
+
+<h3>Requirements/restrictions</h3>
+
+<ul type=disc>
+ <li>Keyword order is important. The following MUST appear in the following order: </li>
+ <ul type=circle>
+  <li>BUILD SECTION  ENDBUILD </li>
+  <li>SECTION / ENDSECTION must enclose SECTIONDATA and optionally SECTIONTYPE and
+      SECTIONRVA keywords. </li>
+  <li>SECTION / ENDSECTION must enclose IMPLIB and IMPORT </li>
+  <li>ENDIMPORTS must terminate IMPLIB and
+      IMPORT, and must be followed by SECTIONDATA </li>
+ </ul>
+ <li>Other keywords can appear in any order anywhere between BUILD and ENDBUILD. </li>
+ <li>Sections are always aligned in memory on
+     4K boundaries. Each section follows the next in memory. </li>
+ <li>The entry point is calculated from the
+     start of the last section marked as S-CODE or S-EXECUTE . </li>
+ <li>No resource section is built (section
+     .rsrc). To be addressed. (Tough one, as the format isn't documented properly.) </li>
+ <li>The DLL type is currently ignored. </li>
+ <li>WATCH OUT! for name collisions. Only
+     specify VIMAGE as a vocabulary if you're not compiling code, please. </li>
+</ul>
+
+
+
+
+<h3>Defaults</h3>
+
+<ul>
+  <li><code>BUILD </code></li>
+  <li><code>GUI EXE SUBSYSTEM  </code></li>
+  <li><code>0x400000 LOADPOINT  </code></li>
+  <li><code>0x100000 0x1000 STACKSIZE </code></li>
+  <li><code>0x100000 0x1000 HEAPSIZE </code></li>
+  <li><code>n SECTIONRVA  </code></li>
+  <li><code>n SECTIONSIZE </code></li>
+</ul>
+
+<hr>
+
+<p>Document : w32f-Arch-Meta.htm -- 2006/09/21 -- georgeahubert </p>
+
+</body>
+
+</html>
