@@ -49,7 +49,7 @@ in-application
                 cfa>proc proc>name dup c@
                 1 name-max-chars between        \ if it looks like a count byte
                 if      count type space        \ display the name
-                else     h.                     \ else display a number
+                else     u.                     \ else display a number
                 then    ;
 
 in-system
@@ -95,7 +95,7 @@ in-system
                                         THEN
                                 THEN
                 ENDCASE R> DROP
-        ELSE    ." 0x" 1 h.r ."  "
+        ELSE   1 u.r  ( ." 0x" 1 h.r ) ."  "
         THEN    CELL+ ;
 
 : .WORD         ( ip -- ip' )

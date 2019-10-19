@@ -5951,7 +5951,7 @@ in-system
 
 : .NAME         ( xt -- )       \ show name, if can't find name, show address
                 DUP >NAME DUP NAME> ['] [UNKNOWN] =     \ if not found
-                IF      DROP [CHAR] " EMIT ." 0x" 1 H.R [CHAR] " EMIT SPACE
+                IF      DROP 1 u.r ( [CHAR] " EMIT ." 0x" 1 H.R [CHAR] " EMIT ) SPACE
                 ELSE    .ID DROP
                 THEN    ;
 
