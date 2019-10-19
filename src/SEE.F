@@ -95,7 +95,7 @@ in-system
                                         THEN
                                 THEN
                 ENDCASE R> DROP
-        ELSE    ." 0x" 1 h.r ."  "
+        ELSE    1 .r   ( ." 0x" 1 h.r ) ."  "
         THEN    CELL+ ;
 
 : .WORD         ( ip -- ip' )
