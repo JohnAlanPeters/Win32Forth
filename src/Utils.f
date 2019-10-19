@@ -253,7 +253,7 @@ in-system
                 else    base @ >r decimal
                         dup uppercase count type 15 ?cr
                         ."  at line: "
-                        swap dup . swap
+                        swap dup 1- . swap
                         r> base !
                         dup count cur-file place
                 then    ;
