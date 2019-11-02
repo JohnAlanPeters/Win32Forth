@@ -1407,7 +1407,7 @@ int ClipboardCount
         new> font to CommandFont
         UnLinkGdiObject
         10 Height: CommandFont
-\        FW_HEAVY Weight: CommandFont          \ Optional
+        fw_bold ( FW_HEAVY ) Weight: CommandFont          \ Optional
         s" Courier" SetFaceName: CommandFont
 \        s" Terminal" SetFaceName: CommandFont \ Optional choice
         CommandFont SetFont: self   \ this creates a caret in BigCursor: self
