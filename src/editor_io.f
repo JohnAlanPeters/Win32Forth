@@ -249,16 +249,6 @@ IN-SYSTEM
 : linelist      ( n1 -- )
                 cur-file $locate ;
 
-: view          ( -<name>- )    \ VIEW the source for a word
-                .viewinfo $browse ;
-
-\ synonym v view                   \ made a colon def - [cdo-2008May13]
-\ synonym Vv view                  \ made a colon def - [cdo-2008May13]
-: v             \ synonym of VIEW
-                view ;
-: vv            \ synonym of VIEW
-                view ;
-
 : ed            ( -<name>- )    \ EDIT the source for a word
                 .viewinfo $edit ;
 
