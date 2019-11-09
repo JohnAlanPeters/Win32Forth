@@ -156,6 +156,14 @@ EXTERNAL
 : with-address  ( -- )
                 true to with-address? ;
 
+: wordscount ( -- )
+                base @ >r decimal
+                cr horizontal-line
+                ." Displayed " words-cnt . ." of the " count-words . ." words in the system."
+                cr ." ** Use: WORDS <substring> to limit the list **"
+                cr ." ** Use: CONSTANTS <substring> to display Windows Constants **"
+                cr ." See also .loaded .deferred .file .fonts .free and more"
+                r> base ! ;
 INTERNAL
 
 : _WORDS         ( -<optional_name>- ) \ WORDS partial-string will focus the list
@@ -177,6 +185,7 @@ INTERNAL
                                 cr ." Interrupted!"
                         then
                 then    0 to with-address?
+((
                 base @ >r decimal
 
                 cr horizontal-line
@@ -184,11 +193,12 @@ INTERNAL
                 cr ." ** Use: WORDS <substring> to limit the list **"
                 cr ." ** Use: CONSTANTS <substring> to display Windows Constants **"
                 cr ." See also .loaded .deferred .file .fonts .free and more"
-                r> base ! ;
+                r> base ! ))
+ ;
 
 EXTERNAL
 
-: WORDS		( -<optional_name>- ) \ WORDS partial-string will focus the list
+: WORDS   ( -<optional_name>- ) \ WORDS partial-string will focus the list
                 true to with-tabs? _words ;
 
 : on-allwords   { theCFA \ vocBuf -- }

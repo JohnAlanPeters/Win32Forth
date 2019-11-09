@@ -389,7 +389,7 @@ time-buf compile-version time-len move  \ move time into buffer
 : .#"           ( n1 n2 -- a1 n3 )
                 >r 0 <# r> 0 ?do # loop #> ;
 
-: >date"        ( time_structure -- )
+: >date"        ( time_structure -- a1 l1 )
                 >r 31 date$ null \ z" ddddd',' MMMM dd yyyy"
                 r> null LOCALE_USER_DEFAULT
                 call GetDateFormat date$ swap 1- ;
