@@ -311,24 +311,24 @@ create EscapeTable      \ -- addr
    8 c,         \ \b
    char c c,    \ \c
    char d c,    \ \d
-   #27 c,       \ \e
-   #12 c,       \ \f
+   27 c,       \ \e
+   12 c,       \ \f
    char g c,    \ \g
    char h c,    \ \h
    char i c,    \ \i
    char j c,    \ \j
    char k c,    \ \k
-   #10 c,       \ \l
+   10 c,       \ \l
    char m c,    \ \m
-   #10 c,       \ \n (Unices only)
+   10 c,       \ \n (Unices only)
    char o c,    \ \o
    char p c,    \ \p
    char " c,    \ \q
-   #13 c,       \ \r
+   13 c,       \ \r
    char s c,    \ \s
    9 c,         \ \t
    char u c,    \ \u
-   #11 c,       \ \v
+   11 c,       \ \v
    char w c,    \ \w
    char x c,    \ \x
    char y c,    \ \y
@@ -344,7 +344,7 @@ create EscapeTable      \ -- addr
      1 /string extract2H r> addchar  exit
    endif
    over c@ [char] m = if                        \ CR/LF pair?
-     1 /string  #13 r@ addchar  #10 r> addchar  exit
+     1 /string 13 r@ addchar  10 r> addchar  exit
    endif
    over c@ [char] n = if                        \ CR/LF pair?
      1 /string  crlf$ count r> append  exit
