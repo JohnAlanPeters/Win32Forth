@@ -5599,8 +5599,9 @@ DEFER RESET-STACKS ' _RESET-STACKS IS RESET-STACKS ( ?? -- ) \ reset the stack
                 CR >IN @ DUP (SOURCE) @ < +              \ adjust if not at end of line
                    POCKET C@ DUP>R - SPACES              \ spaces
                    R> 1 max 0 ?DO [CHAR] ^ EMIT LOOP     \ then (at least one) ^^^ under the word
-                BASE @ >R DECIMAL                        \ save base
-                CR TYPE ." ("                            \ print type
+                BASE @ >R DECIMAL                        \  save base
+                CR LOADLINE @ ?dup if . 32 EMIT then
+                TYPE ." ("                               \ print type
                 DUP TO LAST-ERROR                        \ save error #
                 S>D (D.) TYPE ." ): "                    \ i.e "Error(-234): <name> "
                 POCKET ?TYPE                             \ show whatever was parsed by WORD
