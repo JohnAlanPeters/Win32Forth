@@ -39,7 +39,7 @@ in-system
 \
 \ defer .float    ' dummy.float is .float
 
-DEFER (SEE)  ( cfa -- )
+DEFER (SEE)  ( cfa -- ) \ Triple click on this -> ((see))
 
 INTERNAL        \ internal definitions start here
 

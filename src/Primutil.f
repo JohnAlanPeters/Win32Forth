@@ -974,7 +974,7 @@ LMAXCOUNTED 2 CELLS+ CONSTANT LMAXSTRING
 
 in-system
 
-: GET-VIEWFILE  ( cfa -- line# addr flag )    \ find source for word, very inefficent as
+: GET-VIEWFILE  ( cfa -- line# addr flag )    \ find source for word, very inefficient as
                                               \ uses >name, >view@ and >ffa@
                 dup >view@ swap >ffa@         \ fetch line #, file name
                 over 1 <                      \ view < 1

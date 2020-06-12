@@ -44,7 +44,7 @@ Create PD   16 cells 2 + , 16 cells allot
 
 Create DI   5 cells , 4 cells allot
     DI cell+      Constant DocName
-    0 value Job
+    0 value printJob
 
 
 : PageSetupDlg ( -- f )   \ display the new Page Setup dialog
@@ -114,8 +114,8 @@ Create DI   5 cells , 4 cells allot
         ;   \ initialize the default printer, return DC
 
 : Print-start ( -- )
-        DI hDC @ Call StartDoc to Job   \ <=0 means error
-        hDC @ Call StartPage drop       \ and job won't print
+        DI hDC @ Call StartDoc to printJob   \ <=0 means error
+        hDC @ Call StartPage drop       \ and pringjob won't print
         ;    \ start printing a new page for new doc
 
 : Start-page ( -- )
