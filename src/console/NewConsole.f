@@ -308,6 +308,7 @@ Black White c_FGBG!
 : c_ScrollToView ( -- )   UpdateScrollRange: cmd  AutoScroll: cmd ;
 
 IN-APPLICATION
+defer f1key ' noop is f1key
 :noname ( n -- )
         Case
             'O' +k_control             of  edit-forth             endof
@@ -320,7 +321,7 @@ IN-APPLICATION
             'R' +k_control +k_shift    of  CONHNDL repeat-amacro  endof
             'S' +k_control +k_shift    of  start/stop-macro       endof
 [THEN]
-            k_F1                       of  F1-doc                 endof
+            k_F1                       of  f1key ( F1-doc )       endof
 \            k_F2                       of  F2-help                endof
             ( default )  \ swap drop
         EndCase

@@ -326,7 +326,7 @@ EXTERNAL
                 (SEE) ;
 
 : SEE           ( <name> -- ) \ see a word parsed from input stream
-                '   (SEE)    ;
+                bl word anyfind if (SEE) else drop ." [UNKNOWN]" then ;
 
 MODULE          \ end of the module
 

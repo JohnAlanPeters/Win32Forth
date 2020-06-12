@@ -70,7 +70,7 @@ in-system
                 reset-stacks ;
 
 \ synonym stop/start start/stop    \ - made a colon def - [cdo-2008May13]
-: stop/start    \ synonym of START/STOP
+: stop-start    \ synonym of START/STOP
                 start/stop ;
 
 defer .rstack            ' noop         is .rstack
